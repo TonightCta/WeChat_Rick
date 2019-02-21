@@ -24,6 +24,16 @@ export default new Router({
       path:'/mine',//个人中心
       name:'Mine',
       component:resolve=>require(['@/page/mine'],resolve)
+    },
+    {
+      path:'/newslist',//新闻列表
+      name:'NewsList',
+      component:resolve=>require(['@/page/newslist'],resolve)
+    },
+    {
+      path:'/newDetails',//新闻详情
+      name:'NewsDetails',
+      component:resolve=>require(['@/page/newsDetails'],resolve)
     }
   ]
 })

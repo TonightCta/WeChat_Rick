@@ -55,3 +55,9 @@ input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
             color:#b0b0b0;
             font-family: "微软雅黑";
         }
+.mint-swipe-indicator{
+  opacity: 1!important;
+}
+.mint-swipe-indicator.is-active{
+  background: red!important;
+}

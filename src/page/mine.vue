@@ -1,3 +1,4 @@
+<!-- 个人中心 -->
 <template lang="html">
   <div class="mine">
     <h1>这是我的</h1>

@@ -1,12 +1,24 @@
 <template lang="html">
   <div class="header_wapper">
-    <span>犀牛小哥ICT服务平台</span>
+    <img :src=backUrl alt="" @click="backPage()">
+    <slot>
+      <span>新闻中心</span>
+    </slot>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
 export default {
+  data(){
+    return{
+      backUrl:'../../static/img/back.png'
+    }
+  },
+  methods:{
+    backPage(){
+      window.history.back()
+    }
+  }
 }
 </script>
 
@@ -19,6 +31,14 @@ export default {
   top:0;
   left:0;
   z-index: 999;
+  position: relative;
+  img{
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    top:1.5rem;
+    left:1.5rem;
+  }
   span{
     display: inline-block;
     width: 100%;

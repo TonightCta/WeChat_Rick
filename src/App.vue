@@ -1,22 +1,16 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <Header/>
     <div class="view_box">
       <router-view/>
     </div>
-    <Footer/>
   </div>
 </template>
 
 <script>
-import Header from '@/components/header_wapper'
-import Footer from '@/components/footer_wapper'
 export default {
   name: 'App',
   components:{
-    Header,
-    Footer
   }
 }
 </script>
