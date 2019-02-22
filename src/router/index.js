@@ -34,6 +34,16 @@ export default new Router({
       path:'/newDetails',//新闻详情
       name:'NewsDetails',
       component:resolve=>require(['@/page/newsDetails'],resolve)
+    },
+    {
+      path:'/personMes',//个人信息页
+      name:'PersonMes',
+      component:resolve=>require(['@/page/person_mes'],resolve)
+    },
+    {
+      path:'/login',//登录/注册
+      name:'Login',
+      component:resolve=>require(['@/page/login'],resolve)
     }
   ]
 })

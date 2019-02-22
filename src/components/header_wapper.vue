@@ -14,7 +14,7 @@ export default {
 .header_wapper{
   width: 100%;
   height:5rem ;
-  background: #5277cc;
+  background: linear-gradient(#101013, #2c2d31); 
   position: fixed;
   top:0;
   left:0;

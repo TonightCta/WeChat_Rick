@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="header_wapper">
-    <img :src=backUrl alt="" @click="backPage()">
+    <i class="iconfont icon-fanhui"  @click="backPage()"></i>
     <slot>
       <span>新闻中心</span>
     </slot>
@@ -26,18 +26,18 @@ export default {
 .header_wapper{
   width: 100%;
   height:5rem ;
-  background: #5277cc;
+  background: linear-gradient(#101013, #2c2d31);
   position: fixed;
   top:0;
   left:0;
   z-index: 999;
   position: relative;
-  img{
-    width: 2rem;
-    height: 2rem;
+  i{
+    font-size: 2rem;
     position: absolute;
-    top:1.5rem;
+    top:1.3rem;
     left:1.5rem;
+    color:white;
   }
   span{
     display: inline-block;
