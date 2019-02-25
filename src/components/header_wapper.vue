@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="header_wapper">
-    <span>犀牛小哥ICT服务平台</span>
+    <slot>
+      <span>犀牛小哥ICT服务平台</span>
+    </slot>
   </div>
 </template>
 
@@ -13,8 +15,8 @@ export default {
 <style lang="scss" scoped>
 .header_wapper{
   width: 100%;
-  height:5rem ;
-  background: linear-gradient(#101013, #2c2d31); 
+  height:5rem;
+  background: linear-gradient(#101013, #2c2d31);
   position: fixed;
   top:0;
   left:0;

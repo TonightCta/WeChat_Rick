@@ -1,30 +1,30 @@
 <template lang="html">
   <div class="footer_wapper">
     <ul class="icon_list">
-      <li>
-        <router-link :to="{path:'/home',query:{color:1}}" tag="span" @click.native="color==1">
-          <!-- <img src="../../static/img/home_icon.png" alt=""> -->
-          <i class="iconfont icon-shouye1" :class="{active:color==1}"></i>
+        <router-link :to="{path:'/home',query:{color:1}}" tag="li" :class="{active:color==1}" @click.native="color==1">
+          <i class="iconfont icon-shouye1"></i>
+          <br>
+          <span>首页</span>
         </router-link>
-      </li>
-      <li>
-        <router-link :to="{path:'/order',query:{color:2}}" tag="span" @click.native="color==2">
-          <!-- <img src="../../static/img/order_icon.png" alt=""> -->
-          <i class="iconfont icon-shouye" :class="{active:color==2}"></i>
+        <router-link :to="{path:'/order',query:{color:2}}" tag="li" :class="{active:color==2}" @click.native="color==2">
+          <i class="iconfont icon-shouye"></i>
+          <span>订单</span>
         </router-link>
-      </li>
-      <li>
-        <router-link :to="{path:'/mine',query:{color:3}}" tag="span" @click.native="color==3">
-          <!-- <img src="../../static/img/mine_icon.png" alt=""> -->
-          <i class="iconfont icon-wode" :class="{active:color==3}"></i>
+        <router-link :to="{path:'/about',query:{color:3}}" tag="li" :class="{active:color==3}" @click.native="color==3">
+          <i class="iconfont icon-guanyuwomenkaobei" style="font-size:1.7rem;"></i>
+          <span>关于我们</span>
         </router-link>
-      </li>
+        <router-link :to="{path:'/mine',query:{color:4}}" tag="li" :class="{active:color==4}" @click.native="color==4">
+          <i class="iconfont icon-wode"></i>
+          <span>个人中心</span>
+        </router-link>
     </ul>
-    <ul class="text_list">
+    <!-- <ul class="text_list">
       <li :class="{active:color==1}">首页</li>
       <li :class="{active:color==2}">订单</li>
+      <li :class="{active:color==2}">关于我们</li>
       <li :class="{active:color==3}">我的</li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
@@ -48,6 +48,9 @@ export default {
 <style lang="scss" scoped>
 .active{
   color:black!important;
+  span{
+    color:black!important;
+  }
 }
 .footer_wapper{
   width: 100%;
@@ -60,16 +63,28 @@ export default {
   .icon_list{
     width: 100%;
     display: flex;
-    height:50%;
+    height:100%;
     line-height: 4rem;
-    justify-content: space-around;
+    // justify-content: space-around;
     padding-bottom:.5rem;
     li{
+      width: 25%;
+      text-align: center;
       color: #666;
+      position: relative;
+      i{
+        font-size: 2rem;
+      }
       span{
-        i{
-          font-size: 2rem;
-        }
+        display: inline-block;
+        width: 100%;
+        // background: red;
+        position: absolute;
+        font-size: 1rem;
+        left:0;
+        // top:0;
+        font-size: 1.2rem;
+        top:1.8rem;
       }
     }
   }

@@ -31,7 +31,6 @@ export default {
   top:0;
   left:0;
   z-index: 999;
-  position: relative;
   i{
     font-size: 2rem;
     position: absolute;
