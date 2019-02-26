@@ -13,17 +13,26 @@ export default new Router({
     {
       path: '/home',//首页
       name: 'Home',
-      component: resolve=>require(['@/page/Home/home'],resolve)
+      component: resolve=>require(['@/page/Home/home'],resolve),
+      meta:{
+        title:'犀牛小哥ICT服务平台'
+      }
     },
     {
       path:'/order',//订单页
       name:'Order',
-      component:resolve=>require(['@/page/Order/order'],resolve)
+      component:resolve=>require(['@/page/Order/order'],resolve),
+      meta:{
+        title:'我的订单'
+      }
     },
     {
       path:'/mine',//个人中心
       name:'Mine',
-      component:resolve=>require(['@/page/Mine/mine'],resolve)
+      component:resolve=>require(['@/page/Mine/mine'],resolve),
+      meta:{
+        title:'个人中心'
+      }
     },
     {
       path:'/about',//关于我们
@@ -33,15 +42,22 @@ export default new Router({
         {
           path:'/companyIn',//公司简介
           name:'CompanyIn',
-          component:resolve=>require(['@/page/About/company_intro'],resolve)
+          component:resolve=>require(['@/page/About/company_intro'],resolve),
+          meta:{
+            title:'关于我们'
+          }
         },
         {
           path:'/companyCon',//联系我们
           name:'CompanyCon',
-          component:resolve=>require(['@/page/About/company_contact'],resolve)
+          component:resolve=>require(['@/page/About/company_contact'],resolve),
+          meta:{
+            title:'关于我们'
+          }
         }
       ],
-      redirect:'/companyIn'
+      redirect:'/companyIn',
+
     },
     {
       path:'/newslist',//新闻列表

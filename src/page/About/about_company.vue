@@ -34,6 +34,9 @@ export default {
   },
   components:{
     Footer
+  },
+  mounted(){
+    
   }
 }
 </script>

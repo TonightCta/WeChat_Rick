@@ -3,35 +3,36 @@
   <div class="mine">
     <!-- 个人资料块 -->
     <div class="person_mes">
-      <img src="../../../static/img/table1.png" alt="" class="person_pic" @click="goMes()">
-      <router-link to="/login" tag="p" class="person_oper">
-        登录/注册
+      <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic" @click="goMes()">
+      <router-link to="/login" tag="p" class="person_oper" @click.native="mineCon()">
+        {{nickName}}
       </router-link>
       <div class="person_del">
         <ul>
           <li>
             <span class="iconfont icon-icon-test"></span>
             <span>电话：</span>
-            <span>18888888888</span>
+            <span>{{userPhone}}</span>
           </li>
           <li>
             <span class="iconfont icon-rili"></span>
             <span>工作年限：</span>
-            <span>二十年Java</span>
+            <span>{{userDate}}年</span>
           </li>
         </ul>
         <p>
           <span class="iconfont icon-mail"></span>
           <span>邮箱：</span>
-          <span>18888888888@gmail.com</span>
+          <span>{{userEmail}}</span>
         </p>
         <span class="iconfont icon-icon y"></span>
       </div>
-    </div>
-    <!-- 阴影盒子 -->
-    <div class="person_mask">
+      <!-- 阴影盒子 -->
+      <div class="person_mask">
 
+      </div>
     </div>
+
     <!-- 功能块 -->
     <div class="person_work">
       <ul>
@@ -58,9 +59,37 @@
 </template>
 
 <script>
+import {mapMutations,mapState} from 'vuex'
 import Footer from '@/components/footer_wapper'
 export default {
+  inject:['reload'],
+  data(){
+    return{
+      nickName:'登录/注册',
+      userPhone:'-',
+      userDate:'-',
+      userEmail:'-'
+    }
+  },
+  computed:{
+    ...mapState(['userMes'])
+  },
+  mounted(){
+    if(this.userMes.nickname){
+      this.nickName=this.userMes.nickname
+    }
+    if(this.userMes.email){
+      this.userEmail=this.userMes.email
+    }
+    if(this.userMes.engineerVO){
+      this.userPhone=this.userMes.engineerVO.phone
+    }
+    if(this.userMes.engineerVO){
+      this.userDate=this.userMes.engineerVO.workYear
+    }
+  },
   methods:{
+    ...mapMutations(['isBackM_fn','isBackT_fn','userMes_fn']),
     goMes(){//点击进入个人详情页
       this.$router.push({
         path:'/personMes',
@@ -71,10 +100,16 @@ export default {
     },
     logOut(){//注销登录
       this.$Indicator.open('注销中...');
+      this.userMes_fn('');
       setTimeout(()=>{
         this.$Indicator.close();
+        this.reload()
         this.$Toast('注销成功')
-      },1000)
+      },500)
+    },
+    mineCon(){//进入登录注册页
+      this.isBackM_fn(true);
+      this.isBackT_fn(false);
     }
   },
   components:{
@@ -87,6 +122,7 @@ export default {
 .mine{
   width: 92%;
   margin:0 auto;
+  position: relative;
   .person_mes{
     width: 100%;
     background: url('../../../static/img/person_background.png');
@@ -144,19 +180,20 @@ export default {
       top:20.2rem;
       margin-left: -1.4rem;
     }
+    .person_mask{
+      width: 60%;
+      height: 10rem;
+      background: white;
+      margin:0 auto;
+      position: absolute;
+      top:12rem;
+      box-shadow:0px 30px 100px #666;
+      z-index: -1;
+      left:50%;
+      margin-left: -30%;
+    }
   }
-  .person_mask{
-    width: 60%;
-    height: 10rem;
-    background: white;
-    margin:0 auto;
-    position: absolute;
-    top:12rem;
-    box-shadow:0px 30px 100px #666;
-    z-index: -1;
-    left:50%;
-    margin-left: -30%;
-  }
+
   .person_work{
     width: 100%;
     margin-bottom: 15rem;

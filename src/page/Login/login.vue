@@ -20,10 +20,23 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
 import WorkHeader from '@/components/work_header'
 export default {
+  data(){
+    return{
+      turnBack:true
+    }
+  },
   components:{
     WorkHeader
+  },
+  methods:{
+    ...mapMutations(['isBackM_fn','isBackT_fn']),
+  },
+  destroyed(){
+    this.isBackM_fn(false);
+    this.isBackT_fn(false);
   }
 }
 </script>

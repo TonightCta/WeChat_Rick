@@ -10,74 +10,76 @@
           <img src="../../../static/img/mes_number.png" alt="">
           <span>登录&nbsp;&nbsp;ID:</span>
           <span>
-            <input type="text" v-model="userId" disabled="disabled" name="" value="">
+            <input type="text" v-model="userId" name="" value="">
+            <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
-        <li>
+        <!-- <li>
           <img src="../../../static/img/mes_pass.png" alt="">
           <span>登录密码:</span>
           <span>
-            <input type="password" v-model="userPass"
-             :disabled="disabled" name="" value=""
+            <input type="password" v-model="userPass"name="" value=""
              placeholder="请输入您的密码"
              >
+             <span class="mes_mask" v-show="disabled"></span>
           </span>
-        </li>
+        </li> -->
         <li>
           <img src="../../../static/img/mes_location.png" alt="">
           <span>服务范围:</span>
           <span>
-            <input type="text" v-model="userLoca"
-            :disabled="disabled" name="" value=""
+            <input type="text" v-model="userLoca" name="" value=""
             placeholder="请输入您的工作地址"
             >
+            <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
         <li>
           <img src="../../../static/img/mes_person.png" alt="">
           <span>身份认证:</span>
           <span>
-            <input type="text" v-model="userCard"
-            :disabled="disabled" name="" value=""
+            <input type="text" v-model="userCard" name="" value=""
             placeholder="请输入您的身份证号"
             >
+            <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
         <li>
           <img src="../../../static/img/mes_skills.png" alt="">
           <span>技能认证:</span>
           <span>
-            <input type="text" v-model="userSkill" disabled="disabled" name="" value="">
+            <input type="text" v-model="userSkill" name="" value="">
+            <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
         <li>
           <img src="../../../static/img/mes_date.png" alt="">
           <span>工作年限:</span>
           <span>
-            <input type="text" v-model="userDate"
-            :disabled="disabled" name="" value=""
+            <input type="text" v-model="userDate" name="" value=""
             placeholder="请输入您的工作年限"
             >
+            <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
         <li>
           <img src="../../../static/img/mes_email.png" alt="">
           <span>电子邮箱:</span>
           <span>
-            <input type="text" v-model="userEmail"
-            :disabled="disabled" name="" value=""
+            <input type="text" v-model="userEmail" name="" value=""
             placeholder="请输入您的邮箱地址"
             >
+            <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
         <li>
           <img src="../../../static/img/mes_phone.png" alt="">
           <span>联系电话:</span>
           <span>
-            <input type="text" v-model="userPhone"
-            :disabled="disabled" name="" value=""
+            <input type="text" v-model="userPhone" name="" value=""
             placeholder="请输入您的联系电话"
             >
+            <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
       </ul>
@@ -91,22 +93,67 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
+import {mapState} from 'vuex'
 export default {
   data(){
     return{
       disabled:true,//是否禁用输入框
-      userId:10086,//用户ID
-      userPass:123456,//用户密码
-      userLoca:'北京市海淀区万霖大厦',//用户工作地址
-      userCard:411381199502284536,//用户身份认证
-      userSkill:'区块链架构师',//用户技能认证
-      userDate:'十年',//用户工作年限
-      userEmail:'18888888888@gmail.com',//用户邮箱
-      userPhone:'18888888888',//用户联系电话
+      userId:'-',//用户ID
+      userPass:'-',//用户密码
+      userLoca:'-',//用户工作地址
+      userCard:'-',//用户身份认证
+      userSkill:'-',//用户技能认证
+      userDate:'-',//用户工作年限
+      userEmail:'-',//用户邮箱
+      userPhone:'-',//用户联系电话
+      placeArr:[],
+      delArr:[]
     }
+  },
+
+  computed:{
+    ...mapState(['userMes'])
   },
   mounted(){
     this.disabled=this.$route.query.isDis;
+    console.log(this.userMes);
+    if(this.userMes.name){//登录ID
+      this.userId=this.userMes.name;
+    }
+    if(this.userMes.engineerVO.childPlaces.length>0){//服务地址
+      let locaList=this.userMes.engineerVO.childPlaces;
+      for(let i in locaList){
+        let subLoca=locaList[i].parentPlace.name+'-'+locaList[i].name;
+        this.placeArr.push(subLoca)
+      }
+      this.userLoca=this.placeArr.splice(0,2).join('/')+'...'
+    };
+    if(this.userMes.engineerVO.state){//身份认证
+      if(this.userMes.engineerVO.state==0){
+        this.userCard='未认证'
+      }else if(this.userMes.engineerVO.state==1){
+        this.userCard='认证中'
+      }else if(this.userMes.engineerVO.state==2){
+        this.userCard='已认证'
+      }
+    };
+    if(this.userMes.engineerVO.levels.length>0){//技能认证
+      let delList=this.userMes.engineerVO.levels;
+      for(let x in delList){
+        let subDel=delList[x].technology.name+'-'+delList[x].name;
+        this.delArr.push(subDel)
+      };
+      this.userSkill=this.delArr.splice(0,2).join('/')+'...'
+    };
+    if(this.userMes.engineerVO.workYear){//工作年限
+      this.userDate=this.userMes.engineerVO.workYear+'年';
+    };
+    if(this.userMes.email){//用户邮箱
+      this.userEmail=this.userMes.email;
+    };
+    if(this.userMes.mobile){//用手电话
+      this.userPhone=this.userMes.mobile
+    }
   },
   methods:{
     saveMes(){
@@ -156,6 +203,14 @@ export default {
         line-height: 5.2rem;
         font-size: 1.2rem;
         left:6.5rem;
+      }
+      .mes_mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: black;
+        opacity: 0;
+        left:5%;
       }
       input{
         margin-left: 5.5rem;

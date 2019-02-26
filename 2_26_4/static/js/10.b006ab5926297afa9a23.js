@@ -1,0 +1,2 @@
+webpackJsonp([10],{P22N:function(e,t){},vwyp:function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n={components:{WorkHeader:r("qqdu").a}},a={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"take_order"},[t("WorkHeader",[t("span",[this._v("接单赚钱")])]),this._v(" "),t("h1",[this._v("这是接单页面")])],1)},staticRenderFns:[]};var s=r("C7Lr")(n,a,!1,function(e){r("P22N")},"data-v-ac1dbfee",null);t.default=s.exports}});
+//# sourceMappingURL=10.b006ab5926297afa9a23.js.map

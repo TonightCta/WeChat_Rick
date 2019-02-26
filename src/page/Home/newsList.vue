@@ -5,7 +5,7 @@
       <span>{{pageTitle}}</span>
     </WorkHeader>
     <div class="news_newsDeta">
-      <mt-loadmore :top-method="loadTop" topPullText="加载中" ref="loadmore">
+      <mt-loadmore :auto-fill="false" :top-method="loadTop" topPullText="加载中" ref="loadmore">
         <ul>
           <li v-for="(item,index) in newsList" @click="newsDe(index)">
             <img :src="`http://rightservicetech.com:8080/${item.imgName}`" alt="">
@@ -64,8 +64,8 @@ export default {
     //点击新闻详情
     newsDe(index){
       this.$router.push({
-        path:'/newDetails',
-        query:{
+        name:'NewsDetails',
+        params:{
           Mes:this.newsList[index].content
         }
       })
@@ -84,17 +84,16 @@ export default {
 <style lang="scss" scoped>
   .news_list{
     width: 100%;
-    height:100%;
     margin-top:5rem;
     .news_newsDeta{
       width: 100%;
-      height:100%;
       ul{
         width: 100%;
         li{
           height:11rem;
           position: relative;
           box-sizing: border-box;
+          border-bottom:1px solid #ccc;
           img{
             width: 8rem;
             height:8rem;
@@ -125,12 +124,8 @@ export default {
             bottom:1.4rem;
           }
         }
-        li:nth-child(2){
-          border-top:1px solid #ccc;
-          border-bottom:1px solid #ccc;
-        }
         li:last-child{
-          margin-bottom: 100rem;
+          margin-bottom: 5rem;
         }
       }
       .lookMoreNews{

@@ -49,15 +49,18 @@ export default {
       padding-top:.8rem;
       box-sizing: border-box;
       position: relative;
+      overflow: hidden;
       img{
         width: 3.5rem;
         height: 3.5rem;
       }
       input{
+        height: 2rem;
         font-size: 1.5rem;
         position: absolute;
-        top:1.7rem;
-        margin-left: 1rem;
+        top:50%;
+        margin-top: -1.2rem;
+        margin-left: .6rem;
       }
     }
   }

@@ -8,4 +8,4 @@
 ############    box-shadow: 0px 0px 30px #999;     ********0px 10px 30px #999;
 
 
-########  background: linear-gradient(#101013, #2c2d31);
+########  background: linear-gradient(#101013, #2c2d31);   http://10.0.0.31

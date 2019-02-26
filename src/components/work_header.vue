@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="header_wapper">
     <i class="iconfont icon-fanhui"  @click="backPage()"></i>
+    <i class="iconfont icon-fanhui"  @click="backOne()" v-show="isBackM"></i>
+    <i class="iconfont icon-fanhui"  @click="backTne()" v-show="isBackT"></i>
     <slot>
       <span>新闻中心</span>
     </slot>
@@ -8,16 +10,43 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   data(){
     return{
       backUrl:'../../static/img/back.png'
     }
   },
+  computed:{
+    ...mapState(['isBackM','isBackT'])
+  },
+  mounted(){
+    // this.isBackT=this.$route.query.isBack;
+    // this.isBackM=this.$route.query.isBackI;
+  },
   methods:{
     backPage(){
       window.history.back()
+    },
+    backOne(){
+      this.$router.push({
+        path:'/mine',
+        query:{
+          color:4
+        }
+      })
+    },
+    backTne(){
+      this.$router.push({
+        path:'/home',
+        query:{
+          color:1
+        }
+      })
     }
+  },
+  mounted(){
+    // console.log(this.isBack)
   }
 }
 </script>

@@ -4,7 +4,7 @@
     <ul>
       <li>
         <img src="../../../static/img/mes_number.png" alt="">
-        <input type="number" placeholder="请输入账号/手机号" name="" value="">
+        <input type="text" placeholder="请输入账号/手机号" name="" value="" v-model="userName">
       </li>
       <li>
         <img src="../../../static/img/btn_pass.png" alt="">
@@ -12,16 +12,18 @@
         <i class="iconfont icon-chakan" v-show="isPass" @click="showPass()"></i>
       </li>
     </ul>
-    <p class="login_btn">登录</p>
+    <p class="login_btn" @click="login()">登录</p>
     <p class="forget_pass">忘记密码?</p>
   </div>
 </template>
 
 <script>
+import {mapMutations,mapState} from 'vuex';
 export default {
   data(){
     return{
-      userPass:'',
+      userName:'',//用户登录名
+      userPass:'',//用户密码
       isPass:false
     }
   },
@@ -34,9 +36,39 @@ export default {
       }
     }
   },
+  computed:{
+    // ...mapState('userMes')
+  },
   methods:{
+    ...mapMutations(['userMes_fn']),
     showPass(){
       this.$refs.userpass.type='number';
+    },
+    login(){
+      let _this=this;
+      _this.$Indicator.open('登录中...')
+      let formData=new FormData();
+      formData.append('name',_this.userName);
+      formData.append('password',_this.userPass);
+      _this.$axios.post(_this.oUrl+'/login',formData).then((res)=>{
+
+        if(res.data.code===0){
+          _this.$Indicator.close();
+          _this.userMes_fn(res.data.data);
+          _this.$Toast('登录成功')
+          _this.$router.push({
+            path:'/mine',
+            query:{
+              color:4
+            }
+          })
+        }else{
+          _this.$Indicator.close();
+          _this.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        console.log(err);
+      })
     }
   }
 }
@@ -59,14 +91,17 @@ export default {
       padding-top:.8rem;
       box-sizing: border-box;
       position: relative;
+      overflow: hidden;
       img{
         width: 3.5rem;
         height: 3.5rem;
       }
       input{
         font-size: 1.5rem;
+        height: 2rem;
         position: absolute;
-        top:1.7rem;
+        top:50%;
+        margin-top: -1rem;
         margin-left: 1rem;
       }
       i{

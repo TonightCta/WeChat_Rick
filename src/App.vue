@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <div class="view_box">
-      <router-view/>
+      <router-view v-wechat-title="$route.meta.title" v-if="isLoad"></router-view>
     </div>
   </div>
 </template>
@@ -10,6 +10,24 @@
 <script>
 export default {
   name: 'App',
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
+  data(){
+    return{
+      isLoad:true
+    }
+  },
+  methods:{
+    reload(){
+      this.isLoad=false;
+      this.$nextTick(()=>{
+        this.isLoad=true;
+      })
+    }
+  },
   components:{
   }
 }
@@ -23,7 +41,7 @@ export default {
   margin:0;
   padding:0;
   width: 100%;
-  height:100%;
   overflow-x: hidden;
+  padding-bottom: 2rem;
 }
 </style>
