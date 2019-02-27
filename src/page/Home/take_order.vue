@@ -4,15 +4,17 @@
     <WorkHeader>
       <span>接单赚钱</span>
     </WorkHeader>
-    <h1>这是接单页面</h1>
+    <Deve/>
   </div>
 </template>
 
 <script>
 import WorkHeader from '@/components/work_header'
+import Deve from '@/components/development_of'
 export default {
   components:{
-    WorkHeader
+    WorkHeader,
+    Deve
   }
 }
 </script>

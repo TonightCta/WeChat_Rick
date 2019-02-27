@@ -71,7 +71,8 @@ export default {
     return{
       bannerUrl:'../../../static/img/banner1.png',
       bannerUrl2:'../../../static/img/banner2.png',
-      bannerUrl3:'../../../static/img/banner3.png'
+      bannerUrl3:'../../../static/img/banner3.png',
+      newsList:[]
     }
   },
   components:{
@@ -92,18 +93,18 @@ export default {
       formData.append('size',3);
       formData.append('page',0);
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition',formData).then((res)=>{
+        console.log(res)
         _this.newsListT_fn(res.data.data.content);
-        // console.log(res)
-        for(let i in _this.newsListT){
-          if(_this.newsListT[i].title.length>10){
-            let subT=_this.newsListT[i].title;
-            _this.newsListT[i].title=subT.substring(0,13)+'...'
-          }
-          if(_this.newsListT[i].intro.length>38){
-            let subX=_this.newsListT[i].intro;
-            _this.newsListT[i].intro=subX.substring(0,34)+'...'
-          }
-        };
+          for(let i in _this.newsListT){
+            if(_this.newsListT[i].title.length>10){
+              let subT=_this.newsListT[i].title;
+              _this.newsListT[i].title=subT.substring(0,13)+'...'
+            }
+            if(_this.newsListT[i].intro.length>38){
+              let subX=_this.newsListT[i].intro;
+              _this.newsListT[i].intro=subX.substring(0,34)+'...'
+            }
+          };
       }).catch((err)=>{
         console.log(err)
       })
@@ -113,6 +114,7 @@ export default {
       let _this=this;
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type=2&size=3&page=0',).then((res)=>{
         _this.conListT_fn(res.data.data.content);
+        console.log(res)
         for(let i in _this.conListT){
           if(_this.conListT[i].title.length>10){
             let subT=_this.conListT[i].title;
@@ -130,21 +132,41 @@ export default {
     },
     //进入新闻详情
     newsDeHome(index){
-      this.$router.push({
-        name:'NewsDetails',
-        params:{
-          Mes:this.newsListT[index].content
-        }
+      let _this=this;
+      let formData=new FormData();
+      formData.append('type',1);
+      formData.append('size',3);
+      formData.append('page',0);
+      _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition',formData).then((res)=>{
+        console.log(res)
+        _this.newsList=res.data.data.content;
+        this.$router.push({
+          name:'NewsDetails',
+          params:{
+            Mes:this.newsListT[index].content,
+            title:this.newsList[index].title
+          }
+        })
+      }).catch((err)=>{
+        console.log(err)
       })
+
     },
     // 进入咨询详情
     newsConHome(index){
-      this.$router.push({
-        name:'NewsDetails',
-        params:{
-          Mes:this.conListT[index].content
-        }
+      let _this=this;
+      _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type=2&size=3&page=0',).then((res)=>{
+        this.$router.push({
+          name:'NewsDetails',
+          params:{
+            Mes:this.conListT[index].content,
+            title:res.data.data.content[index].title
+          }
+        })
+      }).catch((err)=>{
+        console.log(err)
       })
+
     },
     homeCon(){
       this.isBackT_fn(true);

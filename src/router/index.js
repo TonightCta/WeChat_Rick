@@ -35,6 +35,16 @@ export default new Router({
       }
     },
     {
+      path:'/setTing',//设置
+      name:'SetTing',
+      component:resolve=>require(['@/page/Mine/person_setting'],resolve)
+    },
+    {
+      path:'/personSer',//服务条款
+      name:'PersonSer',
+      component:resolve=>require(['@/page/Mine/person_service'],resolve)
+    },
+    {
       path:'/about',//关于我们
       name:'About',
       component:resolve=>require(['@/page/About/about_company'],resolve),

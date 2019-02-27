@@ -39,19 +39,26 @@
         <router-link to="/cerSkill" tag="li">
           <i class="iconfont icon-renzheng"></i>
           <span>技能认证</span>
+          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
         <router-link to="/cerCard" tag="li">
-          <i class="iconfont icon-shimingrenzheng"></i>
+          <i class="iconfont card_icon icon-shimingrenzheng"></i>
           <span>身份认证</span>
+          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
         <router-link :to="{path:'/personMes',query:{isDis:false}}" tag="li">
-          <i class="iconfont icon-bianjiziliao"></i>
+          <i class="iconfont write_icon icon-bianjiziliao"></i>
           <span>编辑资料</span>
+          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
-        <li @click="logOut()">
-          <i class="iconfont icon-tuichudenglu"></i>
-          <span>注销登录</span>
-        </li>
+        <!-- <li @click="logOut()">
+
+        </li> -->
+        <router-link to="/setTing" tag="li">
+          <i class="iconfont icon-shezhi"></i>
+          <span>设置</span>
+          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+        </router-link>
       </ul>
     </div>
     <Footer/>
@@ -98,15 +105,7 @@ export default {
         }
       })
     },
-    logOut(){//注销登录
-      this.$Indicator.open('注销中...');
-      this.userMes_fn('');
-      setTimeout(()=>{
-        this.$Indicator.close();
-        this.reload()
-        this.$Toast('注销成功')
-      },500)
-    },
+
     mineCon(){//进入登录注册页
       this.isBackM_fn(true);
       this.isBackT_fn(false);
@@ -213,6 +212,12 @@ export default {
         i{
           font-size: 2.2rem;
         }
+        .forward{
+          color:#999;
+          position: absolute;
+          right:2rem;
+          font-weight: bold;
+        }
         span{
           font-size: 1.2rem;
           position: absolute;
@@ -224,12 +229,12 @@ export default {
         margin-top:4rem;
       }
       li:nth-child(3){
-        i{
+        .write_icon{
           font-size: 1.8rem;
         }
       }
       li:nth-child(2){
-        i{
+        .card_icon{
           position: absolute;
           top:.2rem;
           left:2rem;

@@ -11,8 +11,10 @@ import VueWechatTitle from 'vue-wechat-title';
 import './index.css';
 import 'mint-ui/lib/style.css';
 import './assets/iconfont/iconfont.css';
+import 'jquery'
 Vue.prototype.$axios=Axios;
-Vue.prototype.oUrl='http://rightservicetech.com:8080';
+// Vue.prototype.oUrl='http://rightservicetech.com:8080';
+Vue.prototype.oUrl='http://hexsoft.top:8080'
 Vue.prototype.$Indicator=Indicator;
 Vue.prototype.$Toast=Toast;
 Vue.config.productionTip = false;

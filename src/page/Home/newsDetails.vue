@@ -3,6 +3,7 @@
     <WorkHeader>
       <span>新闻详情</span>
     </WorkHeader>
+    <p class="newsTitle_cl">{{newsTitle}}</p>
     <div class="details_mes" ref="details_mes">
       <div class="" v-html='content' ref="contentF">
 
@@ -16,16 +17,13 @@ import WorkHeader from '@/components/work_header'
 export default {
   data(){
     return{
-      content:null
+      content:null,
+      newsTitle:'',
     }
   },
   mounted(){
     this.content=this.$route.params.Mes;
-    // console.log(this.content);
-    console.log(this.$refs.contentF[3]);
-    for(let i in this.$refs.contentF){
-      console.log(this.$refs.contentF[2],213213132)
-    }
+    this.newsTitle=this.$route.params.title;
   },
   components:{
     WorkHeader
@@ -33,17 +31,30 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.details_mes{
-  font-size: 1.8rem;
+<style lang="scss">
+.newsTitle_cl{
   width: 100%;
-  color:red;
-  &>p{
-    color:blue!important;
-  }
+  margin-top: 8rem;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+
+}
+.news_details{
+  width: 95%;
+  margin:0 auto;
+}
+.details_mes{
+  margin-top: 2rem;
+  width: 100%;
   p{
+    font-size: 1.4rem!important;
+    text-align:justify!important;
+    text-justify:inter-ideograph!important;
     img{
-      width: 100%!important;
+      width: 95%!important;
+      margin-left:-6.5%!important;
+      margin-top: 2rem;
     }
   }
 }

@@ -4,15 +4,17 @@
     <WorkHeader>
       <span>工作日志</span>
     </WorkHeader>
-    <h1>这是工作日志页</h1>
+    <Deve/>
   </div>
 </template>
 
 <script>
 import WorkHeader from '@/components/work_header'
+import Deve from '@/components/development_of'
 export default {
   components:{
-    WorkHeader
+    WorkHeader,
+    Deve
   }
 }
 </script>

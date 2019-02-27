@@ -1,16 +1,18 @@
 <!-- 订单列表 -->
 <template lang="html">
   <div class="order_wapper">
-    <h1>这是订单</h1>
+    <Deve/>
     <Footer/>
   </div>
 </template>
 
 <script>
 import Footer from '@/components/footer_wapper'
+import Deve from '@/components/development_of'
 export default {
   components:{
-    Footer
+    Footer,
+    Deve
   }
 }
 </script>
