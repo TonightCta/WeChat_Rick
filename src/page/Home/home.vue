@@ -33,7 +33,7 @@
     <div class="home_newsDeta">
       <ul>
         <li v-for="(item,index) in newsListT" @click="newsDeHome(index)">
-          <img :src="`http://rightservicetech.com:8080/${item.imgName}`" alt="">
+          <img :src="`http://hexsoft.top:8080/${item.imgName}`" alt="">
           <span class="home_newsDeta_title">{{item.title}}</span>
           <span class="home_newsDeta_de">{{item.intro}}</span>
           <span class="home_newsDeta_time">{{item.timeStr}}</span>

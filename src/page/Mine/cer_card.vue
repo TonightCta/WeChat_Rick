@@ -108,7 +108,7 @@ export default {
       border-radius: 10px;
       height: 15rem;
       background: white;
-      box-shadow: 0px 0px 30px #999;
+      box-shadow: 0px 0px 15px #999;
       margin-bottom: 1rem;
       position: relative;
       img{
@@ -134,7 +134,7 @@ export default {
     background-size: 100% 100%;
     margin:0 auto;
     box-sizing: border-box;
-    box-shadow: 0px 0px 30px #999;
+    box-shadow: 0px 0px 15px #999;
     position:relative;
     input{
       width: 100%;

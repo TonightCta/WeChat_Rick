@@ -100,7 +100,7 @@ export default {
         height: 2rem;
         position: absolute;
         top:50%;
-        margin-top: -1rem;
+        margin-top: -1.2rem;
         margin-left: 1rem;
       }
       i{

@@ -1,2 +1,0 @@
-webpackJsonp([11],{MrMK:function(e,t){},vwyp:function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r("qqdu"),a=r("VVAB"),s={components:{WorkHeader:n.a,Deve:a.a}},i={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"take_order"},[t("WorkHeader",[t("span",[this._v("接单赚钱")])]),this._v(" "),t("Deve")],1)},staticRenderFns:[]};var o=r("C7Lr")(s,i,!1,function(e){r("MrMK")},"data-v-9ed28898",null);t.default=o.exports}});
-//# sourceMappingURL=11.56d2e00eb7b4894aab6f.js.map

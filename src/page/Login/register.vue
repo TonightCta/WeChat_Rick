@@ -10,10 +10,7 @@
         <img src="../../../static/img/btn_icon.png" alt="">
         <input type="number" v-model="userPhone" placeholder="请输入手机号" name="" value="">
       </li>
-      <!-- <li>
-        <img src="../../../static/img/mes_number.png" alt="">
-        <input type="text" v-model="nickName" placeholder="请输入登录名" name="" value="">
-      </li> -->
+
       <li>
         <img src="../../../static/img/mes_pass.png" alt="">
         <input type="password" v-model="userPass" placeholder="请输入密码" name="" value="">
@@ -21,6 +18,10 @@
       <li>
         <img src="../../../static/img/btn_pass.png" alt="">
         <input type="password" v-model="turnPass" placeholder="确认密码" name="" value="">
+      </li>
+      <li>
+        <img src="../../../static/img/mes_number.png" alt="">
+        <input type="text" v-model="inviCode" placeholder="请输入邀请码（选填）" name="" value="">
       </li>
     </ul>
     <p class="login_btn" @click="regis()">注册</p>
@@ -32,24 +33,25 @@ import {mapMutations} from 'vuex';
 export default {
   data(){
     return{
-      userName:'',
-      userPhone:'',
-      nickName:'',
-      userPass:'',
-      turnPass:''
+      userName:null,
+      userPhone:null,
+      nickName:null,
+      userPass:null,
+      turnPass:null,
+      inviCode:null,//邀请码
     }
   },
   methods:{
     ...mapMutations(['userMes_fn','userID_fn']),
     regis(){
       let _this=this;
-      if(_this.userName==''){
+      if(_this.userName==null){
         _this.$Toast('请输入姓名')
-      }else if(_this.userPhone==''){
+      }else if(_this.userPhone==null){
         _this.$Toast('请输入手机号')
       }else if(!(/^1[34578]\d{9}$/.test(_this.userPhone))){
         _this.$Toast('请输入正确的手机号')
-      }else if(_this.turnPass==''){
+      }else if(_this.turnPass==null){
         _this.$Toast('请输入登录密码')
       }else if(_this.userPass!==_this.turnPass){
         _this.$Toast('两次输入密码不一致')
@@ -60,6 +62,7 @@ export default {
         formData.append('phone',this.userPhone);
         formData.append('username',this.userName);
         formData.append('password',this.turnPass);
+        formData.append('recommendCode',this.inviCode);
         _this.$axios.post(_this.oUrl+'/saveExternalEngineer',formData).then((res)=>{
           _this.$Indicator.close();
           if(res.data.code==0){

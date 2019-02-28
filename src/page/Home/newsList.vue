@@ -4,18 +4,21 @@
     <WorkHeader>
       <span>{{pageTitle}}</span>
     </WorkHeader>
-    <div class="news_newsDeta">
-      <mt-loadmore :auto-fill="false" :top-method="loadTop" topPullText="加载中" ref="loadmore">
-        <ul>
-          <li v-for="(item,index) in newsList" @click="newsDe(index)">
-            <img :src="`http://rightservicetech.com:8080/${item.imgName}`" alt="">
-            <span class="news_newsDeta_title">{{item.title}}</span>
-            <span class="news_newsDeta_de">{{item.intro}}</span>
-            <span class="news_newsDeta_time">{{item.timeStr}}</span>
-          </li>
-        </ul>
-      </mt-loadmore>
+    <div class="">
+      <div class="news_newsDeta" ref="newsDa" :style="{height:newsDaHeight+'px'}">
+        <mt-loadmore :auto-fill="false" :top-method="loadTop" topPullText="加载中" ref="loadmore">
+          <ul>
+            <li v-for="(item,index) in newsList" @click="newsDe(index)">
+              <img :src="`http://rightservicetech.com:8080/${item.imgName}`" alt="">
+              <span class="news_newsDeta_title">{{item.title}}</span>
+              <span class="news_newsDeta_de">{{item.intro}}</span>
+              <span class="news_newsDeta_time">{{item.timeStr}}</span>
+            </li>
+          </ul>
+        </mt-loadmore>
+      </div>
     </div>
+    <p class="noData" v-show="isHasData">暂无更多数据</p>
   </div>
 </template>
 
@@ -29,6 +32,8 @@ export default {
       pageTitle:'',//头部标题
       lisType:'',//数据类型
       pageNum:0,//页码
+      newsDaHeight:null,//动态盒子高度
+      isHasData:false,//当前列表是否有数据
     }
   },
   created(){
@@ -37,18 +42,23 @@ export default {
   },
   mounted(){
     this.getNewsList();
+    this.newsDaHeight=document.documentElement.clientHeight - this.$refs.newsDa.getBoundingClientRect().top;
   },
   methods:{
     //获取新闻列表
     getNewsList(){
       let _this=this;
+      _this.$Indicator.open();
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type='+_this.lisType+'&size=10&page='+this.pageNum).then((res)=>{
         this.$refs.loadmore.onTopLoaded();
+        _this.$Indicator.close()
         _this.newsList=res.data.data.content;
+        if(_this.newsList.length<1){
+          _this.isHasData=true;
+        }
         for(let i in _this.newsList){
           if(_this.newsList[i].title.length>10){
             let subT=_this.newsList[i].title;
-            // console.log(subT)
             _this.newsList[i].title=subT.substring(0,14)+'...'
           }
           if(_this.newsList[i].intro.length>38){
@@ -139,6 +149,14 @@ export default {
         text-align: center;
         margin-top:1rem;
       }
+    }
+    .noData{
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+      color:#666;
+      top:10.5rem;
     }
   }
 </style>

@@ -15,7 +15,7 @@
             <p>需求描述：</p>
           </li>
           <li>
-            <textarea name="name" placeholder="请输入您的需求描述"></textarea>
+            <textarea name="name" placeholder="请输入您的需求描述" v-model="needCon"></textarea>
           </li>
         </ul>
         <ul class="mount">
@@ -23,7 +23,7 @@
             <p>预算金额：</p>
           </li>
           <li>
-            <input type="number" name="" value="" placeholder="请输入您的预算金额">
+            <input type="number" name="" value="" v-model="amount" placeholder="请输入您的预算金额">
           </li>
         </ul>
       </div>
@@ -34,7 +34,7 @@
             <p>联系人：</p>
           </li>
           <li>
-            <input type="text" name="" value="" placeholder="请输入联系人姓名">
+            <input type="text" name="" value="" placeholder="请输入联系人姓名" v-model="contactName">
           </li>
         </ul>
         <ul class="mount">
@@ -42,7 +42,7 @@
             <p>联系电话：</p>
           </li>
           <li>
-            <input type="number" name="" value="" placeholder="请输入联系人电话">
+            <input type="number" name="" value="" placeholder="请输入联系人电话" v-model="contactPhone">
           </li>
         </ul>
       </div>
@@ -54,17 +54,53 @@
 <script>
 import WorkHeader from '@/components/work_header'
 export default {
+  data(){
+    return{
+      needCon:null,//需求详情
+      amount:null,//预算金额
+      contactName:null,//联系人姓名
+      contactPhone:null,//联系人电话
+    }
+  },
   components:{
     WorkHeader
   },
   methods:{
     subNeed(){
-      this.$Indicator.open('提交中...');
-      setTimeout(()=>{
-        this.$Toast('提交成功');
-        this.$Indicator.close();
-        window.history.back()
-      },1000)
+      let _this=this;
+      if(_this.needCon==null){
+        _this.$Toast('请输入需求详情')
+      }else if(_this.amount==null){
+        _this.$Toast('请输入预算金额')
+      }else if(_this.contactName==null){
+        _this.$Toast('请输入联系人姓名')
+      }else if(_this.contactPhone==null){
+        _this.$Toast('请输入联系人电话')
+      }else if(!(/^1[34578]\d{9}$/.test(_this.contactPhone))){
+        _this.$Toast('请输入正确的手机号')
+      }else{
+        _this.$Indicator.open('提交中...');
+        let formData=new FormData();
+        formData.append('content',_this.needCon);
+        formData.append('budget',_this.amount);
+        formData.append('linkman',_this.contactName);
+        formData.append('contact',_this.contactPhone);
+        _this.$axios.post(_this.oUrl+'/saveDemand',formData).then((res)=>{
+          if(res.data.code==0){
+            _this.$Toast('提交成功');
+            _this.$Indicator.close();
+            window.history.back()
+          }else{
+            _this.$Toast(res.data.msg);
+            _this.$Indicator.close();
+          }
+        }).catch((err)=>{
+          console.log(err)
+        })
+      }
+      // setTimeout(()=>{
+
+      // },1000)
     }
   }
 }
@@ -149,10 +185,10 @@ export default {
         width: 80%;
         // background: green;
         input{
-          width: 95%;
+          width: 92%;
           padding-left:.6rem;
           border-radius: 6px;
-          height: 90%;
+          height: 85%;
           border:1px solid #ccc;
         }
       }
@@ -217,10 +253,10 @@ export default {
         width: 80%;
         // background: green;
         input{
-          width: 95%;
+          width: 92%;
           padding-left:.6rem;
           border-radius: 6px;
-          height: 90%;
+          height: 85%;
           border:1px solid #ccc;
         }
       }
