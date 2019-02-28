@@ -48,7 +48,7 @@ export default {
         for(let i in _this.newsList){
           if(_this.newsList[i].title.length>10){
             let subT=_this.newsList[i].title;
-            console.log(subT)
+            // console.log(subT)
             _this.newsList[i].title=subT.substring(0,14)+'...'
           }
           if(_this.newsList[i].intro.length>38){
@@ -56,7 +56,7 @@ export default {
             _this.newsList[i].intro=subX.substring(0,39)+'...'
           }
         };
-        console.log(res);
+        // console.log(res);
       }).catch((err)=>{
         console.log(err)
       })

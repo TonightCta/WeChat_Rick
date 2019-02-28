@@ -51,7 +51,6 @@ export default {
       formData.append('name',_this.userName);
       formData.append('password',_this.userPass);
       _this.$axios.post(_this.oUrl+'/login',formData).then((res)=>{
-
         if(res.data.code===0){
           _this.$Indicator.close();
           _this.userMes_fn(res.data.data);

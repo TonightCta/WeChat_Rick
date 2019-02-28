@@ -1,2 +1,0 @@
-webpackJsonp([9],{"2B91":function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n={components:{Footer:r("TzS0").a}},o={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"order_wapper"},[t("h1",[this._v("这是订单")]),this._v(" "),t("Footer")],1)},staticRenderFns:[]};var s=r("C7Lr")(n,o,!1,function(e){r("BoEK")},"data-v-cb5beac8",null);t.default=s.exports},BoEK:function(e,t){}});
-//# sourceMappingURL=9.02d0f1bcaed8aa4ff1b0.js.map

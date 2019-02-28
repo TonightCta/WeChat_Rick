@@ -93,7 +93,7 @@ export default {
       formData.append('size',3);
       formData.append('page',0);
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition',formData).then((res)=>{
-        console.log(res)
+        // console.log(res)
         _this.newsListT_fn(res.data.data.content);
           for(let i in _this.newsListT){
             if(_this.newsListT[i].title.length>10){
@@ -114,7 +114,7 @@ export default {
       let _this=this;
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type=2&size=3&page=0',).then((res)=>{
         _this.conListT_fn(res.data.data.content);
-        console.log(res)
+        // console.log(res)
         for(let i in _this.conListT){
           if(_this.conListT[i].title.length>10){
             let subT=_this.conListT[i].title;

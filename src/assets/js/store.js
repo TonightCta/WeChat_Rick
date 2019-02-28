@@ -6,6 +6,7 @@ Vue.use(Vuex);
 const store=new Vuex.Store({
   state:{
     token:'1232132132',
+    userID:null,
     newsListT:[],
     conListT:[],
     isBackM:false,//个人中心注册返回
@@ -27,6 +28,9 @@ const store=new Vuex.Store({
     },
     userMes_fn(state,opt){
       state.userMes=opt;
+    },
+    userID_fn(state,opt){
+      state.userID=opt;
     }
   },
   getters:{

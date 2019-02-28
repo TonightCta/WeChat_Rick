@@ -18,7 +18,10 @@
       <i class="iconfont icon-icon19"></i>
 
     </div>
-    <p class="sendCard" @click="sendCards()" v-show="upBtn">提交</p>
+    <p class="sendCard" @click="sendCards()">提交</p>
+    <div class="up_mask"  v-show="upBtn">
+
+    </div>
   </div>
 </template>
 
@@ -30,17 +33,17 @@ export default {
       cardPic:[],//回显列表
       cardFile:[],//上传列表
       isTwo:true,//添加按钮
-      upBtn:false,//提交按钮
+      upBtn:true,//提交按钮
     }
   },
   watch:{
     cardPic(val,oldVal){
       if(val.length>=2){
         this.isTwo=false;
-        this.upBtn=true;
+        this.upBtn=false;
       }else{
         this.isTwo=true;
-        this.upBtn=false;
+        this.upBtn=true;
       }
     }
   },
@@ -170,6 +173,16 @@ export default {
     z-index: 999;
     right:0;
     color:white;
+  }
+  .up_mask{
+    width: 5rem;
+    position: absolute;
+    top:-6.5rem;
+    z-index: 1999;
+     background: linear-gradient(#101013, #2c2d31);
+     opacity: .5;
+    right:0;
+    height: 4rem;
   }
 }
 </style>

@@ -10,17 +10,17 @@
         <img src="../../../static/img/btn_icon.png" alt="">
         <input type="number" v-model="userPhone" placeholder="请输入手机号" name="" value="">
       </li>
-      <li>
+      <!-- <li>
         <img src="../../../static/img/mes_number.png" alt="">
         <input type="text" v-model="nickName" placeholder="请输入登录名" name="" value="">
-      </li>
+      </li> -->
       <li>
         <img src="../../../static/img/mes_pass.png" alt="">
-        <input type="text" v-model="userPass" placeholder="请输入11位密码" name="" value="">
+        <input type="password" v-model="userPass" placeholder="请输入密码" name="" value="">
       </li>
       <li>
         <img src="../../../static/img/btn_pass.png" alt="">
-        <input type="text" v-model="turnPass" placeholder="确认密码" name="" value="">
+        <input type="password" v-model="turnPass" placeholder="确认密码" name="" value="">
       </li>
     </ul>
     <p class="login_btn" @click="regis()">注册</p>
@@ -28,35 +28,53 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex';
 export default {
   data(){
     return{
-      userName:null,
-      userPhone:null,
-      nickName:null,
-      userPass:null,
-      turnPass:null
+      userName:'',
+      userPhone:'',
+      nickName:'',
+      userPass:'',
+      turnPass:''
     }
   },
   methods:{
+    ...mapMutations(['userMes_fn','userID_fn']),
     regis(){
       let _this=this;
       if(_this.userName==''){
         _this.$Toast('请输入姓名')
       }else if(_this.userPhone==''){
         _this.$Toast('请输入手机号')
-      }else if(_this.nickName==''){
-        _this.$Toast('请输入登录名')
+      }else if(!(/^1[34578]\d{9}$/.test(_this.userPhone))){
+        _this.$Toast('请输入正确的手机号')
       }else if(_this.turnPass==''){
         _this.$Toast('请输入登录密码')
+      }else if(_this.userPass!==_this.turnPass){
+        _this.$Toast('两次输入密码不一致')
       }else{
+        _this.$Indicator.open('注册中...')
         let formData=new FormData();
         formData.append('name',this.userName);
         formData.append('phone',this.userPhone);
-        formData.append('username',this.nickName);
+        formData.append('username',this.userName);
         formData.append('password',this.turnPass);
         _this.$axios.post(_this.oUrl+'/saveExternalEngineer',formData).then((res)=>{
-          console.log(res)
+          _this.$Indicator.close();
+          if(res.data.code==0){
+            _this.$Toast('注册成功');
+            _this.userMes_fn(res.data.data);
+            _this.userID_fn(res.data.data.id);
+            _this.$router.push({
+              path:'/mine',
+              query:{
+                color:4
+              }
+            })
+          }else{
+            _this.$Toast(res.data.msg)
+          }
         }).catch((err)=>{
           console.log(err)
         })

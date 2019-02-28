@@ -4,7 +4,50 @@
     <WorkHeader>
       <span>发布需求</span>
     </WorkHeader>
-    <h1>这是发布需求页</h1>
+    <div class="put_bg">
+
+    </div>
+    <div class="put_area">
+      <div class="area_top">
+        <p class="top_title">请填写您的需求</p>
+        <ul class="textarea">
+          <li>
+            <p>需求描述：</p>
+          </li>
+          <li>
+            <textarea name="name" placeholder="请输入您的需求描述"></textarea>
+          </li>
+        </ul>
+        <ul class="mount">
+          <li>
+            <p>预算金额：</p>
+          </li>
+          <li>
+            <input type="number" name="" value="" placeholder="请输入您的预算金额">
+          </li>
+        </ul>
+      </div>
+      <div class="area_bot">
+        <p class="top_title">联系方式</p>
+        <ul class="mount">
+          <li>
+            <p>联系人：</p>
+          </li>
+          <li>
+            <input type="text" name="" value="" placeholder="请输入联系人姓名">
+          </li>
+        </ul>
+        <ul class="mount">
+          <li>
+            <p>联系电话：</p>
+          </li>
+          <li>
+            <input type="number" name="" value="" placeholder="请输入联系人电话">
+          </li>
+        </ul>
+      </div>
+    </div>
+    <p class="put_need" @click="subNeed()">提交</p>
   </div>
 </template>
 
@@ -13,9 +56,189 @@ import WorkHeader from '@/components/work_header'
 export default {
   components:{
     WorkHeader
+  },
+  methods:{
+    subNeed(){
+      this.$Indicator.open('提交中...');
+      setTimeout(()=>{
+        this.$Toast('提交成功');
+        this.$Indicator.close();
+        window.history.back()
+      },1000)
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.put_bg{
+  width: 100%;
+  height:12rem;
+  background: url('../../../static/img/login_bg.png');
+  background-size:100% 100%;
+  margin-top: 5rem;
+}
+.put_area{
+  width: 93%;
+  margin:0 auto;
+  padding-top:2rem;
+  .area_top{
+    width: 100%;
+    padding-bottom:2rem;
+    border-radius: 10px;
+    box-shadow: 0px 0px 30px #999;
+    background: white;
+    overflow-x: hidden;
+    .top_title{
+      width: 100%;
+      font-size: 1.4rem;
+      padding-top:.5rem;
+      // margin-left:.5rem;
+      padding-bottom:.5rem;
+      box-sizing: border-box;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+    .textarea{
+      width: 100%;
+      display: flex;
+      margin-bottom: 2rem;
+      li{
+        height: 10rem;
+      }
+      li:nth-child(1){
+        width: 20%;
+        p{
+          width: 100%;
+          font-size: 1.2rem;
+          text-align: right;
+        }
+      }
+      li:nth-child(2){
+        width: 80%;
+        textarea{
+          width: 95%;
+          border-radius: 8px;
+          height:100%;
+          resize: none;
+          outline: none;
+          padding-left:.5rem;
+          padding-top: .5rem;
+          border:1px solid #ccc;
+        }
+      }
+    }
+    .mount{
+      width: 100%;
+      display: flex;
+      li{
+        height: 3.5rem;
+      }
+      li:nth-child(1){
+        width: 20%;
+        // background: yellow;
+        p{
+          width: 100%;
+          font-size: 1.2rem;
+          text-align: right;
+          line-height: 3.5rem;
+        }
+      }
+      li:nth-child(2){
+        width: 80%;
+        // background: green;
+        input{
+          width: 95%;
+          padding-left:.6rem;
+          border-radius: 6px;
+          height: 90%;
+          border:1px solid #ccc;
+        }
+      }
+    }
+  }
+  .area_bot{
+    width: 100%;
+    padding-bottom:2rem;
+    border-radius: 10px;
+    box-shadow: 0px 0px 30px #999;
+    background: white;
+    overflow-x: hidden;
+    margin-top: 2rem;
+    .top_title{
+      width: 100%;
+      font-size: 1.4rem;
+      padding-top:.5rem;
+      // margin-left:.5rem;
+      padding-bottom:.5rem;
+      box-sizing: border-box;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+    .textarea{
+      width: 100%;
+      display: flex;
+      margin-bottom: 2rem;
+      li{
+        height: 10rem;
+      }
+      li:nth-child(1){
+        width: 20%;
+        p{
+          width: 100%;
+          font-size: 1.2rem;
+          text-align: right;
+        }
+      }
+      li:nth-child(2){
+        width: 80%;
+      }
+    }
+    .mount{
+      width: 100%;
+      display: flex;
+      li{
+        height: 3.5rem;
+        margin-bottom: 1rem;
+      }
+      li:nth-child(1){
+        width: 20%;
+        // background: yellow;
+        p{
+          width: 100%;
+          font-size: 1.2rem;
+          text-align: right;
+          line-height: 3.5rem;
+        }
+      }
+      li:nth-child(2){
+        width: 80%;
+        // background: green;
+        input{
+          width: 95%;
+          padding-left:.6rem;
+          border-radius: 6px;
+          height: 90%;
+          border:1px solid #ccc;
+        }
+      }
+    }
+  }
+}
+.put_need{
+  width: 60%;
+  height: 3.5rem;
+  background: url('../../../static/img/btn_bg2.png');
+  background-size: 100% 100%;
+  margin:0 auto;
+  border-radius: 8px;
+  box-shadow: 0px 10px 30px #999;
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 2rem;
+  line-height:3.5rem;
+  color:white;
+}
 </style>
