@@ -2,20 +2,20 @@
   <div class="footer_wapper">
     <ul class="icon_list">
         <router-link :to="{path:'/home',query:{color:1}}" tag="li" :class="{active:color==1}" @click.native="color==1">
-          <i class="iconfont icon-shouye1"></i>
+          <i class="iconfont icon-yemian"></i>
           <br>
           <span>首页</span>
         </router-link>
         <router-link :to="{path:'/order',query:{color:2}}" tag="li" :class="{active:color==2}" @click.native="color==2">
-          <i class="iconfont icon-shouye"></i>
+          <i class="iconfont icon-dingdan"></i>
           <span>订单</span>
         </router-link>
         <router-link :to="{path:'/about',query:{color:3}}" tag="li" :class="{active:color==3}" @click.native="color==3">
-          <i class="iconfont icon-guanyuwomenkaobei" style="font-size:1.7rem;"></i>
+          <i class="iconfont icon-guanyuwomen1" style="font-size:1.7rem;"></i>
           <span>关于我们</span>
         </router-link>
         <router-link :to="{path:'/mine',query:{color:4}}" tag="li" :class="{active:color==4}" @click.native="color==4">
-          <i class="iconfont icon-wode"></i>
+          <i class="iconfont icon-wd"></i>
           <span>个人中心</span>
         </router-link>
     </ul>
@@ -47,9 +47,9 @@ export default {
 
 <style lang="scss" scoped>
 .active{
-  color:black!important;
+  color:#eb7a1d!important;
   span{
-    color:black!important;
+    color:#eb7a1d!important;
   }
 }
 .footer_wapper{
@@ -73,7 +73,7 @@ export default {
       color: #666;
       position: relative;
       i{
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
       span{
         display: inline-block;
@@ -85,6 +85,11 @@ export default {
         // top:0;
         font-size: 1.2rem;
         top:1.8rem;
+      }
+    }
+    li:nth-child(2){
+      i{
+        font-size: 1.7rem;
       }
     }
   }

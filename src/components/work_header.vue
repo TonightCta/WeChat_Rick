@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="header_wapper">
     <i class="iconfont icon-fanhui"  @click="backPage()"></i>
-    <i class="iconfont icon-fanhui"  @click="backOne()" v-show="isBackM"></i>
-    <i class="iconfont icon-fanhui"  @click="backTne()" v-show="isBackT"></i>
     <slot>
       <span>新闻中心</span>
     </slot>
@@ -27,22 +25,6 @@ export default {
   methods:{
     backPage(){
       window.history.back()
-    },
-    backOne(){
-      this.$router.push({
-        path:'/mine',
-        query:{
-          color:4
-        }
-      })
-    },
-    backTne(){
-      this.$router.push({
-        path:'/home',
-        query:{
-          color:1
-        }
-      })
     }
   },
   mounted(){

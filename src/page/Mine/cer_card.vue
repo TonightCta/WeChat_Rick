@@ -27,6 +27,7 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
+import {mapState} from 'vuex'
 export default {
   data(){
     return{
@@ -46,6 +47,12 @@ export default {
         this.upBtn=true;
       }
     }
+  },
+  computed:{
+    ...mapState(['userMes'])
+  },
+  mounted(){
+    console.log(this.userMes)
   },
   methods:{
     upCardIs(e){//上传身份证照片
@@ -75,17 +82,29 @@ export default {
       this.cardFile.splice(index,1);
     },
     sendCards(){//提交认证数据
-      this.$Indicator.open('提交中...');
-      setTimeout(()=>{
-        this.$Indicator.close();
-        this.$Toast('提交成功');
-        this.$router.push({
-          path:'/mine',
-          query:{
-            color:4
-          }
-        })
-      },1000)
+      let _vm=this;
+      console.log(_vm.cardFile)
+      _vm.$Indicator.open('提交中...');
+      let formData=new FormData();
+      formData.append('id',_vm.userMes.engineerVO.id)
+      formData.append('identityUploadFiles',_vm.cardFile)
+      _vm.$axios.post('http://10.0.0.31:8080/mobile/uploadEngineerFile',formData).then((res)=>{
+        _vm.$Indicator.close();
+        console.log(res);
+        if(res.data.code==0){
+          _vm.$Toast('提交成功');
+          _vm.$router.push({
+            path:'/mine',
+            query:{
+              color:4
+            }
+          })
+        }
+      }).catch((err)=>{
+        _vm.$Indicator.close();
+        _vm.$Toast('未知错误')
+        console.log(err)
+      })
     }
   },
   components:{

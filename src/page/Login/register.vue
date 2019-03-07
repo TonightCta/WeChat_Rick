@@ -1,6 +1,12 @@
 <!-- 注册页 -->
 <template lang="html">
   <div class="register_page">
+    <WorkHeader>
+      <span>注册</span>
+    </WorkHeader>
+    <div class="login_pic">
+      <img src="../../../static/img/login_bg2.png" alt="">
+    </div>
     <ul>
       <li>
         <img src="../../../static/img/regi_icon.png" alt="">
@@ -30,14 +36,18 @@
 
 <script>
 import {mapMutations} from 'vuex';
+import WorkHeader from '@/components/work_header'
 export default {
+  components:{
+    WorkHeader
+  },
   data(){
     return{
-      userName:null,
-      userPhone:null,
-      nickName:null,
-      userPass:null,
-      turnPass:null,
+      userName:null,//用户姓名
+      userPhone:null,//用户手机
+      nickName:null,//用户登录名
+      userPass:null,//用户密码
+      turnPass:null,//确认密码
       inviCode:null,//邀请码
     }
   },
@@ -63,7 +73,7 @@ export default {
         formData.append('username',this.userName);
         formData.append('password',this.turnPass);
         formData.append('recommendCode',this.inviCode);
-        _this.$axios.post(_this.oUrl+'/saveExternalEngineer',formData).then((res)=>{
+        _this.$axios.post('http://10.0.0.31:8080/saveExternalEngineer',formData).then((res)=>{
           _this.$Indicator.close();
           if(res.data.code==0){
             _this.$Toast('注册成功');
@@ -90,13 +100,30 @@ export default {
 <style lang="scss" scoped>
 .register_page{
   width: 100%;
+  .login_pic{
+    width: 100%;
+    height: 12rem;
+    background: url('../../../static/img/login_bg.png');
+    background-size: 100% 100%;
+    position: relative;
+    margin-top: 5rem;
+    img{
+      width: 12rem;
+      height: 7rem;
+      position:absolute;
+      left:50%;
+      top:50%;
+      margin-left:-6rem;
+      margin-top:-3.5rem;
+    }
+  }
   ul{
     width: 70%;
     margin:0 auto;
     li{
       width: 100%;
       height: 5rem;
-      box-shadow: 0px 10px 30px #999;
+      box-shadow: 0px 8px 15px #ccc;
       background: white;
       border-radius:10px;
       margin-top:2rem;
@@ -126,7 +153,7 @@ export default {
     background-size: 100% 100%;
     margin:0 auto;
     border-radius: 8px;
-    box-shadow: 0px 10px 30px #999;
+    box-shadow: 0px 8px 15px #ccc;
     margin-top: 2rem;
     text-align: center;
     font-size: 2rem;

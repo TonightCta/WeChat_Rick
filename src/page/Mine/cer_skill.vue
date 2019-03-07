@@ -18,7 +18,10 @@
       <i class="iconfont icon-icon19"></i>
 
     </div>
-    <p class="sendCard" @click="sendCards()" v-show="upBtn">提交</p>
+    <p class="sendCard" @click="sendCards()">提交</p>
+    <div class="up_mask"  v-show="upBtn">
+
+    </div>
   </div>
 </template>
 
@@ -30,16 +33,16 @@ export default {
       skillsPic:[],
       skillsFile:[],
       isTwo:true,
-      upBtn:false
+      upBtn:true
     }
   },
   watch:{
     skillsPic(val,oldVal){
       console.log(val.length);
-      if(val.length>=1){
-        this.upBtn=true;
+      if(val.length>=2){
+        this.upBtn=false;
       }else{
-        this.upBtn=false
+        this.upBtn=true
       }
       if(val.length>=4){
         this.isTwo=false;
@@ -76,17 +79,28 @@ export default {
       this.skillsFile.splice(index,1);
     },
     sendCards(){//提交认证数据
-      this.$Indicator.open('提交中...');
-      setTimeout(()=>{
-        this.$Indicator.close();
-        this.$Toast('提交成功');
-        this.$router.push({
-          path:'/mine',
-          query:{
-            color:4
-          }
-        })
-      },1000)
+      let _vm=this;
+      _vm.$Indicator.open('提交中...');
+      let _form=new FormData();
+      // _form.append('')
+      // _form.append('')
+      _vm.$axios.post(_vm.oUrl+'',_form).then((res)=>{
+        _vm.$Indicator.close();
+        console.log(res);
+        if(res.data.code==0){
+          _vm.$Toast('提交成功');
+          _vm.$router.push({
+            path:'/mine',
+            query:{
+              color:4
+            }
+          })
+        }
+      }).catch((err)=>{
+        _vm.$Indicator.close();
+        _vm.$Toast('未知错误')
+        console.log(err)
+      })
     }
   },
   components:{
@@ -173,6 +187,16 @@ export default {
     z-index: 999;
     right:0;
     color:white;
+  }
+  .up_mask{
+    width: 5rem;
+    position: absolute;
+    top:-6.5rem;
+    z-index: 1999;
+     background: linear-gradient(#101013, #2c2d31);
+     opacity: .5;
+    right:0;
+    height: 4rem;
   }
 }
 </style>

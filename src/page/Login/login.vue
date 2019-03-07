@@ -2,19 +2,19 @@
 <template lang="html">
   <div class="login">
     <WorkHeader>
-      <span>登录/注册</span>
+      <span>登录</span>
     </WorkHeader>
-    <div class="change_login">
+    <!-- <div class="change_login">
       <ul>
         <router-link to="/register" tag="li">注册</router-link>
         <router-link to="/Tlogin" tag="li">登录</router-link>
       </ul>
-    </div>
+    </div> -->
     <div class="login_pic">
       <img src="../../../static/img/login_bg2.png" alt="">
     </div>
     <div class="login_view">
-      <router-view></router-view>
+      <!-- <router-view></router-view> -->
     </div>
   </div>
 </template>
@@ -72,6 +72,7 @@ export default {
   background: url('../../../static/img/login_bg.png');
   background-size: 100% 100%;
   position: relative;
+  margin-top: 5rem;
   img{
     width: 12rem;
     height: 7rem;

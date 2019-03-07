@@ -1,6 +1,12 @@
 <!-- 登录页 -->
 <template lang="html">
   <div class="Tlogin_page">
+    <WorkHeader>
+      <span>登录</span>
+    </WorkHeader>
+    <div class="login_pic">
+      <img src="../../../static/img/login_bg2.png" alt="">
+    </div>
     <ul>
       <li>
         <img src="../../../static/img/mes_number.png" alt="">
@@ -13,17 +19,25 @@
       </li>
     </ul>
     <p class="login_btn" @click="login()">登录</p>
-    <p class="forget_pass">忘记密码?</p>
+    <p class="forget_pass">
+      <span>忘记密码？</span>
+      <span>/</span>
+      <router-link to="/register" tag='span'>立即注册</router-link>
+    </p>
   </div>
 </template>
 
 <script>
+import WorkHeader from '@/components/work_header'
 import {mapMutations,mapState} from 'vuex';
 export default {
+  components:{
+    WorkHeader
+  },
   data(){
     return{
-      userName:'',//用户登录名
-      userPass:'',//用户密码
+      userName:null,//用户登录名
+      userPass:null,//用户密码
       isPass:false
     }
   },
@@ -32,7 +46,7 @@ export default {
       if(val!==''){
         this.isPass=true;
       }else{
-        this.isPass=false
+        this.isPass=false;
       }
     }
   },
@@ -46,28 +60,36 @@ export default {
     },
     login(){
       let _this=this;
-      _this.$Indicator.open('登录中...')
-      let formData=new FormData();
-      formData.append('name',_this.userName);
-      formData.append('password',_this.userPass);
-      _this.$axios.post(_this.oUrl+'/login',formData).then((res)=>{
-        if(res.data.code===0){
+      if(_this.userName==null){
+        _this.$Toast('请输入您的账号')
+      }else if(_this.userPass==null){
+        _this.$Toast('请输入您的密码')
+      }else{
+        _this.$Indicator.open('登录中...')
+        let formData=new FormData();
+        formData.append('name',_this.userName);
+        formData.append('password',_this.userPass);
+        _this.$axios.post('http://10.0.0.31:8080/login',formData).then((res)=>{
+          if(res.data.code===0){
+            console.log(res)
+            _this.$Indicator.close();
+            _this.userMes_fn(res.data.data);
+            _this.$Toast('登录成功')
+            _this.$router.push({
+              path:'/mine',
+              query:{
+                color:4
+              }
+            })
+          }else{
+            _this.$Indicator.close();
+            _this.$Toast(res.data.msg)
+          }
+        }).catch((err)=>{
           _this.$Indicator.close();
-          _this.userMes_fn(res.data.data);
-          _this.$Toast('登录成功')
-          _this.$router.push({
-            path:'/mine',
-            query:{
-              color:4
-            }
-          })
-        }else{
-          _this.$Indicator.close();
-          _this.$Toast(res.data.msg)
-        }
-      }).catch((err)=>{
-        console.log(err);
-      })
+          console.log(err);
+        })
+      }
     }
   }
 }
@@ -76,13 +98,30 @@ export default {
 <style lang="scss" scoped>
 .Tlogin_page{
   width: 100%;
+  .login_pic{
+    width: 100%;
+    height: 12rem;
+    background: url('../../../static/img/login_bg.png');
+    background-size: 100% 100%;
+    position: relative;
+    margin-top: 5rem;
+    img{
+      width: 12rem;
+      height: 7rem;
+      position:absolute;
+      left:50%;
+      top:50%;
+      margin-left:-6rem;
+      margin-top:-3.5rem;
+    }
+  }
   ul{
     width: 70%;
     margin:0 auto;
     li{
       width: 100%;
       height: 5rem;
-      box-shadow: 0px 10px 30px #999;
+      box-shadow: 0px 8px 15px #ccc;
       background: white;
       border-radius:10px;
       margin-top:2rem;
@@ -117,8 +156,8 @@ export default {
     background-size: 100% 100%;
     margin:0 auto;
     border-radius: 8px;
-    box-shadow: 0px 10px 30px #999;
-    margin-top: 5rem;
+    box-shadow: 0px 8px 15px #999;
+    margin-top: 3rem;
     text-align: center;
     font-size: 2rem;
     line-height: 4rem;
@@ -131,7 +170,16 @@ export default {
     margin-top: 3rem;
     font-size: 1.3rem;
     color:#eb7a1d;
-    text-decoration:underline;
+    span:nth-child(1){
+      text-decoration:underline;
+    }
+    span:nth-child(2){
+      margin-left: 1rem;
+      margin-right:1rem;
+    }
+    span:nth-child(3){
+      text-decoration:underline;
+    }
   }
 }
 </style>

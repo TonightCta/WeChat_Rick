@@ -4,7 +4,7 @@
     <!-- 个人资料块 -->
     <div class="person_mes">
       <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic" @click="goMes()">
-      <router-link to="/login" tag="p" class="person_oper" @click.native="mineCon()">
+      <router-link to="/TLogin" tag="p" class="person_oper" @click.native="mineCon()">
         {{nickName}}
       </router-link>
       <div class="person_del">
@@ -25,7 +25,7 @@
           <span>邮箱：</span>
           <span>{{userEmail}}</span>
         </p>
-        <span class="iconfont icon-icon y"></span>
+        <span class="iconfont icon-icon y" @click="cert()" ref="certColor"></span>
       </div>
       <!-- 阴影盒子 -->
       <div class="person_mask">
@@ -67,21 +67,32 @@
 
 <script>
 import {mapMutations,mapState} from 'vuex'
+import { MessageBox } from 'mint-ui'
 import Footer from '@/components/footer_wapper'
 export default {
   inject:['reload'],
   data(){
     return{
-      nickName:'登录/注册',
+      nickName:'请登录',
       userPhone:'-',
       userDate:'-',
-      userEmail:'-'
+      userEmail:'-',
+      messageTitle:'提示',//操作盒子标题
+      messageCon:'请先进行身份认证',//操作盒子内容
+      pathdyn:null,//跳转地址
     }
   },
   computed:{
     ...mapState(['userMes'])
   },
   mounted(){
+    if(this.userMes.engineerVO.state==0){
+      this.$refs.certColor.style.color='#999'
+    }else if(this.userMes.engineerVO.state==1){
+      this.$refs.certColor.style.color='black'
+    }else{
+      this.$refs.certColor.style.color='#eb7a1d'
+    }
     if(this.userMes.nickname){
       this.nickName=this.userMes.nickname
     }
@@ -109,6 +120,36 @@ export default {
     mineCon(){//进入登录注册页
       this.isBackM_fn(true);
       this.isBackT_fn(false);
+    },
+
+    cert(){//申请认证
+      let _this=this;
+      _this.$axios.post(_this.oUrl+'').then((res)=>{
+        if(res.data.code==0){
+          _this.messageTitle=res.data.data.title;
+          _this.messageCon=res.data.data.con;
+          if(res.data.data.delcode==0){
+            this.pathdyn='/personMes'
+          }else if(res.data.data.delcode==1){
+            this.pathdyn='/cerCard'
+          }else{
+            this.pathdyn='/cerSkill'
+          }
+          setTimeout(()=>{
+            MessageBox.confirm(_this.messageCon,_this.messageTitle,{confirmButtonText:'跳转',cancelButtonText:'返回'}).then(action => {
+              _this.$router.push({
+                path:_this.pathdyn,
+                isDis:false
+              })
+            });
+          },500)
+        }else{
+          _this.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        _this.$Toast('未知错误')
+        console.log(err)
+      })
     }
   },
   components:{
@@ -173,7 +214,7 @@ export default {
     }
     .y{
       font-size: 2rem;
-      color:#f9871b;
+      color:#999;
       position: absolute;
       left:50%;
       top:20.2rem;

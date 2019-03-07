@@ -28,10 +28,11 @@
           <img src="../../../static/img/mes_location.png" alt="">
           <span>服务范围:</span>
           <span>
-            <input type="text" v-model="userLoca" name="" value=""
+            <input type="text" v-model="choseText" name="" value=""
             placeholder="请输入您的工作地址"
             >
             <span class="mes_mask" v-show="disabled"></span>
+            <span class="choseVince" @click="choseVins()"></span>
           </span>
         </li>
         <li>
@@ -87,7 +88,42 @@
         <button type="button" name="button" v-show="!disabled">保存</button>
       </p>
     </div>
+    <div class="locaBox" ref="locaBox">
+      <p class="locaBox_title">
+        <span @click="cancelChose()">取消</span>
+        <span @click="turnChose()">确认</span>
+      </p>
+      <input type="text" name="" value="" v-model="choseText">
+      <span class="text_mask"></span>
+      <div class="localist">
+        <ul class="loca_vince">
+          <li v-for="(item,index) in cityList"
+          @click="choseInV(index)"
+          ref="InV"
+          >
+          {{item.name}}</li>
+        </ul>
+        <ul class="loca_city">
+          <li ref="allchose">
+            <p @click="allChose()">全选</p>
+            <span class="cityMask" ref="allicon" @click="cancelAll()">
+              <i class="iconfont icon-xuanzhong"></i>
+            </span>
+          </li>
+          <li v-for="(itemlea,index) in delArr"
+          ref="city"
+          >
+          <p @click="choseCity(index)">{{itemlea.nameLevel}}</p>
+          <span class="cityMask" @click="delCity(index)">
+            <i class="iconfont icon-xuanzhong"></i>
+          </span>
+        </li>
+      </ul>
+      </div>
+    </div>
+    <div class="locaMask" v-show="showloca" ref="locaMask"  @click="cancelChose()">
 
+    </div>
   </div>
 </template>
 
@@ -107,7 +143,43 @@ export default {
       userEmail:'-',//用户邮箱
       userPhone:'-',//用户联系电话
       placeArr:[],
-      delArr:[]
+      delArr:[],
+      showloca:false,
+      choseText:'-',
+      choseVal:null,//当前选择的省份
+      isAll:[],//是否全选
+      cityList:[
+        {
+          name:'北京',
+          level:[
+            {nameLevel:'北京市'}
+          ]
+        },
+        {
+          name:'河北省',
+          level:[
+            {nameLevel:'唐山市'},
+            {nameLevel:'秦皇岛市'},
+            {nameLevel:'石家庄市'},
+          ]
+        },
+        {
+          name:'河南省',
+          level:[
+            {nameLevel:'郑州市'},
+            {nameLevel:'安阳市'},
+            {nameLevel:'洛阳市'},
+          ]
+        },
+        {
+          name:'黑龙江省',
+          level:[
+            {nameLevel:'齐齐哈尔市'},
+            {nameLevel:'漠河市'},
+            {nameLevel:'哈尔滨市'},
+          ]
+        },
+      ]
     }
   },
 
@@ -115,8 +187,8 @@ export default {
     ...mapState(['userMes'])
   },
   mounted(){
+    this.choseVal=this.cityList[0].name;
     this.disabled=this.$route.query.isDis;
-    console.log(this.userMes);
     if(this.userMes.name){//登录ID
       this.userId=this.userMes.name;
     }
@@ -154,6 +226,7 @@ export default {
     if(this.userMes.mobile){//用手电话
       this.userPhone=this.userMes.mobile
     }
+    this.delArr=this.cityList[0].level;
   },
   methods:{
     saveMes(){
@@ -163,6 +236,124 @@ export default {
         this.$Toast('保存成功');
         window.history.back()
       },1000)
+    },
+    choseVins(){//地址选择
+      this.showloca=true;
+      this.$refs.locaBox.style.bottom='0'
+      setTimeout(()=>{
+        this.$refs.locaMask.style.opacity='0.8'
+      })
+    },
+    cancelChose(){//取消选择
+      this.$refs.locaMask.style.opacity='0'
+      this.$refs.locaBox.style.bottom='-100%'
+      setTimeout(()=>{
+        this.showloca=false;
+      })
+    },
+    choseInV(index){//选择省份
+      this.$refs.allchose.style.color='black';
+      this.$refs.allicon.style.display='none';
+      setTimeout(()=>{
+        for(let i in this.$refs.InV){
+          this.$refs.InV[index].style.color='#eb7a1d'
+          this.$refs.InV[i].style.color='black';
+        };
+      })
+      this.delArr=this.cityList[index].level;
+      this.choseVal=this.cityList[index].name;
+      for(let x in this.$refs.city){
+        this.$refs.city[x].style.color='black';
+        this.$refs.city[x].children[1].style.display='none'
+      };
+      setTimeout(()=>{
+        for(let y in this.placeArr){
+          let indexV=[];
+          let a=[];
+          for(let o in this.delArr){
+            a.push(this.delArr[o].nameLevel)
+          }
+          if(a.indexOf(this.getCaption(this.placeArr[y]))!=-1){
+            this.$refs.city[a.indexOf(this.getCaption(this.placeArr[y]))].children[1].style.display='block'
+            this.$refs.city[a.indexOf(this.getCaption(this.placeArr[y]))].style.color='#eb7a1d'
+          }
+        }
+      });
+      for(let q in this.isAll){
+        if(this.choseVal===this.isAll[q]){
+          this.$refs.allchose.style.color='#eb7a1d';
+          this.$refs.allicon.style.display='block';
+        }else{
+          this.$refs.allchose.style.color='black';
+          this.$refs.allicon.style.display='none';
+        }
+      }
+    },
+    getCaption(obj){
+        var index=obj.lastIndexOf("\-");
+        obj=obj.substring(index+1,obj.length);
+        return obj;
+    },
+    choseCity(index){//选择城市
+      let _vm=this;
+      _vm.placeArr.push(_vm.choseVal+'-'+_vm.delArr[index].nameLevel);
+
+      _vm.choseText=_vm.placeArr.join('/');
+      _vm.$refs.city[index].style.color='#eb7a1d';
+      _vm.$refs.city[index].children[1].style.display='block';
+    },
+    delCity(index){//删除当前选中
+      let _vm=this;
+      let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+_vm.delArr[index].nameLevel);
+      _vm.placeArr.splice(indexT,1)
+      _vm.choseText=_vm.placeArr.join('/');
+      _vm.$refs.city[index].children[1].style.display='none';
+      _vm.$refs.city[index].style.color='black';
+    },
+    allChose(){//全选
+      this.$refs.allchose.style.color='#eb7a1d';
+      this.$refs.allicon.style.display='block';
+      for(let i in this.$refs.city){
+        this.$refs.city[i].style.color='#eb7a1d';
+        this.$refs.city[i].children[1].style.display='block';
+      }
+      for(let y in this.delArr){
+        let indexD=this.placeArr.indexOf(this.choseVal+'-'+this.delArr[y].nameLevel);
+        this.placeArr.splice(indexD,1);
+        setTimeout(()=>{
+          this.placeArr.push(this.choseVal+'-'+this.delArr[y].nameLevel);
+          this.choseText=this.placeArr.join('/');
+
+        })
+      };
+      this.isAll.push(this.choseVal);
+    },
+    cancelAll(){//取消全选
+      let _vm=this;
+      _vm.$refs.allchose.style.color='black';
+      _vm.$refs.allicon.style.display='none';
+      for(let l in this.isAll){
+        let indexI=this.isAll.indexOf(this.choseVal);
+        this.isAll.splice(indexI,1);
+      }
+      for(let i in _vm.$refs.city){
+        _vm.$refs.city[i].style.color='black';
+        _vm.$refs.city[i].children[1].style.display='none';
+      };
+      for(let r in _vm.delArr){
+        let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+_vm.delArr[r].nameLevel)
+        let a=[]
+        _vm.placeArr.splice(indexT,1)
+        this.choseText=this.placeArr.join('/');
+      };
+
+    },
+    turnChose(){//确认选中
+      this.$refs.locaMask.style.opacity='0'
+      this.$refs.locaBox.style.bottom='-100%'
+      setTimeout(()=>{
+        this.showloca=false;
+      })
     }
   },
   components:{
@@ -172,6 +363,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.person_mes{
+  // height: 100%;
+  position: relative;
+  // overflow-y: hidden;
+  padding-bottom: 4rem;
+}
 .personBor{
   border-bottom:1px solid #999;
 }
@@ -210,7 +407,15 @@ export default {
         position: absolute;
         background: black;
         opacity: 0;
-        left:5%;
+        left:8%;
+      }
+      .choseVince{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: black;
+        opacity: 0;
+        left:8%;
       }
       input{
         margin-left: 5.5rem;
@@ -225,7 +430,7 @@ export default {
   }
   .saveMes{
     position: absolute;
-    bottom:1rem;
+    bottom:0rem;
     width: 92%;
     button{
       width: 100%;
@@ -234,7 +439,106 @@ export default {
       background: #eb7a1d;
       color:white;
     }
+  };
+
+}
+.locaBox{
+  width: 100%;
+  height: 50%;
+  background: white;
+  position: fixed;
+  bottom:-100%;
+  transition: 1s all;
+  z-index: 10;
+  .locaBox_title{
+    width: 100%;
+    height: 3rem;
+    // background: red;
+    line-height: 3rem;
+    display: flex;
+    border-bottom:1px solid #ccc;
+    span{
+      display: inline-block;
+      width: 50%;
+      font-size: 1.4rem;
+      padding-left:3rem;
+      padding-right:3rem;
+    }
+    span:nth-child(2){
+      text-align: right;
+      color:#eb7a1d;
+    }
   }
+  input{
+    width: 100%;
+    height: 3.5rem;
+    padding-left:1rem;
+    border-bottom:1px solid #ccc;
+  }
+  .text_mask{
+    width: 100%;
+    height: 3.8rem;
+    position: absolute;
+    top:3rem;
+    left:0;
+  }
+  .localist{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    ul{
+      li{
+        height: 3.5rem;
+        font-size: 1.3rem;
+        text-align: center;
+        line-height:3.5rem;
+      }
+    }
+    .loca_vince{
+      width: 25%;
+      height: 100%;
+      box-sizing: border-box;
+      border-right:1px solid #ccc;
+      li:nth-child(1){
+        color:#eb7a1d;
+      }
+    }
+    .loca_city{
+      width: 75%;
+      height: 100%;
+      li{
+        position: relative;
+        .cityMask{
+          position: absolute;
+          width: 100%;
+          height:100%;
+          background: rgba(0,0,0,0);
+          position: absolute;
+          top:0;
+          left:0;
+          display: none;
+          i{
+            font-size: 1.2rem;
+            font-weight: bold;
+            color:#eb7a1d;
+            position: absolute;
+            right:3rem;
+          }
+        }
+      }
+    }
+  }
+}
+.locaMask{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: rgba(0,0,0,.5);
+  top:0;
+  left:0;
+  z-index: 1;
+  transition: 1s all;
+  opacity: 0;
 }
 
 </style>

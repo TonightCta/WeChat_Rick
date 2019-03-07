@@ -88,19 +88,16 @@ export default new Router({
       path:'/login',//登录/注册
       name:'Login',
       component:resolve=>require(['@/page/Login/login'],resolve),
-      children:[
-        {
-          path:'/register',//注册页
-          name:'Register',
-          component:resolve=>require(['@/page/Login/register'],resolve)
-        },
-        {
-          path:'/Tlogin',//登录页
-          name:'TLogin',
-          component:resolve=>require(['@/page/Login/Tlogin'],resolve)
-        }
-      ],
-      redirect:'/register'
+    },
+    {
+      path:'/register',//注册页
+      name:'Register',
+      component:resolve=>require(['@/page/Login/register'],resolve)
+    },
+    {
+      path:'/Tlogin',//登录页
+      name:'TLogin',
+      component:resolve=>require(['@/page/Login/Tlogin'],resolve)
     },
     {
       path:'/takeOrder',//接单页

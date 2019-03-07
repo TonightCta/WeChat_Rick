@@ -70,3 +70,6 @@ input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
 .mint-loadmore-text {
   font-size: 1.2rem;
 }
+.mint-msgbox-confirm{
+  color:#eb7a1d!important;
+}
