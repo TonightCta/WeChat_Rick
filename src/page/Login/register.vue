@@ -73,12 +73,15 @@ export default {
         formData.append('username',this.userName);
         formData.append('password',this.turnPass);
         formData.append('recommendCode',this.inviCode);
-        _this.$axios.post('http://10.0.0.31:8080/saveExternalEngineer',formData).then((res)=>{
+        _this.$axios.post(_this.oUrl+'/saveExternalEngineer',formData).then((res)=>{
           _this.$Indicator.close();
           if(res.data.code==0){
             _this.$Toast('注册成功');
             _this.userMes_fn(res.data.data);
             _this.userID_fn(res.data.data.id);
+            window.localStorage.setItem('Uid',res.data.data.id);
+            window.localStorage.setItem('name',res.data.data.nickname);
+            window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
             _this.$router.push({
               path:'/mine',
               query:{

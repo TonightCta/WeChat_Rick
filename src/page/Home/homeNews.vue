@@ -5,7 +5,7 @@
     <div class="home_newsDeta">
       <ul>
         <li v-for="(item,index) in newsListT" @click="newsDeHome(index)">
-          <img v-lazy="`http://hexsoft.top:8080/${item.imgName}`" alt="">
+          <img v-lazy="`http://rightservicetech.com:8080/${item.imgName}`" alt="">
           <span class="home_newsDeta_title">{{item.title}}</span>
           <span class="home_newsDeta_de">{{item.intro}}</span>
           <span class="home_newsDeta_time">{{item.timeStr}}</span>
@@ -95,7 +95,7 @@ export default {
       formData.append('size',3);
       formData.append('page',0);
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition',formData).then((res)=>{
-        // console.log(res)
+        console.log(res)
         _this.newsListT_fn(res.data.data.content);
           for(let i in _this.newsListT){
             if(_this.newsListT[i].title.length>10){

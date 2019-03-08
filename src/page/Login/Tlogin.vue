@@ -69,9 +69,11 @@ export default {
         let formData=new FormData();
         formData.append('name',_this.userName);
         formData.append('password',_this.userPass);
-        _this.$axios.post('http://10.0.0.31:8080/login',formData).then((res)=>{
+        _this.$axios.post(_this.oUrl+'/login',formData).then((res)=>{
           if(res.data.code===0){
-            console.log(res)
+            window.localStorage.setItem('Uid',res.data.data.id);
+            window.localStorage.setItem('name',res.data.data.nickname);
+            window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
             _this.$Indicator.close();
             _this.userMes_fn(res.data.data);
             _this.$Toast('登录成功')

@@ -36,8 +36,11 @@ export default {
     }
   },
   mounted(){
-    this.color=1;
-    this.color=this.$route.query.color;
+    if(this.$route.query.color){
+      this.color=this.$route.query.color;
+    }else{
+      this.color=1;
+    }
   },
   methods:{
 

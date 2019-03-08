@@ -86,6 +86,13 @@ export default {
     ...mapState(['userMes'])
   },
   mounted(){
+    console.log(window.localStorage.getItem('name'))
+    if(window.localStorage.getItem('name')){
+      this.nickName=window.localStorage.getItem('name');
+    }
+    if(window.localStorage.getItem('phone')){
+      this.userPhone=window.localStorage.getItem('phone')
+    }
     if(this.userMes.engineerVO.state==0){
       this.$refs.certColor.style.color='#999'
     }else if(this.userMes.engineerVO.state==1){
@@ -93,15 +100,11 @@ export default {
     }else{
       this.$refs.certColor.style.color='#eb7a1d'
     }
-    if(this.userMes.nickname){
-      this.nickName=this.userMes.nickname
-    }
+
     if(this.userMes.email){
       this.userEmail=this.userMes.email
     }
-    if(this.userMes.engineerVO){
-      this.userPhone=this.userMes.engineerVO.phone
-    }
+
     if(this.userMes.engineerVO){
       this.userDate=this.userMes.engineerVO.workYear
     }

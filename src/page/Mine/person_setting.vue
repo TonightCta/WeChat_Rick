@@ -32,6 +32,9 @@ export default {
     logOut(){//注销登录
       this.$Indicator.open('注销中...');
       this.userMes_fn('');
+      window.localStorage.clear('name');
+      window.localStorage.clear('Uid');
+      window.localStorage.clear('phone');
       setTimeout(()=>{
         this.$Indicator.close();
         this.$Toast('注销成功');
