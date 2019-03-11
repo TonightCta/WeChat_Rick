@@ -42,7 +42,7 @@
             <input type="text" v-model="userCard" name="" value=""
             placeholder="请输入您的身份证号"
             >
-            <span class="mes_mask" v-show="disabled"></span>
+            <span class="mes_mask" v-show="true"></span>
           </span>
         </li>
         <li>
@@ -50,7 +50,7 @@
           <span>技能认证:</span>
           <span>
             <input type="text" v-model="userSkill" name="" value="">
-            <span class="mes_mask" v-show="disabled"></span>
+            <span class="mes_mask" v-show="true"></span>
           </span>
         </li>
         <li>
@@ -60,6 +60,7 @@
             <input type="text" v-model="userDate" name="" value=""
             placeholder="请输入您的工作年限"
             >
+            <font>年</font>
             <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
@@ -113,7 +114,7 @@
           <li v-for="(itemlea,index) in delArr"
           ref="city"
           >
-          <p @click="choseCity(index)">{{itemlea.nameLevel}}</p>
+          <p @click="choseCity(index)">{{itemlea.name}}</p>
           <span class="cityMask" @click="delCity(index)">
             <i class="iconfont icon-xuanzhong"></i>
           </span>
@@ -129,7 +130,7 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
-import {mapState} from 'vuex'
+import {mapState,mapMutations} from 'vuex'
 export default {
   data(){
     return{
@@ -148,6 +149,9 @@ export default {
       choseText:'-',
       choseVal:null,//当前选择的省份
       isAll:[],//是否全选
+      cityID:[],//城市ID
+      proID:null,//省份ID
+      showPl:[],//回显地址
       cityList:[
         {
           name:'北京',
@@ -182,11 +186,13 @@ export default {
       ]
     }
   },
-
   computed:{
     ...mapState(['userMes'])
   },
   mounted(){
+    setTimeout(()=>{
+      this.getLocation();//获取地址
+    },1000)
     this.choseVal=this.cityList[0].name;
     this.disabled=this.$route.query.isDis;
     if(this.userMes.name){//登录ID
@@ -200,15 +206,25 @@ export default {
       }
       this.userLoca=this.placeArr.splice(0,2).join('/')+'...'
     };
-    if(this.userMes.engineerVO.state){//身份认证
-      if(this.userMes.engineerVO.state==0){
-        this.userCard='未认证'
-      }else if(this.userMes.engineerVO.state==1){
-        this.userCard='认证中'
-      }else if(this.userMes.engineerVO.state==2){
-        this.userCard='已认证'
+    setTimeout(()=>{
+      if(this.userMes.engineerVO){//身份认证
+        if(this.userMes.engineerVO.state==0){
+          this.userCard='未认证'
+        }else if(this.userMes.engineerVO.state==1){
+          this.userCard='认证中'
+        }else if(this.userMes.engineerVO.state==2){
+          this.userCard='已认证'
+        }
+      };
+    })
+    if(this.userMes.engineerVO){
+      if(this.userMes.engineerVO.childPlaces.length>0){
+        for (let a in this.userMes.engineerVO.childPlaces){
+          this.showPl.push(this.userMes.engineerVO.childPlaces[a].parentPlace.name+'-'+this.userMes.engineerVO.childPlaces[a].name);
+        }
+        this.choseText=this.showPl.join('/')
       }
-    };
+    }
     if(this.userMes.engineerVO.levels.length>0){//技能认证
       let delList=this.userMes.engineerVO.levels;
       for(let x in delList){
@@ -218,7 +234,7 @@ export default {
       this.userSkill=this.delArr.splice(0,2).join('/')+'...'
     };
     if(this.userMes.engineerVO.workYear){//工作年限
-      this.userDate=this.userMes.engineerVO.workYear+'年';
+      this.userDate=this.userMes.engineerVO.workYear;
     };
     if(this.userMes.email){//用户邮箱
       this.userEmail=this.userMes.email;
@@ -226,16 +242,49 @@ export default {
     if(this.userMes.mobile){//用手电话
       this.userPhone=this.userMes.mobile
     }
-    this.delArr=this.cityList[0].level;
+    setTimeout(()=>{
+      this.delArr=this.cityList[0].usingChildList;
+    })
   },
   methods:{
+    ...mapMutations(['userMes_fn']),
+    getLocation(){//获取服务地址
+      let _vm=this;
+      _vm.$axios.get(_vm.oUrl+'/mobile/getUsingPlaceList?engineerId='+_vm.userMes.engineerVO.id).then((res)=>{
+        if(res.data.code==0){
+          _vm.cityList=res.data.data.placeList;
+        }else{
+          _vm.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        _vm.$Toast('未知错误')
+        console.log(err)
+      })
+    },
     saveMes(){
       this.$Indicator.open();
-      setTimeout(()=>{
-        this.$Indicator.close();
-        this.$Toast('保存成功');
-        window.history.back()
-      },1000)
+      let _vm=this;
+      let formData=new FormData();
+      formData.append('id',_vm.userMes.engineerVO.id);
+      formData.append('workYear',_vm.userDate);
+      formData.append('email',_vm.userEmail);
+      for(let i in _vm.cityID){
+        formData.append('placeIds',_vm.cityID[i]);
+      }
+      _vm.$axios.post(_vm.oUrl+'/mobile/editEngineer',formData).then((res)=>{
+        if(res.data.code==0){
+          _vm.userMes_fn(res.data.data);
+            _vm.$Indicator.close();
+            _vm.$Toast('保存成功');
+        }else{
+          _vm.$Indicator.close();
+          _vm.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        _vm.$Indicator.close();
+        console.log(err)
+        _vm.$Toast('未知错误')
+      })
     },
     choseVins(){//地址选择
       this.showloca=true;
@@ -243,6 +292,7 @@ export default {
       setTimeout(()=>{
         this.$refs.locaMask.style.opacity='0.8'
       })
+
     },
     cancelChose(){//取消选择
       this.$refs.locaMask.style.opacity='0'
@@ -254,13 +304,14 @@ export default {
     choseInV(index){//选择省份
       this.$refs.allchose.style.color='black';
       this.$refs.allicon.style.display='none';
+      this.proID=index;
       setTimeout(()=>{
         for(let i in this.$refs.InV){
           this.$refs.InV[index].style.color='#eb7a1d'
           this.$refs.InV[i].style.color='black';
         };
-      })
-      this.delArr=this.cityList[index].level;
+      });
+      this.delArr=this.cityList[index].usingChildList;
       this.choseVal=this.cityList[index].name;
       for(let x in this.$refs.city){
         this.$refs.city[x].style.color='black';
@@ -271,7 +322,7 @@ export default {
           let indexV=[];
           let a=[];
           for(let o in this.delArr){
-            a.push(this.delArr[o].nameLevel)
+            a.push(this.delArr[o].name)
           }
           if(a.indexOf(this.getCaption(this.placeArr[y]))!=-1){
             this.$refs.city[a.indexOf(this.getCaption(this.placeArr[y]))].children[1].style.display='block'
@@ -296,8 +347,10 @@ export default {
     },
     choseCity(index){//选择城市
       let _vm=this;
-      _vm.placeArr.push(_vm.choseVal+'-'+_vm.delArr[index].nameLevel);
-
+      _vm.placeArr.push(_vm.choseVal+'-'+_vm.delArr[index].name);
+      setTimeout(()=>{
+        _vm.cityID.push(_vm.cityList[_vm.proID].usingChildList[index].id);
+      })
       _vm.choseText=_vm.placeArr.join('/');
       _vm.$refs.city[index].style.color='#eb7a1d';
       _vm.$refs.city[index].children[1].style.display='block';
@@ -305,7 +358,9 @@ export default {
     delCity(index){//删除当前选中
       let _vm=this;
       let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+_vm.delArr[index].nameLevel);
-      _vm.placeArr.splice(indexT,1)
+      _vm.placeArr.splice(indexT,1);
+      let indexID=_vm.cityID.indexOf(_vm.cityList[_vm.proID].usingChildList[index].id);
+      _vm.cityID.splice(indexID,1);
       _vm.choseText=_vm.placeArr.join('/');
       _vm.$refs.city[index].children[1].style.display='none';
       _vm.$refs.city[index].style.color='black';
@@ -318,10 +373,10 @@ export default {
         this.$refs.city[i].children[1].style.display='block';
       }
       for(let y in this.delArr){
-        let indexD=this.placeArr.indexOf(this.choseVal+'-'+this.delArr[y].nameLevel);
+        let indexD=this.placeArr.indexOf(this.choseVal+'-'+this.delArr[y].name);
         this.placeArr.splice(indexD,1);
         setTimeout(()=>{
-          this.placeArr.push(this.choseVal+'-'+this.delArr[y].nameLevel);
+          this.placeArr.push(this.choseVal+'-'+this.delArr[y].name);
           this.choseText=this.placeArr.join('/');
 
         })
@@ -341,7 +396,7 @@ export default {
         _vm.$refs.city[i].children[1].style.display='none';
       };
       for(let r in _vm.delArr){
-        let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+_vm.delArr[r].nameLevel)
+        let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+_vm.delArr[r].name)
         let a=[]
         _vm.placeArr.splice(indexT,1)
         this.choseText=this.placeArr.join('/');
@@ -427,6 +482,16 @@ export default {
     li:nth-child(1){
       margin-top:1.5rem;
     }
+    li:nth-child(5){
+      position: relative;
+      font{
+        // background: red;
+        position: absolute;
+        top:0;
+        // color:red;
+        right:-15%;
+      }
+    }
   }
   .saveMes{
     position: absolute;
@@ -484,9 +549,12 @@ export default {
   }
   .localist{
     width: 100%;
+    // overflow-y: auto;
     height: 100%;
     display: flex;
     ul{
+      height: 100%;
+      overflow-y: auto;
       li{
         height: 3.5rem;
         font-size: 1.3rem;
@@ -496,7 +564,8 @@ export default {
     }
     .loca_vince{
       width: 25%;
-      height: 100%;
+      padding-bottom: 10rem;
+      overflow: auto;
       box-sizing: border-box;
       border-right:1px solid #ccc;
       li:nth-child(1){
@@ -505,7 +574,6 @@ export default {
     }
     .loca_city{
       width: 75%;
-      height: 100%;
       li{
         position: relative;
         .cityMask{

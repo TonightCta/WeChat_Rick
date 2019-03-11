@@ -86,21 +86,22 @@ export default {
     ...mapState(['userMes'])
   },
   mounted(){
-    console.log(window.localStorage.getItem('name'))
     if(window.localStorage.getItem('name')){
       this.nickName=window.localStorage.getItem('name');
     }
     if(window.localStorage.getItem('phone')){
       this.userPhone=window.localStorage.getItem('phone')
     }
-    if(this.userMes.engineerVO.state==0){
-      this.$refs.certColor.style.color='#999'
-    }else if(this.userMes.engineerVO.state==1){
-      this.$refs.certColor.style.color='black'
-    }else{
-      this.$refs.certColor.style.color='#eb7a1d'
+    if(this.userMes.engineerVO){
+      console.log(this.userMes.engineerVO.state)
+      if(this.userMes.engineerVO.state==0){
+        this.$refs.certColor.style.color='#999'
+      }else if(this.userMes.engineerVO.state==1){
+        this.$refs.certColor.style.color='black'
+      }else{
+        this.$refs.certColor.style.color='#eb7a1d'
+      }
     }
-
     if(this.userMes.email){
       this.userEmail=this.userMes.email
     }
@@ -127,17 +128,21 @@ export default {
 
     cert(){//申请认证
       let _this=this;
-      _this.$axios.post(_this.oUrl+'').then((res)=>{
+      let formData=new FormData();
+      formData.append('id',_this.userMes.engineerVO.id);
+      _this.$axios.post(_this.oUrl+'/mobile/externalEngineerApply',formData).then((res)=>{
         if(res.data.code==0){
+          console.log(res)
           _this.messageTitle=res.data.data.title;
           _this.messageCon=res.data.data.con;
-          if(res.data.data.delcode==0){
-            this.pathdyn='/personMes'
-          }else if(res.data.data.delcode==1){
-            this.pathdyn='/cerCard'
-          }else{
-            this.pathdyn='/cerSkill'
-          }
+          // if(res.data.data.delcode==0){
+          //   this.pathdyn='/personMes'
+          // }else if(res.data.data.delcode==1){
+          //   this.pathdyn='/cerCard'
+          // }else{
+          //   this.pathdyn='/cerSkill'
+          // }
+          this.userMes_fn(res.data.data)
           setTimeout(()=>{
             MessageBox.confirm(_this.messageCon,_this.messageTitle,{confirmButtonText:'跳转',cancelButtonText:'返回'}).then(action => {
               _this.$router.push({

@@ -8,6 +8,12 @@
 
     </div>
     <ul class="showCardPic">
+      <li v-for='(webPic,index) in webView'>
+        <img :src="oUrl+'/'+webPic.fileName" alt="">
+        <i class="iconfont icon-guanbi" @click="delWhenPic(index)"></i>
+      </li>
+    </ul>
+    <ul class="showCardPic">
       <li v-for='(item,index) in skillsPic'>
         <img :src="item" alt="">
         <i class="iconfont icon-guanbi" @click="delCard(index)"></i>
@@ -27,11 +33,13 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
+import {mapState,mapMutations} from 'vuex'
 export default {
   data(){
     return{
       skillsPic:[],
       skillsFile:[],
+      webView:[],//回显列表
       isTwo:true,
       upBtn:true
     }
@@ -39,19 +47,33 @@ export default {
   watch:{
     skillsPic(val,oldVal){
       console.log(val.length);
-      if(val.length>=2){
+      if((val.length+this.webView.length)>=1){
         this.upBtn=false;
       }else{
         this.upBtn=true
       }
-      if(val.length>=4){
+      if((val.length+this.webView.length)>=5){
         this.isTwo=false;
       }else{
         this.isTwo=true
       }
     }
   },
+  computed:{
+    ...mapState(['userMes'])
+  },
+  mounted(){
+    if(this.userMes.engineerVO){
+      if(this.userMes.engineerVO.certificateFiles.length>=1){
+        let  localCertificateFiles=this.userMes.engineerVO.certificateFiles
+        for(let i in localCertificateFiles){
+          this.webView.push(localCertificateFiles[i])
+        }
+      }
+    }
+  },
   methods:{
+    ...mapMutations(['userMes_fn']),
     upCardIs(e){//上传身份证照片
       let _this=this;
       let file=e.target.files[0];
@@ -74,20 +96,48 @@ export default {
       };
       this.skillsFile.push(e.target.files[0]);
     },
-    delCard(index){
+    delCard(index){//删除当前本地照片
       this.skillsPic.splice(index,1);
       this.skillsFile.splice(index,1);
+    },
+    delWhenPic(index){//删除当前已上传照片
+      console.log(this.webView[index].id);
+      let _vm=this;
+      _vm.$Indicator.open('删除中...');
+      let formData=new FormData();
+      formData.append('id',_vm.webView[index].id);
+      formData.append('type','certificateFile');
+      _vm.$axios.post(_vm.oUrl+'/mobile/deleteEngineerFile',formData).then((res)=>{
+        if(res.data.code==0){
+          _vm.$Indicator.close();
+          _vm.$Toast('删除成功');
+          _vm.userMes_fn(res.data.data);
+          if(res.data.data.engineerVO.certificateFiles.length>=1){
+            this.webView=res.data.data.engineerVO.certificateFiles
+          }
+        }else{
+          _vm.$Indicator.close();
+          _vm.$Toast(res.data.msg);
+        }
+      }).catch((err)=>{
+        _vm.$Toast('未知错误')
+      })
     },
     sendCards(){//提交认证数据
       let _vm=this;
       _vm.$Indicator.open('提交中...');
       let _form=new FormData();
-      // _form.append('')
-      // _form.append('')
-      _vm.$axios.post(_vm.oUrl+'',_form).then((res)=>{
-        _vm.$Indicator.close();
+      _form.append('id',_vm.userMes.engineerVO.id)
+      _form.append('certificateUploadFiles',_vm.skillsFile[0]);
+      _form.append('certificateUploadFiles',_vm.skillsFile[1]);
+      _form.append('certificateUploadFiles',_vm.skillsFile[2]);
+      _form.append('certificateUploadFiles',_vm.skillsFile[3]);
+      _form.append('certificateUploadFiles',_vm.skillsFile[4]);
+      _vm.$axios.post(_vm.oUrl+'/mobile/uploadEngineerFile',_form).then((res)=>{
         console.log(res);
         if(res.data.code==0){
+          _vm.$Indicator.close();
+          _vm.userMes_fn(res.data.data)
           _vm.$Toast('提交成功');
           _vm.$router.push({
             path:'/mine',
@@ -95,6 +145,9 @@ export default {
               color:4
             }
           })
+        }else{
+          _vm.$Indicator.close();
+          _vm.$Toast(res.data.msg);
         }
       }).catch((err)=>{
         _vm.$Indicator.close();

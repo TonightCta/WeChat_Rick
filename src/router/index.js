@@ -8,14 +8,18 @@ export default new Router({
   routes: [
     {
       path:'/',
-      redirect:'/home'
+      redirect:'/home',
+      meta:{
+        keep:false
+      }
     },
     {
       path: '/home',//首页
       name: 'Home',
       component: resolve=>require(['@/page/Home/home'],resolve),
       meta:{
-        title:'犀牛小哥ICT服务平台'
+        title:'犀牛小哥ICT服务平台',
+        keep:true
       }
     },
     {
@@ -117,12 +121,18 @@ export default new Router({
     {
       path:'/cerSkill',//技能认证页
       name:'CerSkill',
-      component:resolve=>require(['@/page/Mine/cer_skill'],resolve)
+      component:resolve=>require(['@/page/Mine/cer_skill'],resolve),
+      meta:{
+        keep:true
+      }
     },
     {
       path:'/cerCard',//身份认证页
       name:'CerCard',
-      component:resolve=>require(['@/page/Mine/cer_card'],resolve)
+      component:resolve=>require(['@/page/Mine/cer_card'],resolve),
+      meta:{
+        keep:true
+      }
     }
   ]
 })

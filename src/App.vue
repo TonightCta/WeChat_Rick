@@ -2,7 +2,10 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <div class="view_box">
-      <router-view v-wechat-title="$route.meta.title" v-if="isLoad"></router-view>
+      <keep-alive>
+        <router-view v-if="$route.meta.keep"></router-view>
+      </keep-alive>
+      <router-view v-wechat-title="$route.meta.title" v-if="!$route.meta.keep"></router-view>
     </div>
   </div>
 </template>

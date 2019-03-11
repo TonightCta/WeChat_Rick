@@ -5,9 +5,9 @@
       <span>服务条款</span>
     </WorkHeader>
     <Deve/>
-    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=487771938&site=qq&menu=yes">
+    <!-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=487771938&site=qq&menu=yes">
       <img border="0" src="http://wpa.qq.com/pa?p=2:487771938:53" alt="点击这里给我发消息" title="点击这里给我发消息"/>
-    </a>
+    </a> -->
   </div>
 </template>
 

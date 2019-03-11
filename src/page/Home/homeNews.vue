@@ -5,12 +5,13 @@
     <div class="home_newsDeta">
       <ul>
         <li v-for="(item,index) in newsListT" @click="newsDeHome(index)">
-          <img v-lazy="`http://rightservicetech.com:8080/${item.imgName}`" alt="">
+          <img :src="oUrl+'/'+item.imgName" alt="">
           <span class="home_newsDeta_title">{{item.title}}</span>
           <span class="home_newsDeta_de">{{item.intro}}</span>
           <span class="home_newsDeta_time">{{item.timeStr}}</span>
         </li>
       </ul>
+      <p class="noData" v-show="isData">暂无更多数据</p>
       <p class="lookMoreNews" @click="getNewsL()">查看更多新闻</p>
       <!-- <router-link to="/newslist" tag="p" class="lookMoreNews"></router-link> -->
     </div>
@@ -21,12 +22,13 @@
     <div class="home_newsDeta">
       <ul>
         <li v-for="(itemZ,index) in conListT" @click="newsConHome(index)">
-          <img :src="`http://rightservicetech.com:8080/${itemZ.imgName}`" alt="">
+          <img :src="oUrl+'/'+itemZ.imgName" alt="">
           <span class="home_newsDeta_title">{{itemZ.title}}</span>
           <span class="home_newsDeta_de">{{itemZ.intro}}</span>
           <span class="home_newsDeta_time">{{itemZ.timeStr}}</span>
         </li>
       </ul>
+      <p class="noData" v-show="isDataCon">暂无更多数据</p>
       <p class="lookMoreNews" @click="getNews()">查看更多资讯</p>
     </div>
   </div>
@@ -37,6 +39,8 @@ import {mapState,mapMutations} from 'vuex'
 export default {
   data(){
     return{
+      isData:false,//是否有新闻数据
+      isDataCon:false,//是否有咨询数据
       newsList:[]
     }
   },
@@ -46,6 +50,9 @@ export default {
   mounted(){
     this.getNewsList();
     this.getConList();
+    if(this.newsListT.length<1){
+      this.isDataCon=true;
+    }
   },
   methods:{
     ...mapMutations(['newsListT_fn','conListT_fn','isBackT_fn','isBackM_fn']),
@@ -95,37 +102,47 @@ export default {
       formData.append('size',3);
       formData.append('page',0);
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition',formData).then((res)=>{
-        console.log(res)
-        _this.newsListT_fn(res.data.data.content);
-          for(let i in _this.newsListT){
-            if(_this.newsListT[i].title.length>10){
-              let subT=_this.newsListT[i].title;
-              _this.newsListT[i].title=subT.substring(0,13)+'...'
-            }
-            if(_this.newsListT[i].intro.length>38){
-              let subX=_this.newsListT[i].intro;
-              _this.newsListT[i].intro=subX.substring(0,34)+'...'
-            }
-          };
+        if(res.data.code==0){
+          if(res.data.data.content.length<1){
+            _this.isData=true;
+          }
+          _this.newsListT_fn(res.data.data.content);
+            for(let i in _this.newsListT){
+              if(_this.newsListT[i].title.length>10){
+                let subT=_this.newsListT[i].title;
+                _this.newsListT[i].title=subT.substring(0,13)+'...'
+              }
+              if(_this.newsListT[i].intro.length>38){
+                let subX=_this.newsListT[i].intro;
+                _this.newsListT[i].intro=subX.substring(0,34)+'...'
+              }
+            };
+        }else{
+          _this.$Toast(res.data.msg)
+        }
+
       }).catch((err)=>{
         console.log(err)
       })
     },
-    getConList(){
+    getConList(){//获取咨询列表
       let _this=this;
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type=2&size=3&page=0',).then((res)=>{
-        _this.conListT_fn(res.data.data.content);
-        // console.log(res)
-        for(let i in _this.conListT){
-          if(_this.conListT[i].title.length>10){
-            let subT=_this.conListT[i].title;
-            _this.conListT[i].title=subT.substring(0,13)+'...'
-          }
-          if(_this.conListT[i].intro.length>38){
-            let subX=_this.conListT[i].intro;
-            _this.conListT[i].intro=subX.substring(0,30)+'...'
-          }
-        };
+        if(res.data.code==0){
+          _this.conListT_fn(res.data.data.content);
+          // console.log(res)
+          for(let i in _this.conListT){
+            if(_this.conListT[i].title.length>10){
+              let subT=_this.conListT[i].title;
+              _this.conListT[i].title=subT.substring(0,13)+'...'
+            }
+            if(_this.conListT[i].intro.length>38){
+              let subX=_this.conListT[i].intro;
+              _this.conListT[i].intro=subX.substring(0,30)+'...'
+            }
+          };
+        }
+
         // console.log(res);
       }).catch((err)=>{
         console.log(err)
@@ -138,6 +155,15 @@ export default {
         query:{
           title:'资讯中心',
           listType:2
+        }
+      })
+    },
+    getNewsL(){//查看更多新闻
+      this.$router.push({
+        path:'/newslist',
+        query:{
+          title:'资讯中心',
+          listType:1
         }
       })
     }
@@ -198,6 +224,14 @@ export default {
       border-top:1px solid #ccc;
       border-bottom:1px solid #ccc;
     }
+  }
+  .noData{
+    width: 100%;
+    height: 6rem;
+    text-align: center;
+    font-size: 1.4rem;
+    line-height:6rem;
+    color:#999;
   }
   .lookMoreNews{
     width: 96%;

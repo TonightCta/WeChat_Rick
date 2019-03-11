@@ -8,6 +8,12 @@
 
     </div>
     <ul class="showCardPic">
+      <li v-for='(webCardPic,index) in cardWeb'>
+        <img :src="oUrl+'/'+webCardPic.fileName" alt="">
+        <i class="iconfont icon-guanbi" @click="delWebCard(index)"></i>
+      </li>
+    </ul>
+    <ul class="showCardPic">
       <li v-for='(item,index) in cardPic'>
         <img :src="item" alt="">
         <i class="iconfont icon-guanbi" @click="delCard(index)"></i>
@@ -27,19 +33,20 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
-import {mapState} from 'vuex'
+import {mapState,mapMutations} from 'vuex'
 export default {
   data(){
     return{
       cardPic:[],//回显列表
       cardFile:[],//上传列表
+      cardWeb:[],//回显列表
       isTwo:true,//添加按钮
       upBtn:true,//提交按钮
     }
   },
   watch:{
-    cardPic(val,oldVal){
-      if(val.length>=2){
+    publicLength(val,oldVal){
+      if(val>=2){
         this.isTwo=false;
         this.upBtn=false;
       }else{
@@ -49,12 +56,30 @@ export default {
     }
   },
   computed:{
-    ...mapState(['userMes'])
+    ...mapState(['userMes']),
+    publicLength(){
+      return this.cardPic.length+this.cardWeb.length
+    },
+  },
+  created(){
+    if(this.userMes.engineerVO){
+      if(this.userMes.engineerVO.identityFiles.length>=1){
+        let  localCertificateFiles=this.userMes.engineerVO.identityFiles;
+        this.cardWeb=localCertificateFiles;
+      }
+    }
   },
   mounted(){
-    console.log(this.userMes)
+    if((this.cardPic.length+this.cardWeb.length)>=2){
+      this.isTwo=false;
+      this.upBtn=false;
+    }else{
+      this.isTwo=true;
+      this.upBtn=true;
+    }
   },
   methods:{
+    ...mapMutations(['userMes_fn']),
     upCardIs(e){//上传身份证照片
       let _this=this;
       let file=e.target.files[0];
@@ -81,17 +106,40 @@ export default {
       this.cardPic.splice(index,1);
       this.cardFile.splice(index,1);
     },
+    delWebCard(index){//删除当前已上传认证图片
+      let _vm=this;
+      _vm.$Indicator.open('删除中...');
+      let formData=new FormData();
+      formData.append('id',_vm.cardWeb[index].id);
+      formData.append('type','identityFile');
+      _vm.$axios.post(_vm.oUrl+'/mobile/deleteEngineerFile',formData).then((res)=>{
+        if(res.data.code==0){
+          _vm.$Indicator.close();
+          _vm.$Toast('删除成功');
+          _vm.userMes_fn(res.data.data);
+          if(res.data.data.engineerVO.certificateFiles.length>=1){
+            this.cardWeb=res.data.data.engineerVO.certificateFiles
+          }
+        }else{
+          _vm.$Indicator.close();
+          _vm.$Toast(res.data.msg);
+        }
+      }).catch((err)=>{
+        _vm.$Toast('未知错误');
+        console.log(err)
+      })
+    },
     sendCards(){//提交认证数据
       let _vm=this;
-      console.log(_vm.cardFile)
       _vm.$Indicator.open('提交中...');
       let formData=new FormData();
       formData.append('id',_vm.userMes.engineerVO.id)
-      formData.append('identityUploadFiles',_vm.cardFile)
-      _vm.$axios.post('http://10.0.0.31:8080/mobile/uploadEngineerFile',formData).then((res)=>{
-        _vm.$Indicator.close();
-        console.log(res);
+      formData.append('identityUploadFiles',_vm.cardFile[0]);
+      formData.append('identityUploadFiles',_vm.cardFile[1]);
+      _vm.$axios.post(_vm.oUrl+'/mobile/uploadEngineerFile',formData).then((res)=>{
         if(res.data.code==0){
+          _vm.$Indicator.close();
+          _vm.userMes_fn(res.data.data)
           _vm.$Toast('提交成功');
           _vm.$router.push({
             path:'/mine',
