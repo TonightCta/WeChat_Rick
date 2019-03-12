@@ -9,7 +9,7 @@
         <mt-loadmore :auto-fill="false" :top-method="loadTop" topPullText="加载中" ref="loadmore">
           <ul>
             <li v-for="(item,index) in newsList" @click="newsDe(index)">
-              <img v-lazy="`http://rightservicetech.com:8080/${item.imgName}`" alt="">
+              <img v-lazy="oUrl+'/'+item.imgName" alt="">
               <span class="news_newsDeta_title">{{item.title}}</span>
               <span class="news_newsDeta_de">{{item.intro}}</span>
               <span class="news_newsDeta_time">{{item.timeStr}}</span>

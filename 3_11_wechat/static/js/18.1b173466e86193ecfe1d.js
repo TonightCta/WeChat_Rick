@@ -1,2 +1,0 @@
-webpackJsonp([18],{VBBT:function(e,t){},hiOU:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n("qqdu"),s=n("VVAB"),a={components:{WorkHeader:r.a,Deve:s.a},methods:{}},i={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"person_service"},[t("WorkHeader",[t("span",[this._v("服务条款")])]),this._v(" "),t("Deve")],1)},staticRenderFns:[]};var o=n("C7Lr")(a,i,!1,function(e){n("VBBT")},"data-v-421abbf2",null);t.default=o.exports}});
-//# sourceMappingURL=18.1b173466e86193ecfe1d.js.map

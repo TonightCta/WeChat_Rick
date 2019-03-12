@@ -70,7 +70,7 @@ export default {
         let formData=new FormData();
         formData.append('name',this.userName);
         formData.append('phone',this.userPhone);
-        formData.append('username',this.userName);
+        formData.append('username',this.userPhone);
         formData.append('password',this.turnPass);
         formData.append('recommendCode',this.inviCode);
         _this.$axios.post(_this.oUrl+'/saveExternalEngineer',formData).then((res)=>{
@@ -80,7 +80,7 @@ export default {
             _this.userMes_fn(res.data.data);
             _this.userID_fn(res.data.data.id);
             window.localStorage.setItem('Uid',res.data.data.id);
-            window.localStorage.setItem('name',res.data.data.nickname);
+            window.localStorage.setItem('name',res.data.data.name);
             window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
             _this.$router.push({
               path:'/mine',

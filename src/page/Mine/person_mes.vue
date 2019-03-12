@@ -28,7 +28,7 @@
           <img src="../../../static/img/mes_location.png" alt="">
           <span>服务范围:</span>
           <span>
-            <input type="text" v-model="choseText" name="" value=""
+            <input type="text" v-model="choseTurn" name="" value=""
             placeholder="请输入您的工作地址"
             >
             <span class="mes_mask" v-show="disabled"></span>
@@ -114,7 +114,7 @@
           <li v-for="(itemlea,index) in delArr"
           ref="city"
           >
-          <p @click="choseCity(index)">{{itemlea.name}}</p>
+          <p @click="choseCity(index)" >{{itemlea.name}}</p>
           <span class="cityMask" @click="delCity(index)">
             <i class="iconfont icon-xuanzhong"></i>
           </span>
@@ -147,53 +147,22 @@ export default {
       delArr:[],
       showloca:false,
       choseText:'-',
+      choseTurn:'-',
       choseVal:null,//当前选择的省份
       isAll:[],//是否全选
       cityID:[],//城市ID
-      proID:null,//省份ID
+      proID:0,//省份ID
       showPl:[],//回显地址
-      cityList:[
-        {
-          name:'北京',
-          level:[
-            {nameLevel:'北京市'}
-          ]
-        },
-        {
-          name:'河北省',
-          level:[
-            {nameLevel:'唐山市'},
-            {nameLevel:'秦皇岛市'},
-            {nameLevel:'石家庄市'},
-          ]
-        },
-        {
-          name:'河南省',
-          level:[
-            {nameLevel:'郑州市'},
-            {nameLevel:'安阳市'},
-            {nameLevel:'洛阳市'},
-          ]
-        },
-        {
-          name:'黑龙江省',
-          level:[
-            {nameLevel:'齐齐哈尔市'},
-            {nameLevel:'漠河市'},
-            {nameLevel:'哈尔滨市'},
-          ]
-        },
-      ]
+      cityList:[],
+      a:[],//数据暂存数组
+      b:[],//数据暂存数组2
     }
   },
   computed:{
     ...mapState(['userMes'])
   },
   mounted(){
-    setTimeout(()=>{
-      this.getLocation();//获取地址
-    },1000)
-    this.choseVal=this.cityList[0].name;
+    this.getLocation();//获取地址
     this.disabled=this.$route.query.isDis;
     if(this.userMes.name){//登录ID
       this.userId=this.userMes.name;
@@ -222,7 +191,8 @@ export default {
         for (let a in this.userMes.engineerVO.childPlaces){
           this.showPl.push(this.userMes.engineerVO.childPlaces[a].parentPlace.name+'-'+this.userMes.engineerVO.childPlaces[a].name);
         }
-        this.choseText=this.showPl.join('/')
+        this.choseText=this.showPl.join('/');
+        this.choseTurn=this.showPl.join('/');
       }
     }
     if(this.userMes.engineerVO.levels.length>0){//技能认证
@@ -241,10 +211,7 @@ export default {
     };
     if(this.userMes.mobile){//用手电话
       this.userPhone=this.userMes.mobile
-    }
-    setTimeout(()=>{
-      this.delArr=this.cityList[0].usingChildList;
-    })
+    };
   },
   methods:{
     ...mapMutations(['userMes_fn']),
@@ -253,6 +220,40 @@ export default {
       _vm.$axios.get(_vm.oUrl+'/mobile/getUsingPlaceList?engineerId='+_vm.userMes.engineerVO.id).then((res)=>{
         if(res.data.code==0){
           _vm.cityList=res.data.data.placeList;
+          _vm.delArr=_vm.cityList[0].usingChildList;
+          _vm.choseVal=_vm.cityList[0].name;
+          _vm.cityList.forEach((cityL)=>{
+            cityL.usingChildList.forEach((x)=>{
+              if(x.selected){
+                _vm.cityID.push(x.id);
+              }
+            })
+          });
+          _vm.b.push(_vm.cityList[0].usingChildList[0].id)
+          setTimeout(()=>{
+            // if(_vm.cityID.indexOf(_vm.cityList[0].usingChildList[0].id)!=-1){
+
+            // }
+            _vm.cityID.forEach((s)=>{
+              let c=_vm.b.indexOf(s);
+              if(c>=0){
+                _vm.$refs.city[c].style.color='#eb7a1d';
+                _vm.$refs.city[c].children[1].style.display='block';
+              }else{
+                return
+              }
+            })
+            // _vm.cityList[0].usingChildList.forEach((a)=>{
+            //   let c=_vm.cityID.indexOf(a.id);
+            //   let
+            //   if(c>=0){
+            //       _vm.$refs.city[c].children[0].style.color='#eb7a1d';
+            //       _vm.$refs.city[c].children[1].style.display='block';
+            //   }else{
+            //     return
+            //   }
+            // })
+          })
         }else{
           _vm.$Toast(res.data.msg)
         }
@@ -302,43 +303,63 @@ export default {
       })
     },
     choseInV(index){//选择省份
-      this.$refs.allchose.style.color='black';
-      this.$refs.allicon.style.display='none';
-      this.proID=index;
-      setTimeout(()=>{
-        for(let i in this.$refs.InV){
-          this.$refs.InV[index].style.color='#eb7a1d'
-          this.$refs.InV[i].style.color='black';
+      let _vm=this;
+
+// <--------------------->
+
+      _vm.a=[]
+      _vm.$refs.allchose.style.color='black';
+      _vm.$refs.allicon.style.display='none';
+      _vm.proID=index;
+      // setTimeout(()=>{
+        for(let i in _vm.$refs.InV){
+          _vm.$refs.InV[index].style.color='#eb7a1d'
+          _vm.$refs.InV[i].style.color='black';
         };
+      // });
+      _vm.delArr=_vm.cityList[index].usingChildList;
+
+      _vm.delArr.forEach((c)=>{
+        _vm.a.push(c.id);
       });
-      this.delArr=this.cityList[index].usingChildList;
-      this.choseVal=this.cityList[index].name;
-      for(let x in this.$refs.city){
-        this.$refs.city[x].style.color='black';
-        this.$refs.city[x].children[1].style.display='none'
-      };
       setTimeout(()=>{
-        for(let y in this.placeArr){
+        _vm.cityID.forEach((v)=>{
+          let b=_vm.a.indexOf(v);
+          if(b>=0){
+            _vm.$refs.city[b].style.color='#eb7a1d';
+            _vm.$refs.city[b].children[1].style.display='block';
+          }else{
+            return
+          }
+        })
+      })
+      _vm.choseVal=_vm.cityList[index].name;
+      _vm.$refs.city.forEach((e)=>{
+        e.style.color='black';
+        e.children[1].style.display='none'
+      })
+      setTimeout(()=>{
+        _vm.placeArr.forEach((e)=>{
           let indexV=[];
           let a=[];
-          for(let o in this.delArr){
-            a.push(this.delArr[o].name)
-          }
-          if(a.indexOf(this.getCaption(this.placeArr[y]))!=-1){
-            this.$refs.city[a.indexOf(this.getCaption(this.placeArr[y]))].children[1].style.display='block'
-            this.$refs.city[a.indexOf(this.getCaption(this.placeArr[y]))].style.color='#eb7a1d'
-          }
+          _vm.delArr.forEach((i)=>{
+            a.push(i.name);
+            if(a.indexOf(_vm.getCaption(e))!=-1){
+              _vm.$refs.city[a.indexOf(_vm.getCaption(e))].children[1].style.display='block'
+              _vm.$refs.city[a.indexOf(_vm.getCaption(e))].style.color='#eb7a1d'
+            }
+          })
+        });
+      });
+      _vm.isAll.forEach((x)=>{
+        if(_vm.choseVal===x){
+          _vm.$refs.allchose.style.color='#eb7a1d';
+          _vm.$refs.allicon.style.display='block';
+        }else{
+          _vm.$refs.allchose.style.color='black';
+          _vm.$refs.allicon.style.display='none';
         }
       });
-      for(let q in this.isAll){
-        if(this.choseVal===this.isAll[q]){
-          this.$refs.allchose.style.color='#eb7a1d';
-          this.$refs.allicon.style.display='block';
-        }else{
-          this.$refs.allchose.style.color='black';
-          this.$refs.allicon.style.display='none';
-        }
-      }
     },
     getCaption(obj){
         var index=obj.lastIndexOf("\-");
@@ -350,6 +371,7 @@ export default {
       _vm.placeArr.push(_vm.choseVal+'-'+_vm.delArr[index].name);
       setTimeout(()=>{
         _vm.cityID.push(_vm.cityList[_vm.proID].usingChildList[index].id);
+        console.log(_vm.cityID)
       })
       _vm.choseText=_vm.placeArr.join('/');
       _vm.$refs.city[index].style.color='#eb7a1d';
@@ -361,26 +383,25 @@ export default {
       _vm.placeArr.splice(indexT,1);
       let indexID=_vm.cityID.indexOf(_vm.cityList[_vm.proID].usingChildList[index].id);
       _vm.cityID.splice(indexID,1);
-      _vm.choseText=_vm.placeArr.join('/');
+      _vm.choseText=_vm.showPl.join('/')+'/'+_vm.placeArr.join('/');
       _vm.$refs.city[index].children[1].style.display='none';
       _vm.$refs.city[index].style.color='black';
     },
     allChose(){//全选
       this.$refs.allchose.style.color='#eb7a1d';
       this.$refs.allicon.style.display='block';
-      for(let i in this.$refs.city){
-        this.$refs.city[i].style.color='#eb7a1d';
-        this.$refs.city[i].children[1].style.display='block';
-      }
-      for(let y in this.delArr){
-        let indexD=this.placeArr.indexOf(this.choseVal+'-'+this.delArr[y].name);
+      this.$refs.city.forEach((e)=>{
+        e.style.color='#eb7a1d';
+        e.children[1].style.display='block';
+      });
+      this.delArr.forEach((y)=>{
+        let indexD=this.placeArr.indexOf(this.choseVal+'-'+y.name);
         this.placeArr.splice(indexD,1);
         setTimeout(()=>{
-          this.placeArr.push(this.choseVal+'-'+this.delArr[y].name);
-          this.choseText=this.placeArr.join('/');
-
+          this.placeArr.push(this.choseVal+'-'+y.name);
+          this.choseText=_vm.showPl.join('/')+'/'+this.placeArr.join('/');
         })
-      };
+      })
       this.isAll.push(this.choseVal);
     },
     cancelAll(){//取消全选
@@ -391,16 +412,16 @@ export default {
         let indexI=this.isAll.indexOf(this.choseVal);
         this.isAll.splice(indexI,1);
       }
-      for(let i in _vm.$refs.city){
-        _vm.$refs.city[i].style.color='black';
-        _vm.$refs.city[i].children[1].style.display='none';
-      };
-      for(let r in _vm.delArr){
-        let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+_vm.delArr[r].name)
+      _vm.$refs.city.forEach((i)=>{
+        i.style.color='black';
+        i.children[1].style.display='none';
+      });
+      _vm.delArr.forEach((r)=>{
+        let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+r.name)
         let a=[]
         _vm.placeArr.splice(indexT,1)
-        this.choseText=this.placeArr.join('/');
-      };
+        this.choseText=_vm.showPl.join('/')+'/'+this.placeArr.join('/');
+      });
 
     },
     turnChose(){//确认选中
@@ -457,7 +478,7 @@ export default {
         left:6.5rem;
       }
       .mes_mask{
-        width: 100%;
+        width: 200%;
         height: 100%;
         position: absolute;
         background: black;
@@ -473,10 +494,10 @@ export default {
         left:8%;
       }
       input{
+        width:98%;
         margin-left: 5.5rem;
         background: white;
         outline: none;
-        background: white;
       }
     }
     li:nth-child(1){
@@ -490,6 +511,7 @@ export default {
         top:0;
         // color:red;
         right:-15%;
+        color:#666;
       }
     }
   }

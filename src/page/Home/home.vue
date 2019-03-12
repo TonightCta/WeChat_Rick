@@ -3,6 +3,8 @@
   <div class="home_wapper">
     <Banner/>
     <Table/>
+    <Plat/>
+    <EngBanner/>
     <News/>
     <Footer/>
   </div>
@@ -36,7 +38,10 @@ export default {
     Footer:resolve=>require(['@/components/footer_wapper'],resolve),
     Banner:resolve=>require(['./homeBanner'],resolve),
     Table:resolve=>require(['./homeTable'],resolve),
-    News:resolve=>require(['./homeNews'],resolve)
+    News:resolve=>require(['./homeNews'],resolve),
+    EngBanner:resolve=>require(['./homeEngBanner'],resolve),
+    Plat:resolve=>require(['./homePlat'],resolve)
+
   }
 }
 </script>

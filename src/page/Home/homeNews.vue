@@ -1,7 +1,7 @@
 <!-- 首页新闻 -->
 <template lang="html">
   <div class="">
-    <p class="home_newsTitle">>>公司新闻<<</p>
+    <p class="home_newsTitle">公司新闻</p>
     <div class="home_newsDeta">
       <ul>
         <li v-for="(item,index) in newsListT" @click="newsDeHome(index)">
@@ -18,7 +18,7 @@
 
     <!-- 咨询列表 -->
 
-    <p class="home_newsTitle">>>行业资讯<<</p>
+    <p class="home_newsTitle">行业资讯</p>
     <div class="home_newsDeta">
       <ul>
         <li v-for="(itemZ,index) in conListT" @click="newsConHome(index)">
@@ -50,9 +50,6 @@ export default {
   mounted(){
     this.getNewsList();
     this.getConList();
-    if(this.newsListT.length<1){
-      this.isDataCon=true;
-    }
   },
   methods:{
     ...mapMutations(['newsListT_fn','conListT_fn','isBackT_fn','isBackM_fn']),
@@ -131,6 +128,9 @@ export default {
         if(res.data.code==0){
           _this.conListT_fn(res.data.data.content);
           // console.log(res)
+          if(res.data.data.content.length<1){
+            _this.isDataCon=true;
+          }
           for(let i in _this.conListT){
             if(_this.conListT[i].title.length>10){
               let subT=_this.conListT[i].title;
@@ -178,6 +178,11 @@ export default {
   font-size: 1.4rem;
   text-align: center;
   color:#252525;
+  background: red;
+  height: 4.5rem;
+  line-height: 4rem;
+  background: url('../../../static/img/news_title_bg.png');
+  background-size: 100% 100%;
 }
 .home_newsDeta{
   width: 100%;
@@ -236,8 +241,8 @@ export default {
   .lookMoreNews{
     width: 96%;
     height: 3rem;
-    background: #ccc;
-    color:#252525;
+    background: linear-gradient(#fa891e, #f7bc8b);
+    color:white;
     margin: 0 auto;
     border-radius:10px;
     font-size: 1.4rem;

@@ -63,6 +63,7 @@ export default {
   bottom:0;
   left:0;
   background: #eee;
+  z-index: 9999;
   .icon_list{
     width: 100%;
     display: flex;

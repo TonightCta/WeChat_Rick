@@ -86,6 +86,7 @@ export default {
     ...mapState(['userMes'])
   },
   mounted(){
+    console.log(this.userMes)
     if(window.localStorage.getItem('name')){
       this.nickName=window.localStorage.getItem('name');
     }
@@ -142,15 +143,22 @@ export default {
           // }else{
           //   this.pathdyn='/cerSkill'
           // }
-          this.userMes_fn(res.data.data)
-          setTimeout(()=>{
-            MessageBox.confirm(_this.messageCon,_this.messageTitle,{confirmButtonText:'跳转',cancelButtonText:'返回'}).then(action => {
-              _this.$router.push({
-                path:_this.pathdyn,
-                isDis:false
-              })
-            });
-          },500)
+          this.userMes_fn(res.data.data);
+          if(res.data.data.engineerVO.state==0){
+            this.$Toast(res.data.data.engineerVO.identifyMsg)
+          }else if(res.data.data.engineerVO.state==1){
+            this.$Toast('当前资料认证中')
+          }else{
+            this.$Toast('您已完成认证')
+          }
+          // setTimeout(()=>{
+          //   MessageBox.confirm(_this.messageCon,_this.messageTitle,{confirmButtonText:'跳转',cancelButtonText:'返回'}).then(action => {
+          //     _this.$router.push({
+          //       path:_this.pathdyn,
+          //       isDis:false
+          //     })
+          //   });
+          // },500)
         }else{
           _this.$Toast(res.data.msg)
         }
