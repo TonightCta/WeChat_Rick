@@ -126,7 +126,7 @@ export default {
 .swiper-slide {
   background-position: center;
   background-size: cover;
-  width: 20rem;
+  width: 24rem;
   height: 12rem;
   background: url('../../../static/img/engBanner_bg.png');
   background-size: 100% 100%;
