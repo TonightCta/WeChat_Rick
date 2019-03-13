@@ -26,9 +26,6 @@ export default {
     backPage(){
       window.history.back()
     }
-  },
-  mounted(){
-    // console.log(this.isBack)
   }
 }
 </script>

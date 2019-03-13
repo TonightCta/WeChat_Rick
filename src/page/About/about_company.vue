@@ -17,7 +17,7 @@
       </ul>
     </div>
     <div class="about_view">
-      <router-view></router-view>
+      <router-view class="transitionBody"></router-view>
     </div>
     <Footer></Footer>
   </div>
@@ -25,18 +25,18 @@
 
 <script>
 import Footer from '@/components/footer_wapper'
-// import Header from '@/components/header_wapper'
 export default {
   data(){
     return{
-      aboutC:1
+      aboutC:1,
+      transitionName: 'transitionLeft'
     }
   },
   components:{
     Footer
   },
   mounted(){
-    
+
   }
 }
 </script>

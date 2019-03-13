@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import  from '@/components/HelloWorld'
-
+import { Toast  } from 'mint-ui';
 Vue.use(Router)
 
-export default new Router({
+
+const router= new Router({
   routes: [
     {
       path:'/',
@@ -135,4 +135,16 @@ export default new Router({
       }
     }
   ]
-})
+});
+router.beforeEach((to,from,next)=>{
+  //登录权限页面
+  const nextRoute=['CerSkill','CerCard','PersonMes','TakeOrder','DemandNeed','WorkLog'];
+  if(nextRoute.indexOf(to.name) > -1){
+    if (!window.localStorage.getItem('Uid')) {
+      Toast('请先登录');
+      next('/Tlogin')
+   }
+  }
+  next()
+});
+export default router;

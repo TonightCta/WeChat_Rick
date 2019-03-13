@@ -2,9 +2,9 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <div class="view_box">
-      <keep-alive>
-        <router-view v-if="$route.meta.keep"></router-view>
-      </keep-alive>
+        <keep-alive>
+          <router-view v-if="$route.meta.keep"></router-view>
+        </keep-alive>
       <router-view v-wechat-title="$route.meta.title" v-if="!$route.meta.keep"></router-view>
     </div>
   </div>
@@ -15,7 +15,7 @@ export default {
   name: 'App',
   provide(){
     return{
-      reload:this.reload
+      reload:this.reload,
     }
   },
   data(){

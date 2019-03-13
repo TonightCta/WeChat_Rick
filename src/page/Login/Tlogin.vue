@@ -16,6 +16,7 @@
         <img src="../../../static/img/btn_pass.png" alt="">
         <input type="password" v-model="userPass" ref="userpass" placeholder="请输入密码" name="" value="">
         <i class="iconfont icon-chakan" v-show="isPass" @click="showPass()"></i>
+        <i class="iconfont icon-chakan" v-show="hidePs" @click="hidePass()"></i>
       </li>
     </ul>
     <p class="login_btn" @click="login()">登录</p>
@@ -38,7 +39,8 @@ export default {
     return{
       userName:null,//用户登录名
       userPass:null,//用户密码
-      isPass:false
+      isPass:false,
+      hidePs:false
     }
   },
   watch:{
@@ -55,8 +57,15 @@ export default {
   },
   methods:{
     ...mapMutations(['userMes_fn']),
-    showPass(){
+    showPass(){//显示密码
       this.$refs.userpass.type='number';
+      this.isPass=false;
+      this.hidePs=true;
+    },
+    hidePass(){//隐藏密码
+      this.$refs.userpass.type='password';
+      this.isPass=true;
+      this.hidePs=false;
     },
     login(){
       let _this=this;

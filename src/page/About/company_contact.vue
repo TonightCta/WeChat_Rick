@@ -45,6 +45,7 @@
 
 <script>
 export default {
+
 }
 </script>
 

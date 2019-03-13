@@ -77,7 +77,6 @@ export default {
       formData.append('size',3);
       formData.append('page',0);
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition',formData).then((res)=>{
-        console.log(res)
         _this.newsList=res.data.data.content;
         this.$router.push({
           name:'NewsDetails',
@@ -127,7 +126,6 @@ export default {
       _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type=2&size=3&page=0',).then((res)=>{
         if(res.data.code==0){
           _this.conListT_fn(res.data.data.content);
-          // console.log(res)
           if(res.data.data.content.length<1){
             _this.isDataCon=true;
           }
@@ -142,8 +140,6 @@ export default {
             }
           };
         }
-
-        // console.log(res);
       }).catch((err)=>{
         console.log(err)
       })

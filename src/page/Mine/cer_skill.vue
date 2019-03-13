@@ -46,7 +46,6 @@ export default {
   },
   watch:{
     skillsPic(val,oldVal){
-      console.log(val.length);
       if((val.length+this.webView.length)>=1){
         this.upBtn=false;
       }else{
@@ -101,7 +100,6 @@ export default {
       this.skillsFile.splice(index,1);
     },
     delWhenPic(index){//删除当前已上传照片
-      console.log(this.webView[index].id);
       let _vm=this;
       _vm.$Indicator.open('删除中...');
       let formData=new FormData();
@@ -134,7 +132,6 @@ export default {
       _form.append('certificateUploadFiles',_vm.skillsFile[3]);
       _form.append('certificateUploadFiles',_vm.skillsFile[4]);
       _vm.$axios.post(_vm.oUrl+'/mobile/uploadEngineerFile',_form).then((res)=>{
-        console.log(res);
         if(res.data.code==0){
           _vm.$Indicator.close();
           _vm.userMes_fn(res.data.data)

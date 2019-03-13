@@ -1,11 +1,11 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue';
+import Vue from "vue";
 import App from './App';
 import router from './router';
 import store from './assets/js/store';
 import MintUi from 'mint-ui';
-import Axios from 'axios';
+import Axios from 'axios'
 import { Indicator,Toast  } from 'mint-ui';
 import VueWechatTitle from 'vue-wechat-title';
 import './index.css';

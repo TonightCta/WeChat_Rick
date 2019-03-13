@@ -66,7 +66,6 @@ export default {
             _this.newsList[i].intro=subX.substring(0,39)+'...'
           }
         };
-        // console.log(res);
       }).catch((err)=>{
         console.log(err)
       })

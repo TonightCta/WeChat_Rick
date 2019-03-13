@@ -94,6 +94,7 @@
         <span @click="cancelChose()">取消</span>
         <span @click="turnChose()">确认</span>
       </p>
+      <input type="text" name="" value="" v-model="choseTurn"n>
       <input type="text" name="" value="" v-model="choseText">
       <span class="text_mask"></span>
       <div class="localist">
@@ -171,9 +172,7 @@ export default {
       let locaList=this.userMes.engineerVO.childPlaces;
       for(let i in locaList){
         let subLoca=locaList[i].parentPlace.name+'-'+locaList[i].name;
-        this.placeArr.push(subLoca)
       }
-      this.userLoca=this.placeArr.splice(0,2).join('/')+'...'
     };
     setTimeout(()=>{
       if(this.userMes.engineerVO){//身份认证
@@ -191,7 +190,6 @@ export default {
         for (let a in this.userMes.engineerVO.childPlaces){
           this.showPl.push(this.userMes.engineerVO.childPlaces[a].parentPlace.name+'-'+this.userMes.engineerVO.childPlaces[a].name);
         }
-        this.choseText=this.showPl.join('/');
         this.choseTurn=this.showPl.join('/');
       }
     }
@@ -231,9 +229,6 @@ export default {
           });
           _vm.b.push(_vm.cityList[0].usingChildList[0].id)
           setTimeout(()=>{
-            // if(_vm.cityID.indexOf(_vm.cityList[0].usingChildList[0].id)!=-1){
-
-            // }
             _vm.cityID.forEach((s)=>{
               let c=_vm.b.indexOf(s);
               if(c>=0){
@@ -243,16 +238,6 @@ export default {
                 return
               }
             })
-            // _vm.cityList[0].usingChildList.forEach((a)=>{
-            //   let c=_vm.cityID.indexOf(a.id);
-            //   let
-            //   if(c>=0){
-            //       _vm.$refs.city[c].children[0].style.color='#eb7a1d';
-            //       _vm.$refs.city[c].children[1].style.display='block';
-            //   }else{
-            //     return
-            //   }
-            // })
           })
         }else{
           _vm.$Toast(res.data.msg)
@@ -307,21 +292,34 @@ export default {
 
 // <--------------------->
 
-      _vm.a=[]
+      _vm.a=[]//暂存数据
       _vm.$refs.allchose.style.color='black';
       _vm.$refs.allicon.style.display='none';
       _vm.proID=index;
-      // setTimeout(()=>{
-        for(let i in _vm.$refs.InV){
-          _vm.$refs.InV[index].style.color='#eb7a1d'
-          _vm.$refs.InV[i].style.color='black';
-        };
-      // });
+      for(let i in _vm.$refs.InV){
+        _vm.$refs.InV[index].style.color='#eb7a1d'
+        _vm.$refs.InV[i].style.color='black';
+      };
       _vm.delArr=_vm.cityList[index].usingChildList;
-
+      let b=[];//存放是全选状态
       _vm.delArr.forEach((c)=>{
         _vm.a.push(c.id);
+        b.push(c.selected)
       });
+      if(b.indexOf(false)>=0){
+        console.log(1)
+      }else{
+        _vm.isAll.push(_vm.choseVal);
+        _vm.isAll.forEach((x)=>{
+          if(_vm.choseVal===x){
+            _vm.$refs.allchose.style.color='#eb7a1d';
+            _vm.$refs.allicon.style.display='block';
+          }else{
+            _vm.$refs.allchose.style.color='black';
+            _vm.$refs.allicon.style.display='none';
+          }
+        });
+      }
       setTimeout(()=>{
         _vm.cityID.forEach((v)=>{
           let b=_vm.a.indexOf(v);
@@ -351,15 +349,6 @@ export default {
           })
         });
       });
-      _vm.isAll.forEach((x)=>{
-        if(_vm.choseVal===x){
-          _vm.$refs.allchose.style.color='#eb7a1d';
-          _vm.$refs.allicon.style.display='block';
-        }else{
-          _vm.$refs.allchose.style.color='black';
-          _vm.$refs.allicon.style.display='none';
-        }
-      });
     },
     getCaption(obj){
         var index=obj.lastIndexOf("\-");
@@ -371,19 +360,23 @@ export default {
       _vm.placeArr.push(_vm.choseVal+'-'+_vm.delArr[index].name);
       setTimeout(()=>{
         _vm.cityID.push(_vm.cityList[_vm.proID].usingChildList[index].id);
-        console.log(_vm.cityID)
-      })
+      });
       _vm.choseText=_vm.placeArr.join('/');
       _vm.$refs.city[index].style.color='#eb7a1d';
       _vm.$refs.city[index].children[1].style.display='block';
     },
     delCity(index){//删除当前选中
       let _vm=this;
-      let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+_vm.delArr[index].nameLevel);
+      let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+_vm.delArr[index].name);
       _vm.placeArr.splice(indexT,1);
+      let indexE=_vm.showPl.indexOf(_vm.choseVal+'-'+_vm.delArr[index].name);
+      if(indexE>=0){
+        _vm.showPl.splice(indexE,1);
+        _vm.choseTurn=_vm.showPl.join('/');
+      }
       let indexID=_vm.cityID.indexOf(_vm.cityList[_vm.proID].usingChildList[index].id);
       _vm.cityID.splice(indexID,1);
-      _vm.choseText=_vm.showPl.join('/')+'/'+_vm.placeArr.join('/');
+      _vm.choseText=_vm.placeArr.join('/');
       _vm.$refs.city[index].children[1].style.display='none';
       _vm.$refs.city[index].style.color='black';
     },
@@ -399,8 +392,11 @@ export default {
         this.placeArr.splice(indexD,1);
         setTimeout(()=>{
           this.placeArr.push(this.choseVal+'-'+y.name);
-          this.choseText=_vm.showPl.join('/')+'/'+this.placeArr.join('/');
+          this.choseText=this.placeArr.join('/');
         })
+      });
+      this.delArr.forEach((i)=>{
+        this.cityID.push(i.id);
       })
       this.isAll.push(this.choseVal);
     },
@@ -420,9 +416,16 @@ export default {
         let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+r.name)
         let a=[]
         _vm.placeArr.splice(indexT,1)
-        this.choseText=_vm.showPl.join('/')+'/'+this.placeArr.join('/');
+        this.choseText=this.placeArr.join('/');
       });
-
+      let arr=[];
+      _vm.delArr.forEach((c)=>{
+        arr.push(c.id)
+      });
+      arr.forEach((x)=>{
+        let indexDel=_vm.cityID.indexOf(x);
+        _vm.cityID.splice(indexDel,1);
+      });
     },
     turnChose(){//确认选中
       this.$refs.locaMask.style.opacity='0'
@@ -465,6 +468,7 @@ export default {
       padding-left: 2rem;
       padding-top:.8rem;
       position: relative;
+      overflow-y: hidden;
       img{
         width: 3.5rem;
         height: 3.5rem;
@@ -494,7 +498,7 @@ export default {
         left:8%;
       }
       input{
-        width:98%;
+        width:80%;
         margin-left: 5.5rem;
         background: white;
         outline: none;
@@ -506,11 +510,9 @@ export default {
     li:nth-child(5){
       position: relative;
       font{
-        // background: red;
         position: absolute;
         top:0;
-        // color:red;
-        right:-15%;
+        right:0;
         color:#666;
       }
     }

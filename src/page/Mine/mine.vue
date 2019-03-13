@@ -4,9 +4,10 @@
     <!-- 个人资料块 -->
     <div class="person_mes">
       <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic" @click="goMes()">
-      <router-link to="/TLogin" tag="p" class="person_oper" @click.native="mineCon()">
-        {{nickName}}
+      <router-link to="/TLogin" tag="p" class="person_oper" @click.native="mineCon()" v-show="didLogin">
+      请登录
       </router-link>
+      <p class="person_oper" v-show="hasLogin">{{nickName}}</p>
       <div class="person_del">
         <ul>
           <li>
@@ -80,13 +81,14 @@ export default {
       messageTitle:'提示',//操作盒子标题
       messageCon:'请先进行身份认证',//操作盒子内容
       pathdyn:null,//跳转地址
+      didLogin:true,//未登录
+      hasLogin:false,//未登录
     }
   },
   computed:{
     ...mapState(['userMes'])
   },
   mounted(){
-    console.log(this.userMes)
     if(window.localStorage.getItem('name')){
       this.nickName=window.localStorage.getItem('name');
     }
@@ -94,7 +96,8 @@ export default {
       this.userPhone=window.localStorage.getItem('phone')
     }
     if(this.userMes.engineerVO){
-      console.log(this.userMes.engineerVO.state)
+      this.didLogin=false;
+      this.hasLogin=true;
       if(this.userMes.engineerVO.state==0){
         this.$refs.certColor.style.color='#999'
       }else if(this.userMes.engineerVO.state==1){
@@ -127,45 +130,35 @@ export default {
       this.isBackT_fn(false);
     },
 
-    cert(){//申请认证
+    cert(){//申请认证\
       let _this=this;
-      let formData=new FormData();
-      formData.append('id',_this.userMes.engineerVO.id);
-      _this.$axios.post(_this.oUrl+'/mobile/externalEngineerApply',formData).then((res)=>{
-        if(res.data.code==0){
-          console.log(res)
-          _this.messageTitle=res.data.data.title;
-          _this.messageCon=res.data.data.con;
-          // if(res.data.data.delcode==0){
-          //   this.pathdyn='/personMes'
-          // }else if(res.data.data.delcode==1){
-          //   this.pathdyn='/cerCard'
-          // }else{
-          //   this.pathdyn='/cerSkill'
-          // }
-          this.userMes_fn(res.data.data);
-          if(res.data.data.engineerVO.state==0){
-            this.$Toast(res.data.data.engineerVO.identifyMsg)
-          }else if(res.data.data.engineerVO.state==1){
-            this.$Toast('当前资料认证中')
+      if(!_this.userMes.engineerVO){
+        _this.$Toast('请先登录');
+        _this.$router.push('/Tlogin')
+      }else{
+        let formData=new FormData();
+        formData.append('id',_this.userMes.engineerVO.id);
+        _this.$axios.post(_this.oUrl+'/mobile/externalEngineerApply',formData).then((res)=>{
+          if(res.data.code==0){
+            _this.messageTitle=res.data.data.title;
+            _this.messageCon=res.data.data.con;
+            this.userMes_fn(res.data.data);
+            console.log(res)
+            if(res.data.data.engineerVO.state==0){
+              this.$Toast(res.data.data.engineerVO.identifyMsg)
+            }else if(res.data.data.engineerVO.state==1){
+              this.$Toast('当前资料认证中')
+            }else{
+              this.$Toast('您已完成认证')
+            }
           }else{
-            this.$Toast('您已完成认证')
+            _this.$Toast(res.data.msg)
           }
-          // setTimeout(()=>{
-          //   MessageBox.confirm(_this.messageCon,_this.messageTitle,{confirmButtonText:'跳转',cancelButtonText:'返回'}).then(action => {
-          //     _this.$router.push({
-          //       path:_this.pathdyn,
-          //       isDis:false
-          //     })
-          //   });
-          // },500)
-        }else{
-          _this.$Toast(res.data.msg)
-        }
-      }).catch((err)=>{
-        _this.$Toast('未知错误')
-        console.log(err)
-      })
+        }).catch((err)=>{
+          _this.$Toast('未知错误')
+          console.log(err)
+        })
+      }
     }
   },
   components:{
