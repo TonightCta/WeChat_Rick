@@ -26,6 +26,10 @@ ul{
   margin:0;
   padding:0;
 }
+ul li{
+  -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+}
 p{
   margin:0;
 }
@@ -74,4 +78,13 @@ input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
 }
 .mint-msgbox-confirm{
   color:#eb7a1d!important;
+}
+.mint-msgbox{
+  border-radius: 10px!important;
+}
+.mint-msgbox-confirm {
+  font-size: 1.6rem!important;
+}
+.mint-msgbox-cancel{
+  font-size: 1.6rem!important;
 }

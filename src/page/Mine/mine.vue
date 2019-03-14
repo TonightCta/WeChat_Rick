@@ -5,7 +5,7 @@
     <div class="person_mes">
       <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic" @click="goMes()">
       <router-link to="/TLogin" tag="p" class="person_oper" @click.native="mineCon()" v-show="didLogin">
-      请登录
+        请登录
       </router-link>
       <p class="person_oper" v-show="hasLogin">{{nickName}}</p>
       <div class="person_del">
@@ -26,12 +26,14 @@
           <span>邮箱：</span>
           <span>{{userEmail}}</span>
         </p>
-        <span class="iconfont icon-icon y" @click="cert()" ref="certColor"></span>
+        <span class="iconfont icon-iconfontzhizuobiaozhun023114 y" @click="cert()" ref="certColor"></span>
       </div>
-      <!-- 阴影盒子 -->
-      <div class="person_mask">
 
-      </div>
+    </div>
+    <!-- 阴影盒子 -->
+
+    <div class="person_mask">
+
     </div>
 
     <!-- 功能块 -->
@@ -52,9 +54,6 @@
           <span>编辑资料</span>
           <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
-        <!-- <li @click="logOut()">
-
-        </li> -->
         <router-link to="/setTing" tag="li">
           <i class="iconfont icon-shezhi"></i>
           <span>设置</span>
@@ -74,7 +73,6 @@ export default {
   inject:['reload'],
   data(){
     return{
-      nickName:'请登录',
       userPhone:'-',
       userDate:'-',
       userEmail:'-',
@@ -86,12 +84,14 @@ export default {
     }
   },
   computed:{
-    ...mapState(['userMes'])
+    ...mapState(['userMes']),
+    nickName(){
+      if(this.userMes.engineerVO){
+        return this.userMes.engineerVO.name
+      }
+    }
   },
   mounted(){
-    if(window.localStorage.getItem('name')){
-      this.nickName=window.localStorage.getItem('name');
-    }
     if(window.localStorage.getItem('phone')){
       this.userPhone=window.localStorage.getItem('phone')
     }
@@ -99,19 +99,31 @@ export default {
       this.didLogin=false;
       this.hasLogin=true;
       if(this.userMes.engineerVO.state==0){
-        this.$refs.certColor.style.color='#999'
-      }else if(this.userMes.engineerVO.state==1){
         this.$refs.certColor.style.color='black'
+      }else if(this.userMes.engineerVO.state==1){
+        this.$refs.certColor.style.color='#999'
       }else{
-        this.$refs.certColor.style.color='#eb7a1d'
+        this.$refs.certColor.style.color='red'
       }
     }
     if(this.userMes.email){
       this.userEmail=this.userMes.email
     }
-
     if(this.userMes.engineerVO){
       this.userDate=this.userMes.engineerVO.workYear
+    };
+    let userId=window.localStorage.getItem('Uid');
+    if(!this.userMes.engineerVO&&window.localStorage.getItem('Uid')){
+      this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
+        if(res.data.code==0){
+          this.userMes_fn(res.data.data)
+        }else{
+          this.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        console.log(err);
+        this.$Toast('未知错误')
+      })
     }
   },
   methods:{
@@ -130,12 +142,63 @@ export default {
       this.isBackT_fn(false);
     },
 
-    cert(){//申请认证\
+    cert(){//申请认证
       let _this=this;
+      let beLing=_this.userMes.engineerVO
       if(!_this.userMes.engineerVO){
         _this.$Toast('请先登录');
         _this.$router.push('/Tlogin')
-      }else{
+      }else if(beLing.identifyState==0){
+        MessageBox({
+          message:'当前未进行资料完善，是否前往？',
+          confirmButtonText:'前往',
+          cancelButtonText:'取消',
+          showCancelButton:true
+        }).then(action => {
+          if(action=='confirm'){
+            _this.$router.push({
+              path:'/personMes',
+              query:{
+                isDis:false
+              }
+            })
+          }
+        }).catch(err=>{
+          if(err=='cancel'){
+            console.log(err)
+          }
+        })
+      }else if(beLing.identifyState==1){
+        MessageBox({
+          message:'当前未进行身份认证，是否前往？',
+          confirmButtonText:'前往',
+          cancelButtonText:'取消',
+          showCancelButton:true
+        }).then(action => {
+          if(action=='confirm'){
+            _this.$router.push('/cerCard')
+          }
+        }).catch(err=>{
+          if(err=='cancel'){
+            console.log(err)
+          }
+        })
+      }else if(beLing.identifyState==2){
+        MessageBox({
+          message:'当前未进行技能认证，是否前往？',
+          confirmButtonText:'前往',
+          cancelButtonText:'取消',
+          showCancelButton:true
+        }).then(action => {
+          if(action=='confirm'){
+            _this.$router.push('/cerSkill')
+          }
+        }).catch(err=>{
+          if(err=='cancel'){
+            console.log(err)
+          }
+        })
+      }else if(beLing.identifyState==3){
         let formData=new FormData();
         formData.append('id',_this.userMes.engineerVO.id);
         _this.$axios.post(_this.oUrl+'/mobile/externalEngineerApply',formData).then((res)=>{
@@ -143,21 +206,23 @@ export default {
             _this.messageTitle=res.data.data.title;
             _this.messageCon=res.data.data.con;
             this.userMes_fn(res.data.data);
-            console.log(res)
             if(res.data.data.engineerVO.state==0){
               this.$Toast(res.data.data.engineerVO.identifyMsg)
             }else if(res.data.data.engineerVO.state==1){
-              this.$Toast('当前资料认证中')
+              this.$Toast('已申请认证，请等待')
             }else{
               this.$Toast('您已完成认证')
             }
           }else{
             _this.$Toast(res.data.msg)
           }
+          _this.reload();
         }).catch((err)=>{
           _this.$Toast('未知错误')
           console.log(err)
         })
+      }else{
+        _this.$Toast('当前账户异常，请联系客服')
       }
     }
   },
@@ -180,6 +245,7 @@ export default {
     border-radius:12px;
     margin-top: 2rem;
     position: relative;
+    z-index: 10;
     .person_pic{
       width: 8rem;
       height: 8rem;
@@ -199,11 +265,13 @@ export default {
       height: 6rem;
       // background: blue;
       padding-top: 1.5rem;
+      z-index: 10;
       ul{
         width: 100%;
         box-sizing: border-box;
         display: flex;
         flex-wrap: 1;
+        margin-top: 1rem;
         li{
           width: 50%;
           font-size: 1.2rem;
@@ -214,7 +282,7 @@ export default {
         }
       }
       p{
-        margin-top:1rem;
+        margin-top:2rem;
         width: 100%;
         font-size: 1.2rem;
         padding-left:1rem;
@@ -225,27 +293,29 @@ export default {
       font-size: 2rem;
       color:#999;
       position: absolute;
-      left:50%;
-      top:20.2rem;
+      right:2rem;
+      top:2rem;
       margin-left: -1.4rem;
     }
-    .person_mask{
-      width: 60%;
-      height: 10rem;
-      background: white;
-      margin:0 auto;
-      position: absolute;
-      top:12rem;
-      box-shadow:0px 30px 100px #666;
-      z-index: -1;
-      left:50%;
-      margin-left: -30%;
-    }
+
+  }
+  .person_mask{
+    width: 60%;
+    height: 10rem;
+    background: white;
+    margin:0 auto;
+    position: absolute;
+    top:11rem;
+    box-shadow:0px 30px 100px #666;
+    z-index: 1;
+    left:50%;
+    margin-left: -30%;
   }
 
   .person_work{
     width: 100%;
     margin-bottom: 15rem;
+    z-index: 10;
     ul{
       width: 100%;
       li{

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { Toast  } from 'mint-ui';
 Vue.use(Router)
+import NProgress from 'nprogress'
 
 
 const router= new Router({
@@ -123,7 +124,7 @@ const router= new Router({
       name:'CerSkill',
       component:resolve=>require(['@/page/Mine/cer_skill'],resolve),
       meta:{
-        keep:true
+        keep:false
       }
     },
     {
@@ -131,12 +132,13 @@ const router= new Router({
       name:'CerCard',
       component:resolve=>require(['@/page/Mine/cer_card'],resolve),
       meta:{
-        keep:true
+        keep:false
       }
     }
   ]
 });
 router.beforeEach((to,from,next)=>{
+  NProgress.start();
   //登录权限页面
   const nextRoute=['CerSkill','CerCard','PersonMes','TakeOrder','DemandNeed','WorkLog'];
   if(nextRoute.indexOf(to.name) > -1){
@@ -147,4 +149,7 @@ router.beforeEach((to,from,next)=>{
   }
   next()
 });
+router.afterEach(() => {
+    NProgress.done()
+})
 export default router;

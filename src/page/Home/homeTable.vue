@@ -3,7 +3,7 @@
   <div class="">
     <div class="home_table">
       <ul>
-        <router-link to="/register" tag="li">小哥注册</router-link>
+        <li @click="hasLogin()">小哥注册</li>
         <router-link to="/takeOrder" tag="li">接单赚钱</router-link>
         <router-link to="/demandNeed" tag="li">发布需求</router-link>
         <router-link to="/workLog" tag="li">工作日志</router-link>
@@ -16,7 +16,20 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
+  computed:{
+    ...mapState(['userMes'])
+  },
+  methods:{
+    hasLogin(){
+      if(this.userMes.engineerVO){
+        this.$Toast('当前已登录，请退出登录后再试')
+      }else{
+        this.$router.push('/register')
+      }
+    }
+  }
 }
 </script>
 

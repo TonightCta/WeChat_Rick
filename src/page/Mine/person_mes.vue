@@ -14,32 +14,23 @@
             <span class="mes_mask" v-show="disabled"></span>
           </span>
         </li>
-        <!-- <li>
-          <img src="../../../static/img/mes_pass.png" alt="">
-          <span>登录密码:</span>
-          <span>
-            <input type="password" v-model="userPass"name="" value=""
-             placeholder="请输入您的密码"
-             >
-             <span class="mes_mask" v-show="disabled"></span>
-          </span>
-        </li> -->
         <li>
           <img src="../../../static/img/mes_location.png" alt="">
           <span>服务范围:</span>
           <span>
             <input type="text" v-model="choseTurn" name="" value=""
             placeholder="请输入您的工作地址"
+             style="width:85%"
             >
             <span class="mes_mask" v-show="disabled"></span>
-            <span class="choseVince" @click="choseVins()"></span>
+            <span class="choseVince" v-show="!disabled" @click="choseVins()"></span>
           </span>
         </li>
         <li>
           <img src="../../../static/img/mes_person.png" alt="">
           <span>身份认证:</span>
           <span>
-            <input type="text" v-model="userCard" name="" value=""
+            <input type="text"  v-model="userCard" name="" value=""
             placeholder="请输入您的身份证号"
             >
             <span class="mes_mask" v-show="true"></span>
@@ -57,18 +48,19 @@
           <img src="../../../static/img/mes_date.png" alt="">
           <span>工作年限:</span>
           <span>
-            <input type="text" v-model="userDate" name="" value=""
+            <input type="text" @blur="mesClear" v-model="userDate" name="" value=""
             placeholder="请输入您的工作年限"
             >
-            <font>年</font>
             <span class="mes_mask" v-show="disabled"></span>
           </span>
+          <font v-show="isTime">年</font>
+
         </li>
         <li>
           <img src="../../../static/img/mes_email.png" alt="">
           <span>电子邮箱:</span>
-          <span>
-            <input type="text" v-model="userEmail" name="" value=""
+          <span class="aaaaa">
+            <input type="text" @blur="mesClear" v-model="userEmail" name="" value=""
             placeholder="请输入您的邮箱地址"
             >
             <span class="mes_mask" v-show="disabled"></span>
@@ -78,7 +70,7 @@
           <img src="../../../static/img/mes_phone.png" alt="">
           <span>联系电话:</span>
           <span>
-            <input type="text" v-model="userPhone" name="" value=""
+            <input type="text" @blur="mesClear" v-model="userPhone" name="" value=""
             placeholder="请输入您的联系电话"
             >
             <span class="mes_mask" v-show="disabled"></span>
@@ -94,7 +86,7 @@
         <span @click="cancelChose()">取消</span>
         <span @click="turnChose()">确认</span>
       </p>
-      <input type="text" name="" value="" v-model="choseTurn"n>
+      <input type="text" name="" value="" v-model="choseTurn">
       <input type="text" name="" value="" v-model="choseText">
       <span class="text_mask"></span>
       <div class="localist">
@@ -132,6 +124,7 @@
 <script>
 import WorkHeader from '@/components/work_header'
 import {mapState,mapMutations} from 'vuex'
+import {downIOS} from '@/assets/js/default'
 export default {
   data(){
     return{
@@ -141,9 +134,9 @@ export default {
       userLoca:'-',//用户工作地址
       userCard:'-',//用户身份认证
       userSkill:'-',//用户技能认证
-      userDate:'-',//用户工作年限
-      userEmail:'-',//用户邮箱
-      userPhone:'-',//用户联系电话
+      userDate:'',//用户工作年限
+      userEmail:'',//用户邮箱
+      userPhone:'',//用户联系电话
       placeArr:[],
       delArr:[],
       showloca:false,
@@ -157,6 +150,8 @@ export default {
       cityList:[],
       a:[],//数据暂存数组
       b:[],//数据暂存数组2
+      isTime:false,//年限是否为空
+      mesClear:downIOS
     }
   },
   computed:{
@@ -164,6 +159,11 @@ export default {
   },
   mounted(){
     this.getLocation();//获取地址
+    if(this.userDate.length>1){
+      this.isTime=true;
+    }else{
+      this.isTime=false
+    }
     this.disabled=this.$route.query.isDis;
     if(this.userMes.name){//登录ID
       this.userId=this.userMes.name;
@@ -211,6 +211,15 @@ export default {
       this.userPhone=this.userMes.mobile
     };
   },
+  watch:{
+    userDate(val,oldVal){
+      if(val.length>1){
+        this.isTime=true;
+      }else{
+        this.isTime=false
+      }
+    }
+  },
   methods:{
     ...mapMutations(['userMes_fn']),
     getLocation(){//获取服务地址
@@ -248,29 +257,40 @@ export default {
       })
     },
     saveMes(){
-      this.$Indicator.open();
       let _vm=this;
-      let formData=new FormData();
-      formData.append('id',_vm.userMes.engineerVO.id);
-      formData.append('workYear',_vm.userDate);
-      formData.append('email',_vm.userEmail);
-      for(let i in _vm.cityID){
-        formData.append('placeIds',_vm.cityID[i]);
-      }
-      _vm.$axios.post(_vm.oUrl+'/mobile/editEngineer',formData).then((res)=>{
-        if(res.data.code==0){
-          _vm.userMes_fn(res.data.data);
-            _vm.$Indicator.close();
-            _vm.$Toast('保存成功');
-        }else{
-          _vm.$Indicator.close();
-          _vm.$Toast(res.data.msg)
+      if(_vm.userDate==''){
+        _vm.$Toast('请输入工作年限')
+      }else if(_vm.userEmail==''){
+        _vm.$Toast('请输入您的邮箱')
+      }else if(!(/^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/.test(this.userEmail))){
+        _vm.$Toast('请输入正确的邮箱格式')
+      }else if(!(/^1[34578]\d{9}$/.test(_vm.userPhone))){
+        _vm.$Toast('请输入正确的手机号')
+      }else{
+        this.$Indicator.open();
+        let _vm=this;
+        let formData=new FormData();
+        formData.append('id',_vm.userMes.engineerVO.id);
+        formData.append('workYear',_vm.userDate);
+        formData.append('email',_vm.userEmail);
+        for(let i in _vm.cityID){
+          formData.append('placeIds',_vm.cityID[i]);
         }
-      }).catch((err)=>{
-        _vm.$Indicator.close();
-        console.log(err)
-        _vm.$Toast('未知错误')
-      })
+        _vm.$axios.post(_vm.oUrl+'/mobile/editEngineer',formData).then((res)=>{
+          if(res.data.code==0){
+            _vm.userMes_fn(res.data.data);
+              _vm.$Indicator.close();
+              _vm.$Toast('保存成功');
+          }else{
+            _vm.$Indicator.close();
+            _vm.$Toast(res.data.msg)
+          }
+        }).catch((err)=>{
+          _vm.$Indicator.close();
+          console.log(err)
+          _vm.$Toast('未知错误')
+        })
+      }
     },
     choseVins(){//地址选择
       this.showloca=true;
@@ -430,6 +450,9 @@ export default {
     turnChose(){//确认选中
       this.$refs.locaMask.style.opacity='0'
       this.$refs.locaBox.style.bottom='-100%'
+      if(this.choseTurn==='-'){
+        this.choseTurn=this.choseText
+      }
       setTimeout(()=>{
         this.showloca=false;
       })
@@ -443,9 +466,7 @@ export default {
 
 <style lang="scss" scoped>
 .person_mes{
-  // height: 100%;
   position: relative;
-  // overflow-y: hidden;
   padding-bottom: 4rem;
 }
 .personBor{
@@ -482,7 +503,7 @@ export default {
         left:6.5rem;
       }
       .mes_mask{
-        width: 200%;
+        width: 100%;
         height: 100%;
         position: absolute;
         background: black;
@@ -510,9 +531,12 @@ export default {
     li:nth-child(5){
       position: relative;
       font{
+        display: inline-block;
         position: absolute;
-        top:0;
-        right:0;
+        top:50%;
+        margin-top:-.7rem;
+        font-size: 1.2rem;
+        left:45%;
         color:#666;
       }
     }

@@ -28,6 +28,7 @@
     <div class="up_mask"  v-show="upBtn">
 
     </div>
+    <p class="card_ins"><span style="color:red;">*</span>请上传清晰身份证正反面照片，并且为 .jpg或.png格式（图片将被等比压缩为260*180大小，长度相近的图片效果更佳）</p>
   </div>
 </template>
 
@@ -35,6 +36,7 @@
 import WorkHeader from '@/components/work_header'
 import {mapState,mapMutations} from 'vuex'
 export default {
+  inject:['reload'],
   data(){
     return{
       cardPic:[],//回显列表
@@ -62,21 +64,26 @@ export default {
     },
   },
   created(){
+
+  },
+  mounted(){
     if(this.userMes.engineerVO){
       if(this.userMes.engineerVO.identityFiles.length>=1){
         let  localCertificateFiles=this.userMes.engineerVO.identityFiles;
         this.cardWeb=localCertificateFiles;
+        setTimeout(()=>{
+          console.log(this.publicLength)
+          if(this.publicLength>=2){
+            this.isTwo=false;
+            this.upBtn=true;
+          }else{
+            this.isTwo=true;
+            this.upBtn=false;
+          }
+        })
       }
     }
-  },
-  mounted(){
-    if((this.cardPic.length+this.cardWeb.length)>=2){
-      this.isTwo=false;
-      this.upBtn=false;
-    }else{
-      this.isTwo=true;
-      this.upBtn=true;
-    }
+
   },
   methods:{
     ...mapMutations(['userMes_fn']),
@@ -117,8 +124,9 @@ export default {
           _vm.$Indicator.close();
           _vm.$Toast('删除成功');
           _vm.userMes_fn(res.data.data);
-          if(res.data.data.engineerVO.certificateFiles.length>=1){
-            this.cardWeb=res.data.data.engineerVO.certificateFiles
+          _vm.reload();
+          if(res.data.data.engineerVO.identityFiles.length>=1){
+            this.cardWeb=res.data.data.engineerVO.identityFiles;
           }
         }else{
           _vm.$Indicator.close();
@@ -223,14 +231,7 @@ export default {
       left:50%;
       margin-left:-4rem;
       margin-top:-5rem;
-      // animation:myfirst 2s linear infinite;
-      //  -webkit-animation:myfirst 2s linear infinite; /* Safari and Chrome */
     }
-    // @keyframes myfirst{
-    //   0%{top: 7rem;}
-    //   50%{top:5rem;}
-    //   100%{top:7rem;}
-    // }
   }
   .sendCard{
     width: 5rem;
@@ -250,6 +251,14 @@ export default {
      opacity: .5;
     right:0;
     height: 4rem;
+  }
+  .card_ins{
+    width: 90%;
+    margin:0 auto;
+    text-align: justify;
+    font-size: 1.4rem;
+    color:#666;
+    margin-top: 2rem!important;
   }
 }
 </style>

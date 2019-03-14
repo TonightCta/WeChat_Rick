@@ -11,7 +11,10 @@ import VueWechatTitle from 'vue-wechat-title';
 import './index.css';
 import 'mint-ui/lib/style.css';
 import './assets/iconfont/iconfont.css';
+import './assets/iconfontT/iconfont.css';
 import 'jquery'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 Vue.prototype.$axios=Axios;
 // Vue.prototype.oUrl='http://rightservicetech.com:8080';
 Vue.prototype.oUrl='http://hexsoft.top:8080';
@@ -21,6 +24,13 @@ Vue.prototype.$Toast=Toast;
 Vue.config.productionTip = false;
 Vue.use(MintUi);
 Vue.use(VueWechatTitle);
+NProgress.configure({
+    easing: 'ease',  // 动画方式
+    speed: 500,  // 递增进度条的速度
+    showSpinner: false, // 是否显示加载ico
+    trickleSpeed: 200, // 自动递增间隔
+    minimum: 0.3 // 初始化时的最小百分比
+})
 //跳转页面默认返回顶部
 router.afterEach((to,from,next) => {
   setTimeout(()=>{

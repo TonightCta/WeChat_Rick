@@ -10,11 +10,11 @@
     <ul>
       <li>
         <img src="../../../static/img/mes_number.png" alt="">
-        <input type="text" placeholder="请输入账号/手机号" name="" value="" v-model="userName">
+        <input type="text" @blur="clearIOS" placeholder="请输入账号/手机号" name="" value="" v-model="userName">
       </li>
       <li>
         <img src="../../../static/img/btn_pass.png" alt="">
-        <input type="password" v-model="userPass" ref="userpass" placeholder="请输入密码" name="" value="">
+        <input type="password" @blur="clearIOS" v-model="userPass" ref="userpass" placeholder="请输入密码" name="" value="">
         <i class="iconfont icon-chakan" v-show="isPass" @click="showPass()"></i>
         <i class="iconfont icon-chakan" v-show="hidePs" @click="hidePass()"></i>
       </li>
@@ -30,7 +30,8 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
-import {mapMutations,mapState} from 'vuex';
+import {mapMutations,mapState} from 'vuex'
+import {downIOS} from '@/assets/js/default'
 export default {
   components:{
     WorkHeader
@@ -40,7 +41,8 @@ export default {
       userName:null,//用户登录名
       userPass:null,//用户密码
       isPass:false,
-      hidePs:false
+      hidePs:false,
+      clearIOS:downIOS
     }
   },
   watch:{

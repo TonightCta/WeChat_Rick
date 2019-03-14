@@ -45,13 +45,13 @@ export default {
     }
   },
   watch:{
-    skillsPic(val,oldVal){
-      if((val.length+this.webView.length)>=1){
+    skillLength(val,oldVal){
+      if(val>=1){
         this.upBtn=false;
       }else{
         this.upBtn=true
       }
-      if((val.length+this.webView.length)>=5){
+      if(val>=5){
         this.isTwo=false;
       }else{
         this.isTwo=true
@@ -59,15 +59,28 @@ export default {
     }
   },
   computed:{
-    ...mapState(['userMes'])
+    ...mapState(['userMes']),
+    skillLength(){
+      return this.skillsPic.length+this.webView.length
+    }
   },
   mounted(){
     if(this.userMes.engineerVO){
       if(this.userMes.engineerVO.certificateFiles.length>=1){
-        let  localCertificateFiles=this.userMes.engineerVO.certificateFiles
-        for(let i in localCertificateFiles){
-          this.webView.push(localCertificateFiles[i])
-        }
+        let  localCertificateFiles=this.userMes.engineerVO.certificateFiles;
+        this.webView=localCertificateFiles;
+        setTimeout(()=>{
+          if(this.skillLength>=1){
+            this.upBtn=false;
+          }else{
+            this.upBtn=true
+          }
+          if(this.skillLength>=5){
+            this.isTwo=false;
+          }else{
+            this.isTwo=true
+          }
+        })
       }
     }
   },
@@ -195,7 +208,8 @@ export default {
     height: 15rem;
     border-radius: 10px;
     margin-top:2rem;
-    background: white;
+    background: url('../../../static/img/skill_bg.jpg');
+    background-size: 100% 100%;
     margin:0 auto;
     box-sizing: border-box;
     box-shadow: 0px 0px 15px #999;
@@ -214,20 +228,12 @@ export default {
     i{
       color:#666;
       font-size: 8rem;
-      // z-index: -1;
       position: absolute;
       top:50%;
       left:50%;
       margin-left:-4rem;
       margin-top:-5rem;
-      // animation:myfirst 2s linear infinite;
-      //  -webkit-animation:myfirst 2s linear infinite; /* Safari and Chrome */
     }
-    // @keyframes myfirst{
-    //   0%{top: 7rem;}
-    //   50%{top:5rem;}
-    //   100%{top:7rem;}
-    // }
   }
   .sendCard{
     width: 5rem;

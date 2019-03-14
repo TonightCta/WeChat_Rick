@@ -23,6 +23,7 @@
 <script>
 import WorkHeader from '@/components/work_header'
 import {mapMutations} from 'vuex'
+import { MessageBox } from 'mint-ui'
 export default {
   components:{
     WorkHeader
@@ -30,21 +31,35 @@ export default {
   methods:{
     ...mapMutations(['userMes_fn']),
     logOut(){//注销登录
-      this.$Indicator.open('注销中...');
-      this.userMes_fn('');
-      window.localStorage.clear('name');
-      window.localStorage.clear('Uid');
-      window.localStorage.clear('phone');
-      setTimeout(()=>{
-        this.$Indicator.close();
-        this.$Toast('注销成功');
-        this.$router.push({
-          path:'/mine',
-          query:{
-            color:4
-          }
-        })
-      },500)
+      MessageBox({
+        message:'确认注销登录？',
+        confirmButtonText:'确定',
+        cancelButtonText:'取消',
+        showCancelButton:true
+      }).then(action => {
+        if(action=='confirm'){
+          this.$Indicator.open('注销中...');
+          this.userMes_fn('');
+          window.localStorage.clear('name');
+          window.localStorage.clear('Uid');
+          window.localStorage.clear('phone');
+          setTimeout(()=>{
+            this.$Indicator.close();
+            this.$Toast('注销成功');
+            this.$router.push({
+              path:'/mine',
+              query:{
+                color:4
+              }
+            })
+          },500)
+        }
+      }).catch(err=>{
+        if(err=='cancel'){
+          console.log(err)
+        }
+      })
+
     },
   }
 }

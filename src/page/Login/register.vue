@@ -10,24 +10,24 @@
     <ul>
       <li>
         <img src="../../../static/img/regi_icon.png" alt="">
-        <input type="text" v-model="userName" placeholder="请输入姓名" name="" value="">
+        <input type="text" v-model="userName" @blur="regisClear" placeholder="请输入姓名" name="" value="">
       </li>
       <li>
         <img src="../../../static/img/btn_icon.png" alt="">
-        <input type="number" v-model="userPhone" placeholder="请输入手机号" name="" value="">
+        <input type="number" v-model="userPhone" @blur="regisClear" placeholder="请输入手机号" name="" value="">
       </li>
 
       <li>
         <img src="../../../static/img/mes_pass.png" alt="">
-        <input type="password" v-model="userPass" placeholder="请输入密码" name="" value="">
+        <input type="password" v-model="userPass" @blur="regisClear" placeholder="请输入密码" name="" value="">
       </li>
       <li>
         <img src="../../../static/img/btn_pass.png" alt="">
-        <input type="password" v-model="turnPass" placeholder="确认密码" name="" value="">
+        <input type="password" v-model="turnPass" @blur="regisClear" placeholder="确认密码" name="" value="">
       </li>
       <li>
         <img src="../../../static/img/mes_number.png" alt="">
-        <input type="text" v-model="inviCode" placeholder="请输入邀请码（选填）" name="" value="">
+        <input type="text" v-model="inviCode" @blur="regisClear" placeholder="请输入邀请码（选填）" name="" value="">
       </li>
     </ul>
     <p class="login_btn" @click="regis()">注册</p>
@@ -37,6 +37,7 @@
 <script>
 import {mapMutations} from 'vuex';
 import WorkHeader from '@/components/work_header'
+import {downIOS} from '@/assets/js/default'
 export default {
   components:{
     WorkHeader
@@ -49,6 +50,7 @@ export default {
       userPass:null,//用户密码
       turnPass:null,//确认密码
       inviCode:null,//邀请码
+      regisClear:downIOS
     }
   },
   methods:{
@@ -80,7 +82,7 @@ export default {
             _this.userMes_fn(res.data.data);
             _this.userID_fn(res.data.data.id);
             window.localStorage.setItem('Uid',res.data.data.id);
-            window.localStorage.setItem('name',res.data.data.name);
+            window.localStorage.setItem('name',res.data.data.engineerVO.name);
             window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
             _this.$router.push({
               path:'/mine',
