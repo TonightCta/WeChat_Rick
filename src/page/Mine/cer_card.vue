@@ -115,27 +115,29 @@ export default {
     },
     delWebCard(index){//删除当前已上传认证图片
       let _vm=this;
-      _vm.$Indicator.open('删除中...');
-      let formData=new FormData();
-      formData.append('id',_vm.cardWeb[index].id);
-      formData.append('type','identityFile');
-      _vm.$axios.post(_vm.oUrl+'/mobile/deleteEngineerFile',formData).then((res)=>{
-        if(res.data.code==0){
-          _vm.$Indicator.close();
-          _vm.$Toast('删除成功');
-          _vm.userMes_fn(res.data.data);
-          _vm.reload();
-          if(res.data.data.engineerVO.identityFiles.length>=1){
+      if(_vm.userMes.engineerVO.state==0){
+        _vm.$Indicator.open('删除中...');
+        let formData=new FormData();
+        formData.append('id',_vm.cardWeb[index].id);
+        formData.append('type','identityFile');
+        _vm.$axios.post(_vm.oUrl+'/mobile/deleteEngineerFile',formData).then((res)=>{
+          if(res.data.code==0){
+            _vm.$Indicator.close();
+            _vm.$Toast('删除成功');
+            _vm.userMes_fn(res.data.data);
+            _vm.reload();
             this.cardWeb=res.data.data.engineerVO.identityFiles;
+          }else{
+            _vm.$Indicator.close();
+            _vm.$Toast(res.data.msg);
           }
-        }else{
-          _vm.$Indicator.close();
-          _vm.$Toast(res.data.msg);
-        }
-      }).catch((err)=>{
-        _vm.$Toast('未知错误');
-        console.log(err)
-      })
+        }).catch((err)=>{
+          _vm.$Toast('未知错误');
+          console.log(err)
+        })
+      }else{
+        _vm.$Toast('当前资料认证中或已认证，如需修改请联系客服')
+      }
     },
     sendCards(){//提交认证数据
       let _vm=this;

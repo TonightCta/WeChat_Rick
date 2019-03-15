@@ -35,6 +35,7 @@
 import WorkHeader from '@/components/work_header'
 import {mapState,mapMutations} from 'vuex'
 export default {
+  inject:['reload'],
   data(){
     return{
       skillsPic:[],
@@ -114,25 +115,28 @@ export default {
     },
     delWhenPic(index){//删除当前已上传照片
       let _vm=this;
-      _vm.$Indicator.open('删除中...');
-      let formData=new FormData();
-      formData.append('id',_vm.webView[index].id);
-      formData.append('type','certificateFile');
-      _vm.$axios.post(_vm.oUrl+'/mobile/deleteEngineerFile',formData).then((res)=>{
-        if(res.data.code==0){
-          _vm.$Indicator.close();
-          _vm.$Toast('删除成功');
-          _vm.userMes_fn(res.data.data);
-          if(res.data.data.engineerVO.certificateFiles.length>=1){
+      if(_vm.userMes.engineerVO.state==0){
+        _vm.$Indicator.open('删除中...');
+        let formData=new FormData();
+        formData.append('id',_vm.webView[index].id);
+        formData.append('type','certificateFile');
+        _vm.$axios.post(_vm.oUrl+'/mobile/deleteEngineerFile',formData).then((res)=>{
+          if(res.data.code==0){
+            _vm.$Indicator.close();
+            _vm.$Toast('删除成功');
+            _vm.userMes_fn(res.data.data);
+            _vm.reload()
             this.webView=res.data.data.engineerVO.certificateFiles
+          }else{
+            _vm.$Indicator.close();
+            _vm.$Toast(res.data.msg);
           }
-        }else{
-          _vm.$Indicator.close();
-          _vm.$Toast(res.data.msg);
-        }
-      }).catch((err)=>{
-        _vm.$Toast('未知错误')
-      })
+        }).catch((err)=>{
+          _vm.$Toast('未知错误')
+        })
+      }else{
+          _vm.$Toast('当前资料认证中或已认证，如需修改请联系客服')
+      }
     },
     sendCards(){//提交认证数据
       let _vm=this;

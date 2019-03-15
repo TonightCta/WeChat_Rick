@@ -20,7 +20,7 @@ const router= new Router({
       component: resolve=>require(['@/page/Home/home'],resolve),
       meta:{
         title:'犀牛小哥ICT服务平台',
-        keep:true
+        keep:false
       }
     },
     {

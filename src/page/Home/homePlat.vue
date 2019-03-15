@@ -32,7 +32,7 @@ export default {
 }
 .plat_bg{
   width: 100%;
-  height: 210px;
+  height: 190px;
   background:url('../../../static/img/plat_bg.png');
   background-size:100% 100%;
 

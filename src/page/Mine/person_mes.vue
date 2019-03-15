@@ -23,8 +23,8 @@
              style="width:85%"
             >
             <span class="mes_mask" v-show="disabled"></span>
-            <span class="choseVince" v-show="!disabled" @click="choseVins()"></span>
           </span>
+          <span class="choseVince" v-show="!disabled" @click="choseVins()"></span>
         </li>
         <li>
           <img src="../../../static/img/mes_person.png" alt="">
@@ -115,7 +115,7 @@
       </ul>
       </div>
     </div>
-    <div class="locaMask" v-show="showloca" ref="locaMask"  @click="cancelChose()">
+    <div class="locaMask" @touchmove.prevent v-show="showloca" ref="locaMask"  @click="cancelChose()">
 
     </div>
   </div>
@@ -266,6 +266,8 @@ export default {
         _vm.$Toast('请输入正确的邮箱格式')
       }else if(!(/^1[34578]\d{9}$/.test(_vm.userPhone))){
         _vm.$Toast('请输入正确的手机号')
+      }else if(_vm.cityID.length<1){
+        _vm.$Toast('请选择至少一个地址')
       }else{
         this.$Indicator.open();
         let _vm=this;
@@ -309,9 +311,6 @@ export default {
     },
     choseInV(index){//选择省份
       let _vm=this;
-
-// <--------------------->
-
       _vm.a=[]//暂存数据
       _vm.$refs.allchose.style.color='black';
       _vm.$refs.allicon.style.display='none';
@@ -382,6 +381,7 @@ export default {
         _vm.cityID.push(_vm.cityList[_vm.proID].usingChildList[index].id);
       });
       _vm.choseText=_vm.placeArr.join('/');
+      _vm.choseTurn=_vm.choseTurn+'/'+_vm.placeArr.join('/');
       _vm.$refs.city[index].style.color='#eb7a1d';
       _vm.$refs.city[index].children[1].style.display='block';
     },
@@ -456,7 +456,19 @@ export default {
       setTimeout(()=>{
         this.showloca=false;
       })
-    }
+    },
+    //禁止页面滑动
+    stop(){
+      document.body.addEventListener('touchmove', function (e) {
+        e.preventDefault() // 阻止默认的处理方式(阻止下拉滑动的效果)
+      }, {passive: false})
+    },
+    //取消禁止页面滑动
+    move(){
+      document.body.addEventListener('touchmove', function (e) {
+        e.preventDefault() // 阻止默认的处理方式(阻止下拉滑动的效果)
+    }, {passive: true})
+     }
   },
   components:{
     WorkHeader
@@ -516,7 +528,7 @@ export default {
         position: absolute;
         background: black;
         opacity: 0;
-        left:8%;
+        left:0;
       }
       input{
         width:80%;
@@ -562,7 +574,7 @@ export default {
   position: fixed;
   bottom:-100%;
   transition: 1s all;
-  z-index: 10;
+  z-index: 100;
   .locaBox_title{
     width: 100%;
     height: 3rem;
@@ -652,9 +664,8 @@ export default {
   background: rgba(0,0,0,.5);
   top:0;
   left:0;
-  z-index: 1;
+  z-index: 10;
   transition: 1s all;
-  opacity: 0;
 }
 
 </style>

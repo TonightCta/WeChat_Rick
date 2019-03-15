@@ -49,7 +49,7 @@ export default {
       nickName:null,//用户登录名
       userPass:null,//用户密码
       turnPass:null,//确认密码
-      inviCode:null,//邀请码
+      inviCode:'',//邀请码
       regisClear:downIOS
     }
   },
