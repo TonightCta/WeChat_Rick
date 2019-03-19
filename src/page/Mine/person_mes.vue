@@ -73,7 +73,7 @@
             <input type="text" @blur="mesClear" v-model="userPhone" name="" value=""
             placeholder="请输入您的联系电话"
             >
-            <span class="mes_mask" v-show="disabled"></span>
+            <span class="mes_mask" v-show="true"></span>
           </span>
         </li>
       </ul>
@@ -380,8 +380,9 @@ export default {
       setTimeout(()=>{
         _vm.cityID.push(_vm.cityList[_vm.proID].usingChildList[index].id);
       });
+      _vm.showPl.push(_vm.choseVal+'-'+_vm.delArr[index].name);
       _vm.choseText=_vm.placeArr.join('/');
-      _vm.choseTurn=_vm.choseTurn+'/'+_vm.placeArr.join('/');
+      _vm.choseTurn=_vm.showPl.join('/');
       _vm.$refs.city[index].style.color='#eb7a1d';
       _vm.$refs.city[index].children[1].style.display='block';
     },
@@ -412,7 +413,9 @@ export default {
         this.placeArr.splice(indexD,1);
         setTimeout(()=>{
           this.placeArr.push(this.choseVal+'-'+y.name);
+          this.showPl.push(this.choseVal+'-'+y.name)
           this.choseText=this.placeArr.join('/');
+          this.choseTurn=this.showPl.join('/');
         })
       });
       this.delArr.forEach((i)=>{
@@ -434,9 +437,11 @@ export default {
       });
       _vm.delArr.forEach((r)=>{
         let indexT=_vm.placeArr.indexOf(_vm.choseVal+'-'+r.name)
-        let a=[]
+        let indexPc=_vm.showPl.indexOf(_vm.choseVal+'-'+r.name);
         _vm.placeArr.splice(indexT,1)
+        _vm.showPl.splice(indexPc,1)
         this.choseText=this.placeArr.join('/');
+        this.choseTurn=this.showPl.join('/');
       });
       let arr=[];
       _vm.delArr.forEach((c)=>{
