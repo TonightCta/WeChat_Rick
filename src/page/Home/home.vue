@@ -21,17 +21,19 @@ export default {
   },
   mounted(){
     let userId=window.localStorage.getItem('Uid');
-    if(!this.userMes.engineerVO&&window.localStorage.getItem('Uid')){
-      this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
-        if(res.data.code==0){
-          this.userMes_fn(res.data.data)
-        }else{
-          this.$Toast(res.data.msg)
-        }
-      }).catch((err)=>{
-        console.log(err);
-        this.$Toast('未知错误')
-      })
+    if(window.localStorage.getItem('Uid')){
+      if(!this.userMes.engineerVO&&){
+        this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
+          if(res.data.code==0){
+            this.userMes_fn(res.data.data)
+          }else{
+            this.$Toast(res.data.msg)
+          }
+        }).catch((err)=>{
+          console.log(err);
+          this.$Toast('未知错误')
+        })
+      }
     }
   },
   components:{
