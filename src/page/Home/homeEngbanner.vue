@@ -95,7 +95,7 @@ export default {
         slideShadows : true,
       },
       autoplay: {
-        delay:2000,//1秒切换一次
+        delay:2000,//2秒切换一次
         stopOnLastSlide: false,
         disableOnInteraction: false,
       },

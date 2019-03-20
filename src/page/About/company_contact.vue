@@ -62,7 +62,6 @@ export default {
       li{
         font-size: 1.4rem;
         line-height: 2.2rem;
-        font-weight: bold;
       }
       li:nth-of-type(even){
         font-size: 1.2rem;
@@ -84,7 +83,6 @@ export default {
         i{
           position: absolute;
           font-size: 2.8rem;
-          font-weight: bold;
           left:0;
         }
       }

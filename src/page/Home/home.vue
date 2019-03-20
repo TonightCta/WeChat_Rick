@@ -1,6 +1,7 @@
 <!-- 首页 -->
 <template lang="html">
   <div class="home_wapper">
+    <Loading/>
     <Banner/>
     <Table/>
     <Plat/>
@@ -22,7 +23,7 @@ export default {
   mounted(){
     let userId=window.localStorage.getItem('Uid');
     if(window.localStorage.getItem('Uid')){
-      if(!this.userMes.engineerVO&&){
+      if(!this.userMes.engineerVO){
         this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
           if(res.data.code==0){
             this.userMes_fn(res.data.data)
@@ -42,7 +43,8 @@ export default {
     Table:resolve=>require(['./homeTable'],resolve),
     News:resolve=>require(['./homeNews'],resolve),
     EngBanner:resolve=>require(['./homeEngBanner'],resolve),
-    Plat:resolve=>require(['./homePlat'],resolve)
+    Plat:resolve=>require(['./homePlat'],resolve),
+    Loading:resolve=>require(['./homeLoading'],resolve)
 
   }
 }

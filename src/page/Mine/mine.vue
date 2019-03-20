@@ -92,9 +92,6 @@ export default {
     }
   },
   mounted(){
-    if(window.localStorage.getItem('phone')){
-      this.userPhone=window.localStorage.getItem('phone')
-    }
     if(this.userMes.engineerVO){
       this.didLogin=false;
       this.hasLogin=true;
@@ -114,7 +111,7 @@ export default {
     };
     let userId=window.localStorage.getItem('Uid');
     if(window.localStorage.getItem('Uid')){
-      if(!this.userMes.engineerVO&&){
+      if(!this.userMes.engineerVO){
         this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
           if(res.data.code==0){
             this.userMes_fn(res.data.data)

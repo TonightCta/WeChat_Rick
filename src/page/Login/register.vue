@@ -84,6 +84,10 @@ export default {
             window.localStorage.setItem('Uid',res.data.data.id);
             window.localStorage.setItem('name',res.data.data.engineerVO.name);
             window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
+            window.localStorage.setItem('login',true)
+            setTimeout(()=>{
+              window.localStorage.clear('login')
+            },24*60*60*1000)
             _this.$router.push({
               path:'/mine',
               query:{

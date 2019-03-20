@@ -5,8 +5,8 @@
       <span>{{pageTitle}}</span>
     </WorkHeader>
     <div class="">
-      <div class="news_newsDeta" ref="newsDa" :style="{height:newsDaHeight+'px'}">
-        <mt-loadmore :auto-fill="false" :top-method="loadTop" topPullText="加载中" ref="loadmore">
+      <Scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength">
+        <div class="news_newsDeta" ref="newsDa">
           <ul>
             <li v-for="(item,index) in newsList" @click="newsDe(index)">
               <img v-lazy="oUrl+'/'+item.imgName" alt="">
@@ -15,8 +15,8 @@
               <span class="news_newsDeta_time">{{item.timeStr}}</span>
             </li>
           </ul>
-        </mt-loadmore>
-      </div>
+        </div>
+      </Scroll>
     </div>
     <p class="noData" v-show="isHasData">暂无更多数据</p>
   </div>
@@ -24,7 +24,9 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
+import Scroll from './newListCon';
 export default {
+  inject:['reload'],
   data(){
     return{
       bannerUrl:'../../static/img/banner.jpg',
@@ -34,6 +36,7 @@ export default {
       pageNum:0,//页码
       newsDaHeight:null,//动态盒子高度
       isHasData:false,//当前列表是否有数据
+      listLength:false
     }
   },
   created(){
@@ -45,16 +48,61 @@ export default {
     this.newsDaHeight=document.documentElement.clientHeight - this.$refs.newsDa.getBoundingClientRect().top;
   },
   methods:{
+    //刷新数据
+    onRefresh(done){
+      this.getNewsList();
+      this.reload()
+      done();
+    },
+    //加载更多
+    onInfinite(done){
+      this.pageNum++;
+      setTimeout(()=>{
+        let _this=this;
+        _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type='+_this.lisType+'&size=10&page='+this.pageNum).then((res)=>{
+          res.data.data.content.forEach((e)=>{
+              _this.newsList.push(e)
+          });
+          if(res.data.data.content.length>=10){
+            this.listLength=true;
+          }else{
+            this.listLength=false
+          }
+          for(let i in _this.newsList){
+            if(_this.newsList[i].title.length>10){
+              let subT=_this.newsList[i].title;
+              _this.newsList[i].title=subT.substring(0,14)+'...'
+            }
+            if(_this.newsList[i].intro.length>38){
+              let subX=_this.newsList[i].intro;
+              _this.newsList[i].intro=subX.substring(0,39)+'...'
+            }
+          };
+          done()
+        }).catch((err)=>{
+          _this.$Toast('未知异常')
+          _this.$Indicator.close();
+          console.log(err)
+        })
+      })
+    },
     //获取新闻列表
     getNewsList(){
       let _this=this;
       _this.$Indicator.open();
-      _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type='+_this.lisType+'&size=10&page='+this.pageNum).then((res)=>{
-        this.$refs.loadmore.onTopLoaded();
-        _this.$Indicator.close()
+      _this.$axios.post(_this.oUrl+'/view/findNewsListByCondition?type='+_this.lisType+'&size=10&page=0').then((res)=>{
+        // this.$refs.loadmore.onTopLoaded();
+        setTimeout(()=>{
+          _this.$Indicator.close()
+        },500)
         _this.newsList=res.data.data.content;
         if(_this.newsList.length<1){
           _this.isHasData=true;
+        }
+        if(res.data.data.content.length>=10){
+          this.listLength=true;
+        }else{
+          this.listLength=false
         }
         for(let i in _this.newsList){
           if(_this.newsList[i].title.length>10){
@@ -67,6 +115,8 @@ export default {
           }
         };
       }).catch((err)=>{
+        _this.$Toast('未知异常')
+        _this.$Indicator.close();
         console.log(err)
       })
     },
@@ -79,13 +129,10 @@ export default {
         }
       })
     },
-    // 加载更多数据
-    loadTop() {
-      this.getNewsList();
-    }
   },
   components:{
-    WorkHeader
+    WorkHeader,
+    Scroll,
   }
 }
 </script>
@@ -96,6 +143,7 @@ export default {
     margin-top:5rem;
     .news_newsDeta{
       width: 100%;
+      margin-top: 2rem;
       ul{
         width: 100%;
         li{
@@ -132,9 +180,6 @@ export default {
             right:.5rem;
             bottom:1.4rem;
           }
-        }
-        li:last-child{
-          margin-bottom: 5rem;
         }
       }
       .lookMoreNews{

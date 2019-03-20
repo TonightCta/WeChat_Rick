@@ -56,6 +56,9 @@ export default {
       margin-left:-6.5%!important;
       margin-top: 2rem;
     }
+    span{
+      display: inline!important;
+    }
   }
 }
 </style>
