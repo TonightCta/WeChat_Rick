@@ -14,7 +14,7 @@
         </slot>
       </header>
       <slot></slot>
-      <footer class="load-more" v-show="showBtn">
+      <footer class="load-more">
         <slot name="load-more">
           <span>加载中……</span>
         </slot>
@@ -47,8 +47,7 @@ export default {
       type: Function,
       default: undefined,
       require: false
-    },
-    showBtn:Boolean
+    }
   },
   data() {
     return {
@@ -134,7 +133,7 @@ export default {
 <style>
 .yo-scroll {
   position: absolute;
-  top: 2.5rem;
+  top: 5rem;
   right: 0;
   bottom: 0;
   left: 0;
@@ -157,7 +156,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
 }
 .yo-scroll.touch .inner {
   transition-duration: 0ms;
@@ -175,12 +173,14 @@ export default {
 .yo-scroll .refresh-tip,
 .yo-scroll .up-tip {
   display: none;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
 }
 .yo-scroll .load-more {
   height: 3rem;
   display: flex;
+  font-size: 1.5rem;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
 }
 </style>

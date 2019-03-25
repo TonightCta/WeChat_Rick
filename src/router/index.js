@@ -120,6 +120,11 @@ const router= new Router({
       component:resolve=>require(['@/page/Home/work_log'],resolve)
     },
     {
+      path:'/logDetis',//日志详情
+      name:'LogDetis',
+      component:resolve=>require(['@/page/Home/work_logDeti'],resolve)
+    },
+    {
       path:'/cerSkill',//技能认证页
       name:'CerSkill',
       component:resolve=>require(['@/page/Mine/cer_skill'],resolve),

@@ -140,10 +140,8 @@ export default {
 <style lang="scss" scoped>
   .news_list{
     width: 100%;
-    margin-top:5rem;
     .news_newsDeta{
       width: 100%;
-      margin-top: 2rem;
       ul{
         width: 100%;
         li{

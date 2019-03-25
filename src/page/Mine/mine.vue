@@ -92,9 +92,11 @@ export default {
     }
   },
   mounted(){
+    console.log(this.userMes)
     if(this.userMes.engineerVO){
       this.didLogin=false;
       this.hasLogin=true;
+      this.userPhone=this.userMes.engineerVO.phone
       if(this.userMes.engineerVO.state==0){
         this.$refs.certColor.style.color='black'
       }else if(this.userMes.engineerVO.state==1){

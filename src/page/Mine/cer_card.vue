@@ -238,7 +238,7 @@ export default {
   .sendCard{
     width: 5rem;
     font-size: 1.6rem;
-    position: absolute;
+    position: fixed;
     top:-5.5rem;
     z-index: 999;
     right:0;

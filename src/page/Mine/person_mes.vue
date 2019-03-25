@@ -49,11 +49,11 @@
           <span>工作年限:</span>
           <span>
             <input type="text" @blur="mesClear" v-model="userDate" name="" value=""
-            placeholder="请输入您的工作年限"
+            placeholder="单位：年"
             >
             <span class="mes_mask" v-show="disabled"></span>
           </span>
-          <font v-show="isTime">年</font>
+          <!-- <font v-show="isTime">年</font> -->
 
         </li>
         <li>
@@ -159,11 +159,11 @@ export default {
   },
   mounted(){
     this.getLocation();//获取地址
-    if(this.userDate.length>1){
-      this.isTime=true;
-    }else{
-      this.isTime=false
-    }
+    // if(this.userDate.length>1){
+    //   this.isTime=true;
+    // }else{
+    //   this.isTime=false
+    // }
     this.disabled=this.$route.query.isDis;
     if(this.userMes.name){//登录ID
       this.userId=this.userMes.name;
@@ -212,13 +212,13 @@ export default {
     };
   },
   watch:{
-    userDate(val,oldVal){
-      if(val.length>1){
-        this.isTime=true;
-      }else{
-        this.isTime=false
-      }
-    }
+    // userDate(val,oldVal){
+    //   if(val.length>1){
+    //     this.isTime=true;
+    //   }else{
+    //     this.isTime=false
+    //   }
+    // }
   },
   methods:{
     ...mapMutations(['userMes_fn']),
@@ -229,6 +229,25 @@ export default {
           _vm.cityList=res.data.data.placeList;
           _vm.delArr=_vm.cityList[0].usingChildList;
           _vm.choseVal=_vm.cityList[0].name;
+          let b=[];//存放是全选状态
+          _vm.delArr.forEach((c)=>{
+            _vm.a.push(c.id);
+            b.push(c.selected)
+          });
+          if(b.indexOf(false)>=0){
+            console.log(1)
+          }else{
+            _vm.isAll.push(_vm.choseVal);
+            _vm.isAll.forEach((x)=>{
+              if(_vm.choseVal===x){
+                _vm.$refs.allchose.style.color='#eb7a1d';
+                _vm.$refs.allicon.style.display='block';
+              }else{
+                _vm.$refs.allchose.style.color='black';
+                _vm.$refs.allicon.style.display='none';
+              }
+            });
+          }
           _vm.cityList.forEach((cityL)=>{
             cityL.usingChildList.forEach((x)=>{
               if(x.selected){

@@ -47,6 +47,9 @@ export default {
   overflow-x: hidden;
   padding-bottom: 2rem;
 }
+.view_box{
+  padding-bottom: .2rem;
+}
 #nprogress .bar {
   background: #eb7a1d !important;
 }
