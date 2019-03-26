@@ -161,7 +161,7 @@ export default {
     background: url('../../../static/img/btn_bg3.png');
     background-size: 100% 100%;
     margin:0 auto;
-    border-radius: 8px;
+    border-radius: 14px;
     box-shadow: 0px 8px 15px #ccc;
     margin-top: 2rem;
     text-align: center;

@@ -5,18 +5,19 @@
       <span>工作日志</span>
     </WorkHeader>
     <!-- <Deve/> -->
-    <p class="push_work">添加工作日志</p>
+    <p class="push_work" @click="pushLog()">添加工作日志</p>
     <div class="">
       <v-scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength">
-        <div class="work_list" v-for="(log,index) in logList"  @click="logDeti(index)">
+        <div class="work_list" v-for="(log,index) in logList">
           <p class="work_time">{{log.time}}</p>
           <p class="work_type con">项目名称:&nbsp;{{log.type}}</p>
           <p class="work_place con">工作地点:&nbsp;{{log.place}}</p>
           <p class="work_status con">进程节点:&nbsp;{{log.status}}</p>
           <p class="work_pro">
             <button type="button" name="button" @click="delWorkLog(index)"><i class="iconfont icon-duomeitiicon-"></i>删除</button>
-            <button type="button" name="button"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
+            <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
           </p>
+          <p class="click_mask con" @click="logDeti(index)"></p>
         </div>
       </v-scroll>
     </div>
@@ -26,7 +27,8 @@
 <script>
 import WorkHeader from '@/components/work_header'
 import Deve from '@/components/development_of'
-import Scroll from './newListCon';
+import Scroll from './newListCon'
+import {mapMutations} from 'vuex'
 export default {
   data(){
     return{
@@ -77,6 +79,7 @@ export default {
     'v-scroll':Scroll
   },
   methods:{
+    ...mapMutations(['logMes_fn']),
     onRefresh(done){//下拉刷新
       this.$Indicator.open();
       setTimeout(()=>{
@@ -92,12 +95,14 @@ export default {
     },
     logDeti(index){//日志详情
       this.$router.push({
-        name:'LogDetis',
-        params:{
-          con:this.logList[index]
-        }
-      })
+        name:'LogDetis'
+      });
+      window.localStorage.setItem('logMes',JSON.stringify(this.logList[index]))
     },
+    pushLog(){
+      this.$Toast('该功能开发中');
+      this.$router.push('/addLog')
+    }
   }
 }
 </script>
@@ -142,6 +147,14 @@ export default {
     padding-top: 1rem;
     color:#666;
   }
+  .click_mask{
+    width: 100%;
+    position: absolute;
+    height: 70%;
+    background: rgba(0,0,0,0);
+    left:0;
+    top:0;
+  }
   .work_time{
     font-size: 1.4rem;
     box-sizing: border-box;
@@ -164,10 +177,10 @@ export default {
       width: 7rem;
       height: 2.5rem;
       border-radius:5px;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
+      text-align: center;
       i{
-        font-size: 1.4rem;
-        margin-right: .2rem;
+        font-size: 1.3rem;
       }
     }
     button:nth-child(1){
@@ -176,7 +189,7 @@ export default {
       color:#eb7a1d;
       margin-right: 1rem;
       i{
-        font-size: 1.6rem;
+        font-size: 1.4rem;
       }
     }
     button:nth-child(2){

@@ -125,6 +125,11 @@ const router= new Router({
       component:resolve=>require(['@/page/Home/work_logDeti'],resolve)
     },
     {
+      path:'/addLog',//添加日志
+      name:'AddLog',
+      component:resolve=>require(['@/page/Home/work_addLog'],resolve)
+    },
+    {
       path:'/cerSkill',//技能认证页
       name:'CerSkill',
       component:resolve=>require(['@/page/Mine/cer_skill'],resolve),

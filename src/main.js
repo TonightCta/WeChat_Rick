@@ -6,7 +6,7 @@ import router from './router';
 import store from './assets/js/store';
 import MintUi from 'mint-ui';
 import Axios from 'axios'
-import { Indicator,Toast  } from 'mint-ui';
+import { Indicator,Toast   } from 'mint-ui';
 import VueWechatTitle from 'vue-wechat-title';
 import './index.css';
 import 'mint-ui/lib/style.css';

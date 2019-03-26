@@ -10,20 +10,28 @@
     <div class="put_area">
       <div class="area_top">
         <p class="top_title">请填写您的需求</p>
-        <ul class="textarea">
+        <ul class="mount" style="marginBottom:1rem;">
           <li>
-            <p>需求描述：</p>
+            <p><span style="color:red;">*</span>公司名称：</p>
           </li>
           <li>
-            <textarea name="name" placeholder="请输入您的需求描述" v-model="needCon"></textarea>
+            <input type="text" @blur="clearIOS" name="" value="" v-model="company" placeholder="请输入您的公司名称">
+          </li>
+        </ul>
+        <ul class="textarea">
+          <li>
+            <p><span style="color:red;">*</span>需求描述：</p>
+          </li>
+          <li>
+            <textarea name="name" @blur="clearIOS" placeholder="请输入您的需求描述" v-model="needCon"></textarea>
           </li>
         </ul>
         <ul class="mount">
           <li>
-            <p>预算金额：</p>
+            <p><span style="color:red;">*</span>预算金额：</p>
           </li>
           <li>
-            <input type="number" name="" value="" v-model="amount" placeholder="请输入您的预算金额">
+            <input type="number" @blur="clearIOS" name="" value="" v-model="amount" placeholder="请输入您的预算金额">
           </li>
         </ul>
       </div>
@@ -31,18 +39,18 @@
         <p class="top_title">联系方式</p>
         <ul class="mount">
           <li>
-            <p>联系人：</p>
+            <p><span style="color:red;">*</span>联系人：</p>
           </li>
           <li>
-            <input type="text" name="" value="" placeholder="请输入联系人姓名" v-model="contactName">
+            <input type="text" @blur="clearIOS" name="" value="" placeholder="请输入联系人姓名" v-model="contactName">
           </li>
         </ul>
         <ul class="mount">
           <li>
-            <p>联系电话：</p>
+            <p><span style="color:red;">*</span>联系电话：</p>
           </li>
           <li>
-            <input type="number" name="" value="" placeholder="请输入联系人电话" v-model="contactPhone">
+            <input type="number" @blur="clearIOS" name="" value="" placeholder="请输入联系人电话" v-model="contactPhone">
           </li>
         </ul>
       </div>
@@ -53,6 +61,7 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
+import {downIOS} from '@/assets/js/default'
 export default {
   data(){
     return{
@@ -60,6 +69,8 @@ export default {
       amount:null,//预算金额
       contactName:null,//联系人姓名
       contactPhone:null,//联系人电话
+      company:null,//公司名称
+      clearIOS:downIOS
     }
   },
   components:{
@@ -68,7 +79,9 @@ export default {
   methods:{
     subNeed(){
       let _this=this;
-      if(_this.needCon==null){
+      if(_this.company==null){
+        _this.$Toast('请输入您的公司名称')
+      }else if(_this.needCon==null){
         _this.$Toast('请输入需求详情')
       }else if(_this.amount==null){
         _this.$Toast('请输入预算金额')
@@ -81,13 +94,14 @@ export default {
       }else{
         _this.$Indicator.open('提交中...');
         let formData=new FormData();
+        formData.append('company',_this.company);
         formData.append('content',_this.needCon);
         formData.append('budget',_this.amount);
         formData.append('linkman',_this.contactName);
         formData.append('contact',_this.contactPhone);
         _this.$axios.post(_this.oUrl+'/saveDemand',formData).then((res)=>{
           if(res.data.code==0){
-            _this.$Toast('提交成功');
+            _this.$Toast('发布成功');
             _this.$Indicator.close();
             window.history.back()
           }else{
@@ -95,12 +109,10 @@ export default {
             _this.$Indicator.close();
           }
         }).catch((err)=>{
+          _this.$Toast('未知错误')
           console.log(err)
         })
       }
-      // setTimeout(()=>{
-
-      // },1000)
     }
   }
 }
@@ -110,7 +122,7 @@ export default {
 .put_bg{
   width: 100%;
   height:12rem;
-  background: url('../../../static/img/login_bg.png');
+  background: url('../../../static/img/demand_bg.png');
   background-size:100% 100%;
   margin-top: 5rem;
 }
@@ -122,7 +134,7 @@ export default {
     width: 100%;
     padding-bottom:2rem;
     border-radius: 10px;
-    box-shadow: 0px 0px 30px #999;
+    box-shadow: 0px 0px 20px #999;
     background: white;
     overflow-x: hidden;
     .top_title{
@@ -154,7 +166,7 @@ export default {
       li:nth-child(2){
         width: 80%;
         textarea{
-          width: 95%;
+          width: 92%;
           border-radius: 8px;
           height:100%;
           resize: none;
@@ -188,7 +200,7 @@ export default {
           width: 92%;
           padding-left:.6rem;
           border-radius: 6px;
-          height: 85%;
+          height: 90%;
           border:1px solid #ccc;
         }
       }
@@ -198,7 +210,7 @@ export default {
     width: 100%;
     padding-bottom:2rem;
     border-radius: 10px;
-    box-shadow: 0px 0px 30px #999;
+    box-shadow: 0px 0px 20px #999;
     background: white;
     overflow-x: hidden;
     margin-top: 2rem;
@@ -269,8 +281,8 @@ export default {
   background: url('../../../static/img/btn_bg2.png');
   background-size: 100% 100%;
   margin:0 auto;
-  border-radius: 8px;
-  box-shadow: 0px 10px 30px #999;
+  border-radius: 11px;
+  box-shadow: 0px 2px 10px #999;
   margin-top: 2rem;
   text-align: center;
   font-size: 2rem;

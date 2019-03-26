@@ -21,7 +21,6 @@
     </ul>
     <div class="card_is" v-show="isTwo">
       <input type="file" accept="image/*" @change="upCardIs" name="" value="">
-      <i class="iconfont icon-icon19"></i>
 
     </div>
     <p class="sendCard" @click="sendCards()">提交</p>
@@ -239,18 +238,18 @@ export default {
     width: 5rem;
     font-size: 1.6rem;
     position: fixed;
-    top:-5.5rem;
+    top:1.5rem;
     z-index: 999;
     right:0;
     color:white;
   }
   .up_mask{
     width: 5rem;
-    position: absolute;
-    top:-6.5rem;
+    position: fixed;
+    top:.5rem;
     z-index: 1999;
-     background: linear-gradient(#101013, #2c2d31);
-     opacity: .5;
+    background: linear-gradient(#101013, #2c2d31);
+    opacity: .5;
     right:0;
     height: 4rem;
   }

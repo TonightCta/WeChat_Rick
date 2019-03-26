@@ -43,6 +43,10 @@ input{
   border:0;
   outline: none;
   background: white;
+  -webkit-appearance: none;
+}
+textarea{
+  -webkit-appearance: none;
 }
 button{
   border: 0;
