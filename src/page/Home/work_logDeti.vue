@@ -5,29 +5,35 @@
       <span>日志详情</span>
     </WorkHeader>
     <div class="detis_con">
+      <p class="detis_title">项目信息:<span></span></p>
       <div class="con_mes publicBox">
         <p>项目名称:&nbsp;{{mes.type}}</p>
-        <p>项目地点:&nbsp;{{mes.place}}</p>
-        <p>节点进程:&nbsp;{{mes.status}}</p>
-        <p>进行日期:&nbsp;2019-03-22</p>
-        <p>进行时间:&nbsp;13:00-16:00</p>
+        <p>
+          <span>项目地点:&nbsp;{{mes.place}}</span>
+          <span>节点进程:&nbsp;{{mes.status}}</span>
+        </p>
+        <p>
+          <span>进行日期:&nbsp;2019-03-22</span>
+          <span>进行时间:&nbsp;13:00-16:00</span>
+        </p>
       </div>
+      <p class="detis_title">工作内容:<span></span></p>
       <div class="con_text publicBox">
-        <p>工作内容:&nbsp;</p>
         <p class="con_text">
           <textarea name="name" rows="8" cols="80" v-model="mes.type"></textarea>
           <span></span>
         </p>
       </div>
+      <p class="detis_title">项目附件:<span></span></p>
       <div class="con_file publicBox">
-        <p>项目附件:&nbsp;</p>
         <p class="file_show" style="marginTop:1rem;" v-for="(file,index) in fileList" :key="'A'+index">
           <span>{{file.name}}.xls</span>
           <a :href='file.href'></a>
         </p>
       </div>
+      <p class="detis_title">项目图片:<span></span></p>
       <div class="con_pic publicBox">
-        <p>项目图片:&nbsp;<span class="work_pic"></span></p>
+        <span class="work_pic"></span>
         <p class="file_pic" v-for="(pic,index) in picList" :key="index">
           <img :src=pic.url alt="" @click="larger(index)" ref="file_pic">
         </p>
@@ -92,7 +98,7 @@ export default {
       this.delLarger=true;
       this.zIndex=index;
       this.$refs.file_pic[index].style.position='fixed';
-      this.$refs.file_pic[index].style.top='30%';
+      this.$refs.file_pic[index].style.top='40%';
       this.$refs.file_pic[index].style.left='0';
       this.$refs.file_pic[index].style.height='auto';
       this.$refs.file_pic[index].style.zIndex='8888';
@@ -115,30 +121,44 @@ export default {
   .detis_con{
     width: 90%;
     margin:0 auto;
+    .detis_title{
+      width: 100%;
+      height: 4rem;
+      font-size: 1.6rem;
+      box-sizing: border-box;
+      padding-left: .6rem;
+      position: relative;
+      span{
+        position: absolute;
+        height: 1.4rem;
+        width: 4px;
+        background: #eb7a1d;
+        left:0;
+        top:50%;
+        margin-top:-.7rem;
+      }
+    }
     .publicBox{
       border-radius:12px;
       background: white;
-      box-shadow: 0px 2px 10px #999;
+      // box-shadow: 0px 2px 10px #999;
       box-sizing: border-box;
       padding-top: .5rem;
     }
     .con_mes{
       width: 100%;
-      height: 17rem;
+      height: 10.5rem;
+      margin-top: -.5rem;
       p{
         font-size: 1.4rem;
-        padding-left: .5rem;
-      }
-      p:nth-child(1){
-        font-size: 1.6rem;
+        padding-left: 1.5rem;
+        display: flex;
+        span{
+          width: 50%;
+        }
       }
     }
     .con_file{
-      p:nth-child(1){
-        padding-left: .5rem;
-        // margin-bottom: 1rem;
-      }
-      margin-top: 1.5rem;
       margin-bottom:1.5rem;
       padding-bottom: 1rem;
     }
@@ -151,18 +171,15 @@ export default {
       line-height: 4rem;
     }
     .con_text{
-      height: 16.5rem;
+      height: 10rem;
       min-height: 10.5rem;
-      margin-top:1.5rem;
       position: relative;
       padding-bottom: .5rem;
       text-align: center;
-      p:nth-child(1){
-        padding-left: .5rem;
-      }
+      margin-bottom: 1rem;
       textarea{
         display: inline-block;
-        width:95%;
+        width:92%;
         resize: none;
         border-radius:5px;
         height: 10rem;
@@ -221,6 +238,7 @@ export default {
       border-radius:7px;
       margin:0 auto;
       img{
+        margin-top: -20%;
         width: 100%;
       }
     }

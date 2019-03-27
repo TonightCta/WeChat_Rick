@@ -5,38 +5,62 @@
       <span>日志详情</span>
     </WorkHeader>
     <div class="detis_con">
+      <p class="detis_title">项目信息:<span></span></p>
       <div class="con_mes publicBox">
-        <p @click="showProject()">项目名称:&nbsp;
-          <input type="text" name="" placeholder="请选择项目名称" v-model="projectName" value="">
+        <p @click="showProject()">
+          <span class="text_title">项目名称:&nbsp;</span>
+          <span class="time_mes">
+            <input type="text" name="" placeholder="请选择项目名称" v-model="projectName" value="" style="width:100%;textAlign:left;">
+          </span>
           <span></span>
-        </p>
-        <p @click="showProgress()">节点进程:&nbsp;
-          <input type="text" placeholder="请选择节点进程" v-model="progress" name="" value="">
+          </p>
+        <p @click="showProgress()">
+          <span class="text_title">节点进程:&nbsp;</span>
+          <span class="time_mes">
+            <input type="text" placeholder="请选择节点进程" v-model="progress" name="" value="" style="width:100%;textAlign:left;">
+          </span>
           <span></span>
-        </p>
+          </p>
         <p @click="showTimePicker()">进行时间:&nbsp;
-          <input type="text" placeholder="请选择进行时间" v-model="choseTime" name="" value="">
+          <span class="time_mes">
+            <input type="text" v-model="startTime" name="" value="">
+            至
+            <input type="text" v-model="endTime" name="" value="">
+          </span>
+          <!-- <input type="text" placeholder="请选择进行时间" style="borderBottom:0;paddingLeft:1rem;" v-model="choseTime" name="" value=""> -->
           <span></span>
-        </p>
+          </p>
       </div>
+      <p class="detis_title">工作内容:<span></span></p>
       <div class="con_text publicBox">
-        <p>工作内容:&nbsp;</p>
         <p class="con_text">
           <textarea name="name" rows="8" cols="80" placeholder="请输入工作内容"></textarea>
         </p>
       </div>
+      <p class="detis_title">项目附件:<span></span></p>
       <div class="con_file publicBox">
-        <p>项目附件:&nbsp;</p>
-        <p class="file_show" style="marginTop:1rem;">
-
+        <p class="file_show" v-for="(file,index) in fileList" :key="'A'+index">
+          <span>{{file.name}}.xls</span>
+          <a :href='file.href'></a>
+        </p>
+        <p class="file_add">
+          <input type="file" name="" value="" @change="fileAdd">
+          <span>点击上传</span>
+          <i class="iconfont">+</i>
         </p>
       </div>
-      <div class="con_pic publicBox">
-        <p>项目图片:&nbsp;<span class="work_pic"></span></p>
-        <p class="file_pic" >
-
+      <p class="detis_title">
+        项目图片:
+        <span></span>
+      </p>
+        <p class="file_pic" v-for="(pic,index) in picList" :key="index">
+          <img :src=pic.url alt="" @click="larger(index)" ref="file_pic">
         </p>
-      </div>
+        <p class="pic_add">
+          <input type="file" accept="image/*" name="" value="">
+          <span>点击上传</span>
+          <i class="iconfont">+</i>
+        </p>
       <div class="work_mask" @touchmove.prevent v-show="isLarger" @click="closePicker()">
 
       </div>
@@ -81,11 +105,20 @@ export default {
       isLarger:false,//是否查看大图
       delLarger:false,//关闭蒙层
       zIndex:null,//当前查看的项目图片
-      picList:[],//图片列表
-      fileList:[],//文件列表
+      picList:[
+        {url:'static/img/engPic/person_ght.png'},
+      ],//图片列表
+      fileList:[
+        {
+          name:'多媒体融合通信系统升级扩容项目数通交付日报',
+          href:'http://admin.rightservicetech.com/多媒体融合通信系统升级扩容项目数通交付日报_1523459624442.xls'
+        },
+      ],//文件列表
       projectName:null,//项目名称
       progress:null,//进程节点
       choseTime:null,//进行时间
+      startTime:null,//开始时间
+      endTime:null,//结束时间
       // 时间选择列表
       slots: [
        {
@@ -154,7 +187,8 @@ export default {
      if (values[0] > values[1]) {
        picker.setSlotValue(1, values[0]);
      }
-     this.choseTime=values.join(' 至 ')
+     this.startTime=values[0];
+     this.endTime=values[1];
    },
     workFile(){//查看项目文件
       this.$Toast('项目文件')
@@ -164,7 +198,7 @@ export default {
       this.delLarger=true;
       this.zIndex=index;
       this.$refs.file_pic[index].style.position='fixed';
-      this.$refs.file_pic[index].style.top='30%';
+      this.$refs.file_pic[index].style.top='40%';
       this.$refs.file_pic[index].style.left='0';
       this.$refs.file_pic[index].style.height='auto';
       this.$refs.file_pic[index].style.zIndex='8888';
@@ -174,6 +208,7 @@ export default {
       this.isLarger=false;
       this.delLarger=false;
       this.$refs.file_pic[this.zIndex].style.position='static';
+
     },
     closePicker(){//关闭时间选择器
       this.$refs.time_picker.style.bottom='-40%'
@@ -194,6 +229,9 @@ export default {
     showTimePicker(){//时间选择器
       this.isLarger=true;
       this.$refs.time_picker.style.bottom='0'
+    },
+    fileAdd(e){//上传文件
+      console.log(e.target.files[0])
     }
   }
 }
@@ -207,29 +245,77 @@ export default {
   .detis_con{
     width: 90%;
     margin:0 auto;
+    .detis_title{
+      width: 100%;
+      height: 4rem;
+      font-size: 1.6rem;
+      box-sizing: border-box;
+      padding-left: .6rem;
+      position: relative;
+      span{
+        position: absolute;
+        height: 1.4rem;
+        width: 4px;
+        background: #eb7a1d;
+        left:0;
+        top:50%;
+        margin-top:-.7rem;
+      }
+    }
     .publicBox{
       border-radius:12px;
       background: white;
-      box-shadow: 0px 2px 10px #999;
+      // box-shadow: 0px 2px 10px #999;
       box-sizing: border-box;
       padding-top: .5rem;
     }
     .con_mes{
       width: 100%;
-      height: 17rem;
+      height: 16rem;
       p{
         font-size: 1.4rem;
-        padding-left: .5rem;
+        padding-left: 1rem;
         height: 5rem;
+        line-height: 5rem;
         position: relative;
         overflow: hidden;
+        .text_title{
+          height: 5rem;
+          // background: red;
+          width: 25%;
+          position: static;
+          line-height: 5rem;
+        }
         input{
-          position: absolute;
+          display: inline-block;
+          height: 4rem;
+          // background: blue;
           width:70%;
           border-bottom: 1px solid #ccc;
-          height: 3rem;
-          top:.4rem;
+          margin-top: -2rem;
+          font-size: 1.4rem;
           padding-left: .5rem;
+          border-radius:0;
+          padding-bottom: .5rem;
+          box-sizing: border-box;
+        }
+        .time_mes{
+          height: 90%;
+          width:70%;
+          height: 3rem;
+          font-size: 1.4rem;
+          padding-left: .5rem;
+          border-radius:0;
+          padding-bottom: .5rem;
+          position: absolute;
+          left:23%;
+          top:-0.5px;
+          input{
+            height: 80%;
+            width: 30%;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+          }
         }
         span{
           width: 100%;
@@ -242,11 +328,6 @@ export default {
       }
     }
     .con_file{
-      p:nth-child(1){
-        padding-left: .5rem;
-        // margin-bottom: 1rem;
-      }
-      margin-top: 1.5rem;
       margin-bottom:1.5rem;
       padding-bottom: 1rem;
     }
@@ -259,15 +340,10 @@ export default {
       line-height: 4rem;
     }
     .con_text{
-      height: 16.5rem;
+      height: 12rem;
       min-height: 10.5rem;
-      margin-top:1.5rem;
       position: relative;
-      padding-bottom: .5rem;
       text-align: center;
-      p:nth-child(1){
-        padding-left: .5rem;
-      }
       textarea{
         display: inline-block;
         width:95%;
@@ -293,10 +369,6 @@ export default {
       width: 100%;
       padding-bottom: 1rem;
       min-height: 10.5rem;
-      p:nth-child(1){
-        padding-left: .5rem;
-        margin-bottom: 1rem;
-      }
     }
     .file_show{
       width: 90%;
@@ -306,6 +378,7 @@ export default {
       border-radius: 8px;
       position: relative;
       box-sizing: border-box;
+      margin-bottom: .5rem;
       span{
         width: 100%;
         font-size: 1.3rem;
@@ -321,6 +394,39 @@ export default {
         left:0;
       }
     }
+    .file_add{
+      width: 90%;
+      height: 5rem;
+      margin:0 auto;
+      border:1px solid #eb7a1d;
+      border-radius: 8px;
+      box-sizing: border-box;
+      position: relative;
+      text-align: center;
+      .iconfont{
+        font-size: 4rem;
+        color:#eb7a1d;
+        position: absolute;
+        top:-.6rem;
+        left:50%;
+        margin-left: -1.4rem;
+      }
+      span{
+        height: 100%;
+        line-height: 7.5rem;
+        color:#eb7a1d;
+        font-size: 1.5rem;
+      }
+      input{
+        position: absolute;
+        top:1%;
+        left: 1%;
+        width: 98%;
+        height: 98%;
+        opacity: 0;
+        z-index: 1;
+      }
+    }
     .file_pic{
       width: 95%;
       height: 10rem;
@@ -329,7 +435,41 @@ export default {
       border-radius:7px;
       margin:0 auto;
       img{
+        margin-top: -20%;
         width: 100%;
+      }
+    }
+    .pic_add{
+      border:1px solid #eb7a1d;
+      width: 95%;
+      height: 10rem;
+      overflow-y: hidden;
+      margin-bottom: 1rem!important;
+      border-radius:7px;
+      margin:0 auto;
+      position: relative;
+      text-align: center;
+      .iconfont{
+        font-size: 5rem;
+        color:#eb7a1d;
+        position: absolute;
+        top:1rem;
+        left:50%;
+        margin-left: -1.4rem;
+      }
+      span{
+        height: 100%;
+        line-height: 13rem;
+        color:#eb7a1d;
+      }
+      input{
+        position: absolute;
+        top:1%;
+        left: 1%;
+        width: 98%;
+        height: 98%;
+        opacity: 0;
+        z-index: 1;
       }
     }
     .work_mask{

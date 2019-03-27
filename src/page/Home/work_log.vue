@@ -5,7 +5,9 @@
       <span>工作日志</span>
     </WorkHeader>
     <!-- <Deve/> -->
-    <p class="push_work" @click="pushLog()">添加工作日志</p>
+    <p class="push_work" @click="pushLog()">
+      <button type="button" name="button">添加工作日志</button>
+    </p>
     <div class="">
       <v-scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength">
         <div class="work_list" v-for="(log,index) in logList">
@@ -101,6 +103,18 @@ export default {
     },
     pushLog(){
       this.$Toast('该功能开发中');
+      // if(navigator.geolocation) {
+      //   alert(1)
+      //   navigator.geolocation.getCurrentPosition((position)=>{
+      //     let long=position.coords.longitude;//经度
+      //     let lat = position.coords.latitude; // 纬度
+      //     // console.log(position.coords)
+      //     alert('经度：'+long)
+      //     alert('维度：'+lat)
+      //   },(error)=>{
+      //     alert('未知错误')
+      //   })
+      // }
       this.$router.push('/addLog')
     }
   }
@@ -120,17 +134,23 @@ export default {
 }
 .push_work{
   position: absolute;
-  height: 3.5rem;
-  background: #eb7a1d;
-  width: 90%;
-  left:50%;
-  margin-left: -45%;
-  top:5.5rem;
-  border-radius:5px;
-  text-align: center;
+  height: 4.5rem;
+  background: white;
+  width: 100%;
+  left:0;
+  top:5.3rem;
   line-height: 3.5rem;
-  font-size: 1.6rem;
-  color:white;
+  text-align: center;
+  button{
+    width: 90%;
+    background: #eb7a1d;
+    height: 3.5rem;
+    border-radius:5px;
+    color:white;
+    text-align: center;
+    font-size: 1.6rem;
+    margin:0 auto;
+  }
 }
 .work_list{
   width: 95%;
