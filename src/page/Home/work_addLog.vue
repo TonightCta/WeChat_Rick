@@ -2,7 +2,7 @@
 <template lang="html">
   <div class="work_detis">
     <WorkHeader>
-      <span>日志详情</span>
+      <span>添加日志</span>
     </WorkHeader>
     <div class="detis_con">
       <p class="detis_title">项目信息:<span></span></p>
@@ -23,9 +23,9 @@
           </p>
         <p @click="showTimePicker()">进行时间:&nbsp;
           <span class="time_mes">
-            <input type="text" v-model="startTime" name="" value="">
+            <input type="text" v-model="startTime" name="" value="" placeholder="开始时间">
             至
-            <input type="text" v-model="endTime" name="" value="">
+            <input type="text" v-model="endTime" name="" value="" placeholder="结束时间">
           </span>
           <!-- <input type="text" placeholder="请选择进行时间" style="borderBottom:0;paddingLeft:1rem;" v-model="choseTime" name="" value=""> -->
           <span></span>
@@ -34,14 +34,15 @@
       <p class="detis_title">工作内容:<span></span></p>
       <div class="con_text publicBox">
         <p class="con_text">
-          <textarea name="name" rows="8" cols="80" placeholder="请输入工作内容"></textarea>
+          <textarea name="name" rows="8" cols="80" v-model="workContent" placeholder="请输入工作内容"></textarea>
         </p>
       </div>
       <p class="detis_title">项目附件:<span></span></p>
       <div class="con_file publicBox">
         <p class="file_show" v-for="(file,index) in fileList" :key="'A'+index">
-          <span>{{file.name}}.xls</span>
-          <a :href='file.href'></a>
+          <span>{{file}}</span>
+          <i class="iconfont icon-guanbi" @click="delFiles(index)"></i>
+          <!-- <a :href='file.href'></a> -->
         </p>
         <p class="file_add">
           <input type="file" name="" value="" @change="fileAdd">
@@ -53,11 +54,14 @@
         项目图片:
         <span></span>
       </p>
-        <p class="file_pic" v-for="(pic,index) in picList" :key="index">
-          <img :src=pic.url alt="" @click="larger(index)" ref="file_pic">
+      <div class="pic_box" v-for="(pic,index) in picList" :key="index">
+        <p class="file_pic">
+          <img :src=pic alt="" :preview="index" ref="file_pic">
         </p>
+        <i class="iconfont icon-guanbi" @click="delPics(index)"></i>
+      </div>
         <p class="pic_add">
-          <input type="file" accept="image/*" name="" value="">
+          <input type="file" accept="image/*" name="" value="" @change="pushPic($event)">
           <span>点击上传</span>
           <i class="iconfont">+</i>
         </p>
@@ -91,6 +95,8 @@
         </p>
         <mt-picker :slots="slots" @change="onValuesChange"></mt-picker>
       </div>
+      <!-- 提交 -->
+      <p class="subWork" @click="subWork()">提交</p>
     </div>
   </div>
 </template>
@@ -105,20 +111,20 @@ export default {
       isLarger:false,//是否查看大图
       delLarger:false,//关闭蒙层
       zIndex:null,//当前查看的项目图片
-      picList:[
-        {url:'static/img/engPic/person_ght.png'},
-      ],//图片列表
-      fileList:[
-        {
-          name:'多媒体融合通信系统升级扩容项目数通交付日报',
-          href:'http://admin.rightservicetech.com/多媒体融合通信系统升级扩容项目数通交付日报_1523459624442.xls'
-        },
-      ],//文件列表
+      //图片列表
+      picList:[],
+      //上传图片文件列表
+      upPics:[],
+      //文件列表
+      fileList:[],
+      //上传文件列表
+      upFiles:[],
       projectName:null,//项目名称
       progress:null,//进程节点
       choseTime:null,//进行时间
       startTime:null,//开始时间
       endTime:null,//结束时间
+      workContent:null,//工作内容
       // 时间选择列表
       slots: [
        {
@@ -173,6 +179,13 @@ export default {
   created(){
     this.mes=JSON.parse(window.localStorage.getItem('logMes'))
   },
+  mounted(){
+    this.$previewRefresh();
+    this.projectName=null;
+    this.progress=null;
+    this.startTime=null;
+    this.endTime=null;
+  },
   components:{
     WorkHeader
   },
@@ -186,10 +199,10 @@ export default {
     onValuesChange(picker, values) {//时间选择
      if (values[0] > values[1]) {
        picker.setSlotValue(1, values[0]);
-     }
-     this.startTime=values[0];
-     this.endTime=values[1];
-   },
+       }
+       this.startTime=values[0];
+       this.endTime=values[1];
+     },
     workFile(){//查看项目文件
       this.$Toast('项目文件')
     },
@@ -231,7 +244,61 @@ export default {
       this.$refs.time_picker.style.bottom='0'
     },
     fileAdd(e){//上传文件
-      console.log(e.target.files[0])
+      this.upFiles.push(e.target.files[0]);
+      this.fileList.push(e.target.files[0].name);
+    },
+    delFiles(index){//删除已上传文件
+      this.upFiles.splice(index,1);
+      this.fileList.splice(index,1);
+    },
+    pushPic(e){//上传图片文件
+      let _vm=this;
+      let file=e.target,reader=new FileReader();
+      _vm.upPics.push(file.files[0]);
+      console.log(_vm.upPics)
+      reader.readAsDataURL(file.files[0]);
+      reader.onload=function(){
+        _vm.picList.push(this.result);
+        _vm.$previewRefresh()
+      }
+    },
+    delPics(index){//删除已上传图片
+      this.picList.splice(index,1);
+      this.upPics.splice(index,1);
+    },
+    subWork(){//上传日志
+      let _vm=this;
+      if(_vm.projectName==null){
+        _vm.$Toast('请选择项目名称')
+      }else if(_vm.progress==null){
+        _vm.$Toast('请选择节点进程')
+      }else if(_vm.startTime==null){
+        _vm.$Toast('请选择开始时间')
+      }else if(_vm.endTime==null){
+        _vm.$Toast('请选择结束时间')
+      }else if(_vm.workContent==null){
+        _vm.$Toast('请填写工作内容')
+      }else{
+        _vm.$Indicator.open('提交中...');
+        let formdata=new FormData();
+        setTimeout(()=>{
+           _vm.$Indicator.close();
+        },1000)
+        // _vm.$axios.post(_vm.url+'',formdata).then((res)=>{
+        //   console.log(res);
+        //   if(res.data.code){
+        //     _vm.$Indicator.close();
+        //     _vm.$router.push('/workLog');
+        //   }else{
+        //     _vm.$Toast(res.data.msg);
+        //     _vm.$Indicator.close();
+        //   }
+        // }).catch((err)=>{
+        //   _vm.$Indicator.close();
+        //   _vm.$Toast('未知错误');
+        //   console.log(err)
+        // })
+      }
     }
   }
 }
@@ -379,11 +446,21 @@ export default {
       position: relative;
       box-sizing: border-box;
       margin-bottom: .5rem;
+      position: relative;
+      i{
+        font-size: 1.8rem;
+        position: absolute;
+        right:-1rem;
+        top:-2rem;
+        color:#666;
+        z-index: 1;
+      }
       span{
         width: 100%;
         font-size: 1.3rem;
         height: 100%;
         line-height: 5rem;
+        padding-left: .5rem;
       }
       a{
         width: 100%;
@@ -427,24 +504,37 @@ export default {
         z-index: 1;
       }
     }
-    .file_pic{
-      width: 95%;
-      height: 10rem;
-      overflow-y: hidden;
-      margin-bottom: 1rem!important;
-      border-radius:7px;
-      margin:0 auto;
-      img{
-        margin-top: -20%;
-        width: 100%;
+    .pic_box{
+      position: relative;
+      height: auto;
+      i{
+        font-size: 1.8rem;
+        position: absolute;
+        right:0;
+        top:-.8rem;
+        color:#666;
+        z-index: 1;
+      }
+      .file_pic{
+        width: 95%;
+        height: 10rem;
+        overflow-y: hidden;
+        margin-bottom: 1rem!important;
+        border-radius:7px;
+        margin:0 auto;
+        img{
+          margin-top: -20%;
+          width: 100%;
+        }
       }
     }
+
     .pic_add{
       border:1px solid #eb7a1d;
       width: 95%;
       height: 10rem;
       overflow-y: hidden;
-      margin-bottom: 1rem!important;
+      margin-bottom: 3rem!important;
       border-radius:7px;
       margin:0 auto;
       position: relative;
@@ -515,6 +605,18 @@ export default {
           padding-right:2rem;
         }
       }
+    }
+    .subWork{
+      width: 100%;
+      height: 3.5rem;
+      text-align: center;
+      background: #eb7a1d;
+      line-height: 3.5rem;
+      position: fixed;
+      bottom:0;
+      left:0;
+      color:white;
+      border-radius:8px;
     }
   }
 }

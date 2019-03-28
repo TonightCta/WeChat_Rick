@@ -16,6 +16,8 @@ import './assets/iconfontS/iconfont.css';
 import 'jquery'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
 Vue.prototype.$axios=Axios;
 Vue.prototype.oUrl='http://rightservicetech.com:8080';
 // Vue.prototype.oUrl='http://hexsoft.top:8080';
@@ -25,6 +27,7 @@ Vue.prototype.$Toast=Toast;
 Vue.config.productionTip = false;
 Vue.use(MintUi);
 Vue.use(VueWechatTitle);
+Vue.use(preview)
 NProgress.configure({
     easing: 'ease',  // 动画方式
     speed: 500,  // 递增进度条的速度

@@ -26,7 +26,8 @@
           <span>邮箱：</span>
           <span>{{userEmail}}</span>
         </p>
-        <span class="iconfont icon-iconfontzhizuobiaozhun023114 y" @click="cert()" ref="certColor"></span>
+        <!-- <span class="iconfont icon-iconfontzhizuobiaozhun023114 y" ref="certColor"></span> -->
+        <span class="certIcon" @click="cert()">{{cerText}}</span>
       </div>
 
     </div>
@@ -78,6 +79,7 @@ export default {
       userEmail:'-',
       messageTitle:'提示',//操作盒子标题
       messageCon:'请先进行身份认证',//操作盒子内容
+      cerText:null,//认证按钮文本
       pathdyn:null,//跳转地址
       didLogin:true,//未登录
       hasLogin:false,//未登录
@@ -98,11 +100,11 @@ export default {
       this.hasLogin=true;
       this.userPhone=this.userMes.engineerVO.phone
       if(this.userMes.engineerVO.state==0){
-        this.$refs.certColor.style.color='black'
+        this.cerText='点击认证'
       }else if(this.userMes.engineerVO.state==1){
-        this.$refs.certColor.style.color='#999'
+        this.cerText='认证中'
       }else{
-        this.$refs.certColor.style.color='red'
+        this.cerText='已认证'
       }
     }
     if(this.userMes.email){
@@ -265,7 +267,7 @@ export default {
       width: 100%;
       height: 6rem;
       // background: blue;
-      padding-top: 1.5rem;
+      padding-top: 1rem;
       z-index: 10;
       ul{
         width: 100%;
@@ -289,14 +291,20 @@ export default {
         padding-left:1rem;
         color:white;
       }
-    }
-    .y{
-      font-size: 2rem;
-      color:#999;
-      position: absolute;
-      right:2rem;
-      top:2rem;
-      margin-left: -1.4rem;
+      .certIcon{
+        position: absolute;
+        left:50%;
+        margin-left: -5.5rem;
+        bottom:-1.5rem;
+        width: 11rem;
+        height: 3.5rem;
+        background: url('../../../static/img/cer_bg.png');
+        background-size: 100% 100%;
+        text-align: center;
+        color:white;
+        line-height: 3.1rem;
+        font-size: 1.5rem;
+      }
     }
 
   }

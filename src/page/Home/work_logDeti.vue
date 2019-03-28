@@ -35,7 +35,7 @@
       <div class="con_pic publicBox">
         <span class="work_pic"></span>
         <p class="file_pic" v-for="(pic,index) in picList" :key="index">
-          <img :src=pic.url alt="" @click="larger(index)" ref="file_pic">
+          <img :src=pic.url alt="" :preview="index"  ref="file_pic">
         </p>
       </div>
       <div class="work_mask" @touchmove.prevent v-show="isLarger">
@@ -84,7 +84,10 @@ export default {
     ...mapState(['logMes'])
   },
   created(){
-    this.mes=JSON.parse(window.localStorage.getItem('logMes'))
+    this.mes=JSON.parse(window.localStorage.getItem('logMes'));
+  },
+  mounted(){
+    this.$previewRefresh()
   },
   components:{
     WorkHeader
