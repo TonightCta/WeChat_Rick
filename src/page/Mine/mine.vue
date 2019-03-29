@@ -79,7 +79,7 @@ export default {
       userEmail:'-',
       messageTitle:'提示',//操作盒子标题
       messageCon:'请先进行身份认证',//操作盒子内容
-      cerText:null,//认证按钮文本
+      cerText:'点击认证',//认证按钮文本
       pathdyn:null,//跳转地址
       didLogin:true,//未登录
       hasLogin:false,//未登录
@@ -94,7 +94,6 @@ export default {
     }
   },
   mounted(){
-    console.log(this.userMes)
     if(this.userMes.engineerVO){
       this.didLogin=false;
       this.hasLogin=true;

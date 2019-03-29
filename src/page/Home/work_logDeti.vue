@@ -7,35 +7,33 @@
     <div class="detis_con">
       <p class="detis_title">项目信息:<span></span></p>
       <div class="con_mes publicBox">
-        <p>项目名称:&nbsp;{{mes.type}}</p>
+        <p>项目名称:&nbsp;{{mes.projectName}}</p>
+        <p>项目地点:&nbsp;{{mes.projectPointPlace}}</p>
+        <p><span>节点进程:&nbsp;{{mes.projectCourseNodeName}}</span></p>
         <p>
-          <span>项目地点:&nbsp;{{mes.place}}</span>
-          <span>节点进程:&nbsp;{{mes.status}}</span>
-        </p>
-        <p>
-          <span>进行日期:&nbsp;2019-03-22</span>
-          <span>进行时间:&nbsp;13:00-16:00</span>
+          <span>进行日期:&nbsp;{{mes.workTime}}</span>
+          <span>进行时间:&nbsp;{{mes.startTime}}:00-{{mes.endTime}}:00</span>
         </p>
       </div>
       <p class="detis_title">工作内容:<span></span></p>
       <div class="con_text publicBox">
         <p class="con_text">
-          <textarea name="name" rows="8" cols="80" v-model="mes.type"></textarea>
+          <textarea name="name" rows="8" cols="80" v-model="mes.content"></textarea>
           <span></span>
         </p>
       </div>
       <p class="detis_title">项目附件:<span></span></p>
       <div class="con_file publicBox">
         <p class="file_show" style="marginTop:1rem;" v-for="(file,index) in fileList" :key="'A'+index">
-          <span>{{file.name}}.xls</span>
-          <a :href='file.href'></a>
+          <span>{{file.fileName}}.xls</span>
+          <a :href="oUrl+'/'+'准格尔旗法院机房项目开工协调会纪要_1550718883384.docx'"></a>
         </p>
       </div>
       <p class="detis_title">项目图片:<span></span></p>
       <div class="con_pic publicBox">
         <span class="work_pic"></span>
         <p class="file_pic" v-for="(pic,index) in picList" :key="index">
-          <img :src=pic.url alt="" :preview="index"  ref="file_pic">
+          <img :src="oUrl+'/'+pic.fileName" alt="" :preview="index"  ref="file_pic">
         </p>
       </div>
       <div class="work_mask" @touchmove.prevent v-show="isLarger">
@@ -58,26 +56,9 @@ export default {
       isLarger:false,//是否查看大图
       delLarger:false,//关闭蒙层
       zIndex:null,//当前查看的项目图片
-      picList:[//图片列表
-        {url:'static/img/engPic/person_ght.png'},
-        {url:'static/img/engPic/person_lsh.png'},
-        {url:'static/img/engPic/person_sly.png'},
-        {url:'static/img/engPic/person_zyz.png'},
-      ],
-      fileList:[//文件列表
-        {
-          name:'多媒体融合通信系统升级扩容项目数通交付日报',
-          href:'http://admin.rightservicetech.com/多媒体融合通信系统升级扩容项目数通交付日报_1523459624442.xls'
-        },
-        {
-          name:'多媒体融合通信系统升级扩容项目数通交付日报',
-          href:'http://admin.rightservicetech.com/多媒体融合通信系统升级扩容项目数通交付日报_1523459624442.xls'
-        },
-        {
-          name:'多媒体融合通信系统升级扩容项目数通交付日报',
-          href:'http://admin.rightservicetech.com/多媒体融合通信系统升级扩容项目数通交付日报_1523459624442.xls'
-        }
-      ]
+      picList:[],
+      //文件列表
+      fileList:[]
     }
   },
   computed:{
@@ -85,9 +66,12 @@ export default {
   },
   created(){
     this.mes=JSON.parse(window.localStorage.getItem('logMes'));
+    console.log(this.mes);
+    this.picList=this.mes.imgUploads;
+    this.fileList=this.mes.fileUploads;
   },
   mounted(){
-    this.$previewRefresh()
+    this.$previewRefresh();
   },
   components:{
     WorkHeader
@@ -150,12 +134,13 @@ export default {
     }
     .con_mes{
       width: 100%;
-      height: 10.5rem;
+      height: 13.5rem;
       margin-top: -.5rem;
       p{
         font-size: 1.4rem;
         padding-left: 1.5rem;
         display: flex;
+        overflow: hidden;
         span{
           width: 50%;
         }
@@ -218,6 +203,7 @@ export default {
       border-radius: 8px;
       position: relative;
       box-sizing: border-box;
+      overflow: hidden;
       span{
         width: 100%;
         font-size: 1.3rem;

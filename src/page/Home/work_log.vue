@@ -9,12 +9,12 @@
       <button type="button" name="button">添加工作日志</button>
     </p>
     <div class="">
-      <v-scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength">
+      <v-scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
         <div class="work_list" v-for="(log,index) in logList">
-          <p class="work_time">{{log.time}}</p>
-          <p class="work_type con">项目名称:&nbsp;{{log.type}}</p>
-          <p class="work_place con">工作地点:&nbsp;{{log.place}}</p>
-          <p class="work_status con">进程节点:&nbsp;{{log.status}}</p>
+          <p class="work_time">{{log.workTime}}</p>
+          <p class="work_type con">项目名称:&nbsp;{{log.projectName}}</p>
+          <p class="work_place con">工作地点:&nbsp;{{log.projectPointPlace}}</p>
+          <p class="work_status con">进程节点:&nbsp;{{log.projectCourseNodeName}}</p>
           <p class="work_pro">
             <button type="button" name="button" @click="delWorkLog(index)"><i class="iconfont icon-duomeitiicon-"></i>删除</button>
             <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
@@ -22,6 +22,7 @@
           <p class="click_mask con" @click="logDeti(index)"></p>
         </div>
       </v-scroll>
+      <p class="noLog" v-show="!hasLog">暂无日志</p>
     </div>
 
   </div>
@@ -34,45 +35,9 @@ import {mapMutations} from 'vuex'
 export default {
   data(){
     return{
-      listLength:true,
-      logList:[
-        {
-          time:'2019/03/25   10:15',
-          type:'UCC',
-          place:'北京-北京市',
-          status:'上门开工'
-        },
-        {
-          time:'2019/02/11   10:15',
-          type:'UCC',
-          place:'河北-秦皇岛市',
-          status:'上门开工'
-        },
-        {
-          time:'2018/11/25   10:15',
-          type:'UCC',
-          place:'河南-郑州市',
-          status:'上门开工'
-        },
-        {
-          time:'2018/08/25   10:15',
-          type:'UCC',
-          place:'天津-天津市',
-          status:'上门开工'
-        },
-        {
-          time:'2019/05/05   10:15',
-          type:'UCC',
-          place:'河北-石家庄市',
-          status:'上门开工'
-        },
-        {
-          time:'2018/05/01   10:15',
-          type:'UCC',
-          place:'内蒙-呼伦贝尔市',
-          status:'上门开工'
-        }
-      ]
+      listLength:false,
+      logList:[],
+      hasLog:true
     }
   },
   components:{
@@ -80,20 +45,72 @@ export default {
     Deve,
     'v-scroll':Scroll
   },
+  mounted(){
+    this.getLogList()
+  },
   methods:{
     ...mapMutations(['logMes_fn']),
+    getLogList(){//获取日志列表
+      let _vm=this;
+      let formdata=new FormData();
+      _vm.$Indicator.open();
+      let userId=window.localStorage.getItem('Uid');
+      // let userId='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
+      formdata.append('engineerId',userId);
+      _vm.$axios.post(_vm.oUrl+'/mobile/findWorkRecordListByEngineerId',formdata).then((res)=>{
+        if(res.data.code==0){
+          _vm.logList=res.data.data.content;
+          _vm.$Indicator.close();
+          _vm.logList.forEach((e)=>{
+            let date=new Date(e.workTime);
+            let year = date.getFullYear();
+    				let month = date.getMonth() + 1;
+    				let day = date.getDate();
+    				let hour = date.getHours();
+    				let min = date.getMinutes();
+    				if(day > 0 && day < 9) {
+    					day = '0' + day
+    				}
+    				e.workTime = year + ' /' + month + ' /' + day
+          });
+          if(res.data.data.content.length<1){
+            this.hasLog=false;
+          }
+        }else{
+          _vm.$Indicator.close();
+          _vm.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        _vm.$Indicator.close();
+        console.log(err)
+      })
+    },
     onRefresh(done){//下拉刷新
-      this.$Indicator.open();
-      setTimeout(()=>{
-        this.$Indicator.close()
-      },1000)
+      this.getLogList()
       done()
     },
     onInfinite(done){//加载更多
       done()
     },
     delWorkLog(index){//删除当前日志
-      this.$Toast('删除日志')
+      this.$Toast('删除日志');
+      let vm=this;
+      let formdata=new FormData();
+      formdata.append('id',vm.logList[index].id);
+      vm.$Indicator.open('删除中...')
+      vm.$axios.post(vm.oUrl+'/mobile/deleteWorkRecord',formdata).then((res)=>{
+        if(res.data.code==0){
+          vm.logList.splice(index,1);
+          vm.$Toast('删除成功')
+          vm.$Indicator.close()
+        }else{
+          vm.$Indicator.close()
+          vm.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        vm.$Indicator.close()
+        console.log(err)
+      })
     },
     logDeti(index){//日志详情
       this.$router.push({
@@ -102,20 +119,22 @@ export default {
       window.localStorage.setItem('logMes',JSON.stringify(this.logList[index]))
     },
     pushLog(){
-      this.$Toast('该功能开发中');
-      // if(navigator.geolocation) {
-      //   alert(1)
-      //   navigator.geolocation.getCurrentPosition((position)=>{
-      //     let long=position.coords.longitude;//经度
-      //     let lat = position.coords.latitude; // 纬度
-      //     // console.log(position.coords)
-      //     alert('经度：'+long)
-      //     alert('维度：'+lat)
-      //   },(error)=>{
-      //     alert('未知错误')
-      //   })
-      // }
-      this.$router.push('/addLog')
+      let _vm=this;
+      let formdata=new FormData();
+      let engID=window.localStorage.getItem('Uid');
+      // let engID='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
+      formdata.append('engineerId',engID)
+      _vm.$axios.post(_vm.oUrl+'/mobile/findProjectPointAndProjectCourseNodeByEngineer',formdata).then((res)=>{
+        if(res.data.code==0){
+          if(res.data.data.length<1){
+            this.$Toast('当前暂无可更新的项目');
+          }else{
+            this.$router.push('/addLog');
+          }
+        }
+      }).catch((err)=>{
+        console.log(err)
+      })
     }
   }
 }
@@ -152,10 +171,20 @@ export default {
     margin:0 auto;
   }
 }
+.noLog{
+  width: 100%;
+  position: fixed;
+  top:20%;
+  text-align: center;
+  left:0;
+  color:#999;
+  font-size: 1.6rem;
+}
 .work_list{
   width: 95%;
   margin:0 auto;
   height: 16rem;
+  max-height: none;
   border-radius: 5px;
   box-shadow: 0px 0px 5px 5px #ddd;
   position: relative;

@@ -77,7 +77,7 @@ export default {
     WorkHeader
   },
   methods:{
-    subNeed(){
+    subNeed(){//提交需求
       let _this=this;
       if(_this.company==null){
         _this.$Toast('请输入您的公司名称')
@@ -100,16 +100,22 @@ export default {
         formData.append('linkman',_this.contactName);
         formData.append('contact',_this.contactPhone);
         _this.$axios.post(_this.oUrl+'/saveDemand',formData).then((res)=>{
+          console.log(res)
+          _this.$Toast('发布成功');
           if(res.data.code==0){
-            _this.$Toast('发布成功');
             _this.$Indicator.close();
-            window.history.back()
+            _this.$router.push({
+              path:'/home',
+              query:{
+                color:1
+              }
+            })
           }else{
             _this.$Toast(res.data.msg);
             _this.$Indicator.close();
           }
         }).catch((err)=>{
-          _this.$Toast('未知错误')
+          // _this.$Toast('未知错误')
           console.log(err)
         })
       }

@@ -124,7 +124,12 @@ export default {
       choseTime:null,//进行时间
       startTime:null,//开始时间
       endTime:null,//结束时间
+      upStartTime:null,//上传开始时间
+      upEndTime:null,//上传开始时间
       workContent:null,//工作内容
+      nameID:null,//项目ID
+      progressID:null,//节点ID
+      indexP:null,//当前选中项目下标
       // 时间选择列表
       slots: [
        {
@@ -158,64 +163,75 @@ export default {
       //进程节点列表
       slotsProgress:[
         {
-          values: ['开始接单','上门工作'],
+          values: [],
           className: 'slot1',
-          textAlign: 'center'
+          textAlign: 'center',
+          flex:1
         }
       ],
       //项目名称列表
       slotsProject:[
         {
-          values:['北京的','天津的'],
+          values:[],
           className: 'slot1',
-          textAlign: 'center'
+          textAlign: 'center',
+          flex:1
         }
-      ]
+      ],
+      //项目选择信息列表
+      projectList:[]
     }
   },
   computed:{
     ...mapState(['logMes'])
   },
   created(){
-    this.mes=JSON.parse(window.localStorage.getItem('logMes'))
+    this.mes=JSON.parse(window.localStorage.getItem('logMes'));
   },
   mounted(){
     this.$previewRefresh();
-    this.projectName=null;
-    this.progress=null;
     this.startTime=null;
     this.endTime=null;
+    setTimeout(()=>{
+      this.projectName=null;
+      this.progress=null;
+    })
   },
   components:{
     WorkHeader
   },
   methods:{
     onValuesChangeProject(picker,values){//项目名称选择
-      this.projectName=values[0]
+      let _this=this;
+      this.projectName=values[0];
     },
     onValuesChangeProgess(picker,values){//进程节点选择
-      this.progress=values[0]
+      this.progress=values[0];
+      // console.log(this.projectList[this.indexP].usingProjectCourseNodeVOList)
+      let indexG=this.slotsProgress[0].values.indexOf(values[0]);
+      if(this.projectList.length>=1){
+        this.progressID=this.projectList[this.indexP].usingProjectCourseNodeVOList[indexG].id
+      }
     },
     onValuesChange(picker, values) {//时间选择
      if (values[0] > values[1]) {
        picker.setSlotValue(1, values[0]);
        }
        this.startTime=values[0];
+       if(this.startTime.substr(0,1)>0){
+         this.upStartTime=this.startTime.substr(0,2)
+       }else{
+         this.upStartTime=this.startTime.substr(1,1)
+       };
        this.endTime=values[1];
+       if(this.endTime.substr(0,1)>0){
+         this.upEndTime=this.endTime.substr(0,2)
+       }else{
+         this.upEndTime=this.endTime.substr(1,1)
+       }
      },
     workFile(){//查看项目文件
       this.$Toast('项目文件')
-    },
-    larger(index){//查看项目图片
-      this.isLarger=true;
-      this.delLarger=true;
-      this.zIndex=index;
-      this.$refs.file_pic[index].style.position='fixed';
-      this.$refs.file_pic[index].style.top='40%';
-      this.$refs.file_pic[index].style.left='0';
-      this.$refs.file_pic[index].style.height='auto';
-      this.$refs.file_pic[index].style.zIndex='8888';
-      this.$refs.file_pic[index].style.borderRaiuds='0';
     },
     closeLarger(){//关闭大图
       this.isLarger=false;
@@ -233,11 +249,25 @@ export default {
     },
     showProject(){//项目名称选择
       this.isLarger=true;
-      this.$refs.project_picker.style.bottom='0'
+      this.$refs.project_picker.style.bottom='0';
+      this.getProjectList()
     },
     showProgress(){//进程节点选择
+      let _this=this;
       this.isLarger=true;
-      this.$refs.progress_picker.style.bottom='0'
+      this.$refs.progress_picker.style.bottom='0';
+      this.indexP=this.slotsProject[0].values.indexOf(this.projectName);
+      if(_this.projectList.length>=1){
+        _this.nameID=this.projectList[_this.indexP].id;
+        let b=[];
+        _this.projectList[_this.indexP].usingProjectCourseNodeVOList.forEach((e)=>{
+          b.push(e.courseNodeName);
+        });
+        _this.slotsProgress[0].values=b;
+        setTimeout(()=>{
+          b=[]
+        })
+      }
     },
     showTimePicker(){//时间选择器
       this.isLarger=true;
@@ -266,6 +296,21 @@ export default {
       this.picList.splice(index,1);
       this.upPics.splice(index,1);
     },
+    getProjectList(){
+      let _vm=this;
+      let formdata=new FormData();
+      let engID=window.localStorage.getItem('Uid');
+      // let engID='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
+      formdata.append('engineerId',engID)
+      _vm.$axios.post(_vm.oUrl+'/mobile/findProjectPointAndProjectCourseNodeByEngineer',formdata).then((res)=>{
+        _vm.projectList=res.data.data;
+        _vm.projectList.forEach((e)=>{
+          _vm.slotsProject[0].values.push(e.projectName);
+        })
+      }).catch((err)=>{
+        console.log(err)
+      })
+    },
     subWork(){//上传日志
       let _vm=this;
       if(_vm.projectName==null){
@@ -280,24 +325,47 @@ export default {
         _vm.$Toast('请填写工作内容')
       }else{
         _vm.$Indicator.open('提交中...');
+        let engID=window.localStorage.getItem('Uid');
+        // let engID='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
         let formdata=new FormData();
-        setTimeout(()=>{
-           _vm.$Indicator.close();
-        },1000)
-        // _vm.$axios.post(_vm.url+'',formdata).then((res)=>{
-        //   console.log(res);
-        //   if(res.data.code){
-        //     _vm.$Indicator.close();
-        //     _vm.$router.push('/workLog');
-        //   }else{
-        //     _vm.$Toast(res.data.msg);
-        //     _vm.$Indicator.close();
-        //   }
-        // }).catch((err)=>{
-        //   _vm.$Indicator.close();
-        //   _vm.$Toast('未知错误');
-        //   console.log(err)
-        // })
+        let date=new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let hour = date.getHours();
+        let min = date.getMinutes();
+        if(day > 0 && day < 9) {
+          day = '0' + day
+        }
+        let Time = year + '-' + month + '-' + day;
+        console.log(Time);
+        formdata.append('engineerId',engID);
+        formdata.append('projectCourseNodeId',_vm.progressID);
+        formdata.append('content',_vm.workContent);
+        formdata.append('workTime',Time);
+        formdata.append('startTime',_vm.upStartTime);
+        formdata.append('endTime',_vm.upEndTime);
+        _vm.upPics.forEach((e)=>{
+          formdata.append('imageFiles',e);
+        })
+        _vm.upFiles.forEach((x)=>{
+          formdata.append('otherFiles',x);
+        })
+        _vm.$axios.post(_vm.oUrl+'/mobile/saveWorkRecord',formdata).then((res)=>{
+          console.log(res)
+          if(res.data.code==0){
+            _vm.$Toast('添加成功')
+            _vm.$Indicator.close();
+            _vm.$router.push('/workLog');
+          }else{
+            _vm.$Toast(res.data.msg);
+            _vm.$Indicator.close();
+          }
+        }).catch((err)=>{
+          _vm.$Indicator.close();
+          _vm.$Toast('未知错误');
+          console.log(err)
+        })
       }
     }
   }
@@ -472,7 +540,7 @@ export default {
       }
     }
     .file_add{
-      width: 90%;
+      width: 95%;
       height: 5rem;
       margin:0 auto;
       border:1px solid #eb7a1d;
@@ -608,15 +676,14 @@ export default {
     }
     .subWork{
       width: 100%;
-      height: 3.5rem;
+      height: 4rem;
       text-align: center;
       background: #eb7a1d;
-      line-height: 3.5rem;
+      line-height:4rem;
       position: fixed;
       bottom:0;
       left:0;
       color:white;
-      border-radius:8px;
     }
   }
 }
