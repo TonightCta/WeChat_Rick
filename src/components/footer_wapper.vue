@@ -8,7 +8,7 @@
         </router-link>
         <router-link :to="{path:'/order',query:{color:2}}" tag="li" :class="{active:color==2}" @click.native="color==2">
           <i class="iconfont icon-dingdan"></i>
-          <span>订单</span>
+          <span>我的接单</span>
         </router-link>
         <router-link :to="{path:'/about',query:{color:3}}" tag="li" :class="{active:color==3}" @click.native="color==3">
           <i class="iconfont icon-guanyuwomen1" style="font-size:1.7rem;"></i>
@@ -63,7 +63,7 @@ export default {
   bottom:0;
   left:0;
   background: #eee;
-  z-index: 8888;
+  z-index: 8008;
   .icon_list{
     width: 100%;
     display: flex;

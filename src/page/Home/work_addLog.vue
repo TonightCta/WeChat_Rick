@@ -299,7 +299,7 @@ export default {
     getProjectList(){
       let _vm=this;
       let formdata=new FormData();
-      let engID=window.localStorage.getItem('Uid');
+      let engID=window.localStorage.getItem('engID');
       // let engID='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
       formdata.append('engineerId',engID)
       _vm.$axios.post(_vm.oUrl+'/mobile/findProjectPointAndProjectCourseNodeByEngineer',formdata).then((res)=>{
@@ -325,7 +325,7 @@ export default {
         _vm.$Toast('请填写工作内容')
       }else{
         _vm.$Indicator.open('提交中...');
-        let engID=window.localStorage.getItem('Uid');
+        let engID=window.localStorage.getItem('engID');
         // let engID='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
         let formdata=new FormData();
         let date=new Date();

@@ -93,7 +93,7 @@ input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
   font-size: 1.6rem!important;
 }
 .picker-item{
-  width:100%!important; 
+  width:100%!important;
 }
 .pswp__top-bar{
   display: none!important;

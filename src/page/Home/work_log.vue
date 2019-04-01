@@ -54,7 +54,7 @@ export default {
       let _vm=this;
       let formdata=new FormData();
       _vm.$Indicator.open();
-      let userId=window.localStorage.getItem('Uid');
+      let userId=window.localStorage.getItem('engID');
       // let userId='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
       formdata.append('engineerId',userId);
       _vm.$axios.post(_vm.oUrl+'/mobile/findWorkRecordListByEngineerId',formdata).then((res)=>{
@@ -118,10 +118,10 @@ export default {
       });
       window.localStorage.setItem('logMes',JSON.stringify(this.logList[index]))
     },
-    pushLog(){
+    pushLog(){//添加日志
       let _vm=this;
       let formdata=new FormData();
-      let engID=window.localStorage.getItem('Uid');
+      let engID=window.localStorage.getItem('engID');
       // let engID='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
       formdata.append('engineerId',engID)
       _vm.$axios.post(_vm.oUrl+'/mobile/findProjectPointAndProjectCourseNodeByEngineer',formdata).then((res)=>{

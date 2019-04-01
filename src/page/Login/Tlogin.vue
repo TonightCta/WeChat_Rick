@@ -83,6 +83,7 @@ export default {
         _this.$axios.post(_this.oUrl+'/login',formData).then((res)=>{
           if(res.data.code===0){
             window.localStorage.setItem('Uid',res.data.data.id);
+            window.localStorage.setItem('engID',res.data.data.engineerVO.id)
             window.localStorage.setItem('name',res.data.data.name);
             window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
             window.localStorage.setItem('login',true)
