@@ -14,7 +14,7 @@
         </slot>
       </header>
       <slot></slot>
-      <footer class="load-more">
+      <footer class="load-more" v-show="false">
         <slot name="load-more">
           <span>加载中……</span>
         </slot>

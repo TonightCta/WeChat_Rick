@@ -28,8 +28,14 @@ const router= new Router({
       name:'Order',
       component:resolve=>require(['@/page/Order/order'],resolve),
       meta:{
-        title:'我的接单'
+        title:'我的接单',
+        keep:true
       }
+    },
+    {
+      path:'/orderDetails',//订单详情
+      name:'OrderDetails',
+      component:resolve=>require(['@/page/Order/order_details'],resolve)
     },
     {
       path:'/mine',//个人中心
@@ -107,7 +113,15 @@ const router= new Router({
     {
       path:'/takeOrder',//接单页
       name:'TakeOrder',
-      component:resolve=>require(['@/page/Home/take_order'],resolve)
+      component:resolve=>require(['@/page/Home/take_order'],resolve),
+      meta:{
+        keep:true
+      }
+    },
+    {
+      path:'/takeOrderDe',//接单详情
+      name:'TakeOrderDe',
+      component:resolve=>require(['@/page/Home/take_orderDe'],resolve)
     },
     {
       path:'/demandNeed',//发布需求页
@@ -117,7 +131,10 @@ const router= new Router({
     {
       path:'/workLog',//工作日志页
       name:'WorkLog',
-      component:resolve=>require(['@/page/Home/work_log'],resolve)
+      component:resolve=>require(['@/page/Home/work_log'],resolve),
+      meta:{
+        keep:true
+      }
     },
     {
       path:'/logDetis',//日志详情
@@ -144,6 +161,11 @@ const router= new Router({
       meta:{
         keep:false
       }
+    },
+    {
+      path:'/message',//消息中心
+      name:'Message',
+      component:resolve=>require(['@/page/Mine/message_center'],resolve)
     }
   ]
 });

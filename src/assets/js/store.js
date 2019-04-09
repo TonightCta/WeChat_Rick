@@ -13,6 +13,7 @@ const store=new Vuex.Store({
     isBackT:false,//首页注册返回
     userMes:{},//用户信息
     logMes:{},//工作日志详情
+    orderList:[]
   },
   mutations:{
     newsListT_fn(state,opt){//新闻列表缓存
@@ -35,6 +36,9 @@ const store=new Vuex.Store({
     },
     logMes_fn(state,opt){//工作日志详情
       state.logMes=opt
+    },
+    orderList_fn(state,opt){//我的接单列表
+      state.orderList=opt;
     }
   },
   getters:{

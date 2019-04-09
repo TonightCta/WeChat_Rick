@@ -19,8 +19,8 @@ import 'nprogress/nprogress.css'
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
 Vue.prototype.$axios=Axios;
-Vue.prototype.oUrl='http://rightservicetech.com:8080';
-// Vue.prototype.oUrl='http://hexsoft.top:8080';
+// Vue.prototype.oUrl='http://rightservicetech.com:8080';
+Vue.prototype.oUrl='http://hexsoft.top:8080';
 // Vue.prototype.oUrl='http://10.0.0.31:8080';
 Vue.prototype.$Indicator=Indicator;
 Vue.prototype.$Toast=Toast;

@@ -40,6 +40,11 @@
     <!-- 功能块 -->
     <div class="person_work">
       <ul>
+        <router-link to="/message" tag="li">
+          <i class="iconfont icon-chakan"></i>
+          <span>消息中心</span>
+          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+        </router-link>
         <router-link to="/cerSkill" tag="li">
           <i class="iconfont icon-renzheng"></i>
           <span>技能认证</span>

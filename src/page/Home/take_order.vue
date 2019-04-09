@@ -6,7 +6,7 @@
     </WorkHeader>
     <!-- <Deve/> -->
     <p class="push_work">
-      <img src="../../../static/img/search_icon.png" alt="">
+      <img src="../../../static/img/screening_icon.png" alt="">
       <input type="text" placeholder="请输入时间地点等关键字" v-model="searchKey" name="" value="">
       <i class="iconfont icon-guanbi" v-show="hasText" @click="searchKey=null"></i>
       <span v-show="hasText" @click="$Toast('该功能尚未开放,敬请期待')">搜索</span>
@@ -15,17 +15,19 @@
     <div class="">
       <v-scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
         <div class="work_list" v-for="(log,index) in logList">
-          <p class="work_time">{{log.workTime}}</p>
-          <p class="work_type con">项目名称:&nbsp;{{log.projectName}}</p>
-          <p class="work_place con">工作地点:&nbsp;{{log.projectPointPlace}}</p>
-          <p class="work_status con">进程节点:&nbsp;{{log.projectCourseNodeName}}</p>
+          <p class="work_time">{{log.createTimeStr}}</p>
+          <p class="work_type con">项目名称:&nbsp;{{log.name}}</p>
+          <p class="work_place con">工作地点:&nbsp;{{log.placeVO.parentName+'-'+log.placeVO.name}}</p>
+          <span class="status" v-if="log.stateStr==='接单状态'" style="color:#eb7a1d;">可接单</span>
+          <span class="status" v-else style="color:#666;">已截单</span>
           <p class="work_pro">
             <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
+            <button type="button" name="button" @click="applyOrder(index)"><i class="iconfont icon-fuwutiaokuan"></i>申请</button>
           </p>
           <p class="click_mask con" @click="logDeti(index)"></p>
         </div>
       </v-scroll>
-      <p class="noLog" v-show="!hasLog">暂无日志</p>
+      <p class="noLog" v-show="!hasLog">暂无订单</p>
     </div>
 
   </div>
@@ -34,7 +36,8 @@
 import WorkHeader from '@/components/work_header'
 import Deve from '@/components/development_of'
 import Scroll from './newListCon'
-import {mapMutations} from 'vuex'
+import {mapState,mapMutations} from 'vuex'
+import { MessageBox } from 'mint-ui'
 export default {
   data(){
     return{
@@ -62,6 +65,9 @@ export default {
   mounted(){
     this.getLogList()
   },
+  computed:{
+    ...mapState(['userMes'])
+  },
   methods:{
     ...mapMutations(['logMes_fn']),
     getLogList(){//获取日志列表
@@ -70,24 +76,13 @@ export default {
       _vm.$Indicator.open();
       let userId=window.localStorage.getItem('engID');
       // let userId='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
-      formdata.append('engineerId',userId);
-      _vm.$axios.post(_vm.oUrl+'/mobile/findWorkRecordListByEngineerId',formdata).then((res)=>{
+      formdata.append('engineerIdOut',userId);
+      _vm.$axios.post(_vm.oUrl+'/mission/findMissionListByCondition',formdata).then((res)=>{
         if(res.data.code==0){
           _vm.logList=res.data.data.content;
-          console.log(_vm.logList)
-          _vm.$Indicator.close();
-          _vm.logList.forEach((e)=>{
-            let date=new Date(e.workTime);
-            let year = date.getFullYear();
-    				let month = date.getMonth() + 1;
-    				let day = date.getDate();
-    				let hour = date.getHours();
-    				let min = date.getMinutes();
-    				if(day > 0 && day < 9) {
-    					day = '0' + day
-    				}
-    				e.workTime = year + ' /' + month + ' /' + day
-          });
+          setTimeout(()=>{
+            _vm.$Indicator.close();
+          },500)
           if(res.data.data.content.length<1){
             this.hasLog=false;
           }
@@ -100,6 +95,55 @@ export default {
         console.log(err)
       })
     },
+    applyOrder(index){//申请接单
+      let _vm=this;
+      if(_vm.userMes.engineerVO){
+        if(_vm.logList[index].stateStr==='截单状态'){
+          _vm.$Toast('很抱歉,该项目已截单')
+        }else if(_vm.userMes.engineerVO.state==0||_vm.userMes.engineerVO.state==1){
+          MessageBox({
+            message:'当前未进行工程师认证,是否立即前往？',
+            confirmButtonText:'确定',
+            cancelButtonText:'取消',
+            showCancelButton:true
+          }).then(action => {
+            if(action=='confirm'){
+              _vm.$router.push({
+                path:'/mine',
+                query:{
+                  color:4
+                }
+              })
+            }
+          }).catch(err=>{
+            if(err=='cancel'){
+              console.log(err)
+            }
+          })
+        }else{
+          let formdata=new FormData();
+          let userId=window.localStorage.getItem('engID');
+          formdata.append('missionId',_vm.logList[index].id);
+          formdata.append('engineerId',userId);
+          _vm.$axios.post(_vm.oUrl+'/mission/saveMissionRecord',formdata).then((res)=>{
+            if(res.data.code==0){
+              _vm.$Toast('申请成功,稍后将会为您进行审核,请留意');
+              _vm.getLogList();
+            }else{
+              _vm.$Toast(res.data.msg)
+            }
+          }).catch((err)=>{
+            _vm.$Toast('未知异常,请联系客服')
+            console.log(err)
+          })
+        }
+      }else{
+        _vm.$Toast('请先登录');
+        setTimeout(()=>{
+          _vm.$router.push('/Tlogin')
+        },500)
+      }
+    },
     onRefresh(done){//下拉刷新
       this.getLogList()
       done()
@@ -109,9 +153,9 @@ export default {
     },
     logDeti(index){//日志详情
       this.$router.push({
-        name:'LogDetis'
+        name:'TakeOrderDe'
       });
-      window.localStorage.setItem('logMes',JSON.stringify(this.logList[index]))
+      window.localStorage.setItem('takeMes',JSON.stringify(this.logList[index]))
     },
   }
 }
@@ -197,7 +241,7 @@ export default {
 .work_list{
   width: 95%;
   margin:0 auto;
-  height: 16rem;
+  height: 12.5rem;
   max-height: none;
   border-radius: 5px;
   box-shadow: 0px 0px 5px 5px #ddd;
@@ -209,6 +253,12 @@ export default {
     padding-left: 1rem;
     padding-top: 1rem;
     color:#666;
+  }
+  .status{
+    position: absolute;
+    right:1rem;
+    top:1rem;
+    font-size: 1.4rem;
   }
   .click_mask{
     width: 100%;
@@ -259,7 +309,6 @@ export default {
       background: white;
       background :#eb7a1d;
       color:white;
-      margin-right: .2rem;
     }
   }
 }
