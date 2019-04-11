@@ -17,14 +17,9 @@
         <router-link :to="{path:'/mine',query:{color:4}}" tag="li" :class="{active:color==4}" @click.native="color==4">
           <i class="iconfont icon-wd"></i>
           <span>个人中心</span>
+          <i class="mesStatus"></i>
         </router-link>
     </ul>
-    <!-- <ul class="text_list">
-      <li :class="{active:color==1}">首页</li>
-      <li :class="{active:color==2}">订单</li>
-      <li :class="{active:color==2}">关于我们</li>
-      <li :class="{active:color==3}">我的</li>
-    </ul> -->
   </div>
 </template>
 
@@ -94,6 +89,18 @@ export default {
     li:nth-child(2){
       i{
         font-size: 1.7rem;
+      }
+    }
+    li:last-child{
+      position: relative;
+      .mesStatus{
+        width: .6rem;
+        height: .6rem;
+        border-radius: 50%;
+        position: absolute;
+        top:1rem;
+        right:3rem;
+        background: red;
       }
     }
   }

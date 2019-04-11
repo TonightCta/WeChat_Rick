@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import {set,get} from '@/assets/js/loca'
 export default {
   data(){
     return{
@@ -19,26 +20,29 @@ export default {
         setTimeout(()=>{
           // this.$refs.home_loading.style.transform='translateX(-100%)'
           this.$refs.home_loading.style.opacity='0'
-          window.localStorage.setItem('login',1);
+          set('login',1);
         },1000)
         setTimeout(()=>{
           this.isLogin=false;
-        },2000)
-        setTimeout(()=>{
-          window.localStorage.clear('login')
-        },24*60*60*1000)
+        },2000);
       }
     }
   },
   created(){
+    let clearTime=get('login',1000*60*60*24*2);
+    if(clearTime!=''&&clearTime!=null){
+      console.log('未过期')
+    }else{
+      window.localStorage.clear('login')
+    }
+  },
+  mounted(){
     if(window.localStorage.getItem('login')){
       this.isLogin=false;
     }else{
       this.isLogin=true;
     }
-  },
-  mounted(){
-    this.PourPur()
+    this.PourPur();
   },
   methods:{
     //倒计时关闭
@@ -56,9 +60,12 @@ export default {
         this.isLogin=false;
       },1000)
       window.localStorage.setItem('login',1);
-      setTimeout(()=>{
+      let clearTime=get('login',1000*60*60*24*2);
+      if(clearTime!=''&&clearTime!=null){
+        console.log('未过期')
+      }else{
         window.localStorage.clear('login')
-      },24*60*60*1000)
+      }
     }
   }
 }

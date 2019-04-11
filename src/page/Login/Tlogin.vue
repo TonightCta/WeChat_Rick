@@ -32,6 +32,7 @@
 import WorkHeader from '@/components/work_header'
 import {mapMutations,mapState} from 'vuex'
 import {downIOS} from '@/assets/js/default'
+import {set,get} from '@/assets/js/loca'
 export default {
   components:{
     WorkHeader
@@ -86,10 +87,7 @@ export default {
             window.localStorage.setItem('engID',res.data.data.engineerVO.id)
             window.localStorage.setItem('name',res.data.data.name);
             window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
-            window.localStorage.setItem('login',true)
-            setTimeout(()=>{
-              window.localStorage.clear('login')
-            },24*60*60*1000)
+            set('login',true);
             _this.$Indicator.close();
             _this.userMes_fn(res.data.data);
             _this.$Toast('登录成功')

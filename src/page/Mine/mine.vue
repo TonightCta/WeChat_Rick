@@ -42,27 +42,28 @@
       <ul>
         <router-link to="/message" tag="li">
           <i class="iconfont icon-chakan"></i>
-          <span>消息中心</span>
+          <span class="mine_text">消息中心</span>
+          <span class="message_num">2</span>
           <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
         <router-link to="/cerSkill" tag="li">
           <i class="iconfont icon-renzheng"></i>
-          <span>技能认证</span>
+          <span class="mine_text">技能认证</span>
           <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
         <router-link to="/cerCard" tag="li">
           <i class="iconfont card_icon icon-shimingrenzheng"></i>
-          <span>身份认证</span>
+          <span class="mine_text">身份认证</span>
           <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
         <router-link :to="{path:'/personMes',query:{isDis:false}}" tag="li">
           <i class="iconfont write_icon icon-bianjiziliao"></i>
-          <span>编辑资料</span>
+          <span class="mine_text">编辑资料</span>
           <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
         <router-link to="/setTing" tag="li">
           <i class="iconfont icon-shezhi"></i>
-          <span>设置</span>
+          <span class="mine_text">设置</span>
           <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
       </ul>
@@ -351,11 +352,25 @@ export default {
           right:2rem;
           font-weight: bold;
         }
-        span{
+        .mine_text{
           font-size: 1.2rem;
           position: absolute;
           top:0;
           left:5rem;
+        }
+        .message_num{
+          width: 1.8rem;
+          height: 1.8rem;
+          border-radius:50%;
+          background: red;
+          position: absolute;
+          right:4rem;
+          color:white;
+          text-align: center;
+          line-height: 1.8rem;
+          top:50%;
+          margin-top: -.6rem;
+          font-size: 1.2rem;
         }
       }
       li:nth-child(1){

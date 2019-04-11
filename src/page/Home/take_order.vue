@@ -76,8 +76,14 @@ export default {
       _vm.$Indicator.open();
       let userId=window.localStorage.getItem('engID');
       // let userId='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
-      formdata.append('engineerIdOut',userId);
+      console.log(userId);
+      if(window.localStorage.getItem('engID')){
+        formdata.append('engineerIdOut',userId);
+      }else{
+        console.log('未登录')
+      }
       _vm.$axios.post(_vm.oUrl+'/mission/findMissionListByCondition',formdata).then((res)=>{
+        console.log(res)
         if(res.data.code==0){
           _vm.logList=res.data.data.content;
           setTimeout(()=>{
@@ -88,6 +94,7 @@ export default {
           }
         }else{
           _vm.$Indicator.close();
+          // this.hasLog=false;
           _vm.$Toast(res.data.msg)
         }
       }).catch((err)=>{

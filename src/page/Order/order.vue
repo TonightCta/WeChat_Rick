@@ -87,6 +87,7 @@ export default {
             _vm.$Indicator.close();
           },500)
         }else{
+          this.hasLog=false;
           _vm.$Indicator.close();
           _vm.$Toast(res.data.msg)
         }
