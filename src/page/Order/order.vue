@@ -14,26 +14,27 @@
     </p>
     <!-- <v-screen :visible.sync="visible"></v-screen> -->
     <div class="">
-      <v-scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
-        <div class="work_list" v-for="(log,index) in orderList">
-          <p class="work_time">{{log.createTimeStr}}</p>
-          <p class="work_type con">项目名称:&nbsp;{{log.name}}</p>
-          <p class="work_place con">工作地点:&nbsp;{{log.address}}</p>
-          <span class="status" v-if="log.stateStr==='接单状态'" style="color:#eb7a1d;">接单中</span>
-          <span class="status" v-else style="color:#666;">已截单</span>
-          <p class="work_pro">
-            <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
-          </p>
-          <p class="click_mask con" @click="logDeti(index)"></p>
-        </div>
-      </v-scroll>
+      <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
+        <ul>
+          <li class="work_list" v-for="(log,index) in orderList">
+            <p class="work_time">{{log.createTimeStr}}</p>
+            <p class="work_type con">项目名称:&nbsp;{{log.name}}</p>
+            <p class="work_place con">工作地点:&nbsp;{{log.address}}</p>
+            <span class="status" v-if="log.stateStr==='接单状态'" style="color:#eb7a1d;">接单中</span>
+            <span class="status" v-else style="color:#666;">已截单</span>
+            <p class="work_pro">
+              <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
+            </p>
+            <p class="click_mask con" @click="logDeti(index)"></p>
+          </li>
+        </ul>
+      </scroller>
       <p class="noLog" v-show="!hasLog">暂无订单</p>
     </div>
     <Footer/>
   </div>
 </template>
 <script>
-import Scroll from '@/page/Home/newListCon'
 import Screen from '@/components/screening'
 import {mapState,mapMutations} from 'vuex'
 export default {
@@ -49,7 +50,6 @@ export default {
   },
   components:{
     Footer:resolve=>require(['@/components/footer_wapper'],resolve),
-    'v-scroll':Scroll,
     'v-screen':Screen
   },
   watch:{
@@ -83,9 +83,7 @@ export default {
           if(res.data.data.content.length<1){
             this.hasLog=false;
           }
-          setTimeout(()=>{
-            _vm.$Indicator.close();
-          },500)
+          _vm.$Indicator.close();
         }else{
           this.hasLog=false;
           _vm.$Indicator.close();
@@ -98,10 +96,14 @@ export default {
     },
     onRefresh(done){//下拉刷新
       this.getLogList()
-      done()
+      setTimeout(()=>{
+        done()
+      },1000)
     },
     onInfinite(done){//加载更多
-      done()
+      setTimeout(()=>{
+        done()
+      },1500)
     },
     logDeti(index){//日志详情
       this.$router.push({
@@ -119,9 +121,8 @@ export default {
   height: auto;
   overflow-x: hidden;
 }
-.yo-scroll{
-  top:4.5rem!important;
-  margin-bottom: 3rem;
+._v-container{
+  margin-top: 5rem!important;
 }
 .push_work{
   position: absolute;

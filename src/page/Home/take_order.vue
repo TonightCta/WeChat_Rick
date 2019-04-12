@@ -12,21 +12,23 @@
       <span v-show="hasText" @click="$Toast('该功能尚未开放,敬请期待')">搜索</span>
       <span class="mask" @click="$Toast('该功能尚未开放,敬请期待')"></span>
     </p>
-    <div class="">
-      <v-scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
-        <div class="work_list" v-for="(log,index) in logList">
-          <p class="work_time">{{log.createTimeStr}}</p>
-          <p class="work_type con">项目名称:&nbsp;{{log.name}}</p>
-          <p class="work_place con">工作地点:&nbsp;{{log.placeVO.parentName+'-'+log.placeVO.name}}</p>
-          <span class="status" v-if="log.stateStr==='接单状态'" style="color:#eb7a1d;">可接单</span>
-          <span class="status" v-else style="color:#666;">已截单</span>
-          <p class="work_pro">
-            <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
-            <button type="button" name="button" @click="applyOrder(index)"><i class="iconfont icon-fuwutiaokuan"></i>申请</button>
-          </p>
-          <p class="click_mask con" @click="logDeti(index)"></p>
-        </div>
-      </v-scroll>
+    <div class="" style="margin-top:10rem;">
+      <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" ref="myscroller">
+        <ul>
+          <li class="work_list" v-for="(log,index) in logList">
+            <p class="work_time">{{log.createTimeStr}}</p>
+            <p class="work_type con">项目名称:&nbsp;{{log.name}}</p>
+            <p class="work_place con">工作地点:&nbsp;{{log.placeVO.parentName+'-'+log.placeVO.name}}</p>
+            <span class="status" v-if="log.stateStr==='接单状态'" style="color:#eb7a1d;">可接单</span>
+            <span class="status" v-else style="color:#666;">已截单</span>
+            <p class="work_pro">
+              <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
+              <button type="button" name="button" @click="applyOrder(index)"><i class="iconfont icon-fuwutiaokuan"></i>申请</button>
+            </p>
+            <p class="click_mask con" @click="logDeti(index)"></p>
+          </li>
+        </ul>
+      </scroller>
       <p class="noLog" v-show="!hasLog">暂无订单</p>
     </div>
 
@@ -35,7 +37,6 @@
 <script>
 import WorkHeader from '@/components/work_header'
 import Deve from '@/components/development_of'
-import Scroll from './newListCon'
 import {mapState,mapMutations} from 'vuex'
 import { MessageBox } from 'mint-ui'
 export default {
@@ -46,12 +47,12 @@ export default {
       hasLog:true,//是否当前列表有数据
       hasText:false,//是否有输入内容
       searchKey:null,//搜索关键字
+      pageNum:0,//页码
     }
   },
   components:{
     WorkHeader,
     Deve,
-    'v-scroll':Scroll
   },
   watch:{
     searchKey(val,oldVal){
@@ -81,14 +82,13 @@ export default {
         formdata.append('engineerIdOut',userId);
       }else{
         console.log('未登录')
-      }
+      };
+      formdata.append('page',_vm.pageNum);
+      // formdata.append('size',10)
       _vm.$axios.post(_vm.oUrl+'/mission/findMissionListByCondition',formdata).then((res)=>{
-        console.log(res)
         if(res.data.code==0){
           _vm.logList=res.data.data.content;
-          setTimeout(()=>{
-            _vm.$Indicator.close();
-          },500)
+          _vm.$Indicator.close();
           if(res.data.data.content.length<1){
             this.hasLog=false;
           }
@@ -152,11 +152,22 @@ export default {
       }
     },
     onRefresh(done){//下拉刷新
-      this.getLogList()
-      done()
+      this.getLogList();
+      setTimeout(()=>{
+        done()
+      },1000)
     },
     onInfinite(done){//加载更多
-      done()
+      // this.getLogList();
+      setTimeout(()=>{
+        // this.pageNum++;
+        // console.log(this.pageNum);
+        // this.$refs.myscroller.finishPullToRefresh();
+        done()
+      },1500)
+        // this.pageNum++;
+        // console.log('onInfinite')
+        // console.log(done)
     },
     logDeti(index){//日志详情
       this.$router.push({
@@ -169,15 +180,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.yo-scroll{
-  top:9.5rem!important;
-}
 .work_log{
   width: 100%;
   padding-top:10rem;
   height: auto;
   overflow-x: hidden;
   padding-bottom: 1rem;
+}
+._v-container{
+  margin-top: 10rem!important;
 }
 .push_work{
   position: absolute;

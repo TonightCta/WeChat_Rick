@@ -1,4 +1,3 @@
-//封装过期控制代码
 export function set(key,value){
      var curTime = new Date().getTime();
      localStorage.setItem(key,JSON.stringify({data:value,time:curTime}));

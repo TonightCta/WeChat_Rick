@@ -17,18 +17,26 @@
         <router-link :to="{path:'/mine',query:{color:4}}" tag="li" :class="{active:color==4}" @click.native="color==4">
           <i class="iconfont icon-wd"></i>
           <span>个人中心</span>
-          <i class="mesStatus"></i>
+          <i class="mesStatus" v-show="hasMsg"></i>
         </router-link>
     </ul>
   </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   data(){
     return{
-      color:1
+      color:1,
+      hasMsg:false
     }
+  },
+  computed:{
+    ...mapState(['userMes'])
+  },
+  created(){
+    this.getMessState()
   },
   mounted(){
     if(this.$route.query.color){
@@ -38,7 +46,22 @@ export default {
     }
   },
   methods:{
-
+    getMessState(){
+      if(this.userMes.id){
+        let formdata=new FormData();
+        formdata.append('id',this.userMes.id);
+        formdata.append('isRead',false);
+        this.$axios.post(this.oUrl+'/message/findMessageNumberByOperator',formdata).then((res)=>{
+          if(res.data.data>0){
+            this.hasMsg=true;
+          }else{
+            this.hasMsg=false;
+          }
+        }).catch((err)=>{
+          console.log(err)
+        })
+      }
+    }
   }
 }
 </script>

@@ -38,7 +38,7 @@ export default {
 
 <style>
 #app {
-  font-family: '微软雅黑';
+  font-family: 'MyriadPro Regular';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin:0;

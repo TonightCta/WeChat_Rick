@@ -9,19 +9,21 @@
       <button type="button" name="button">添加工作日志</button>
     </p>
     <div class="">
-      <v-scroll :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
-        <div class="work_list" v-for="(log,index) in logList">
-          <p class="work_time">{{log.workTime}}</p>
-          <p class="work_type con">项目名称:&nbsp;{{log.projectName}}</p>
-          <p class="work_place con">工作地点:&nbsp;{{log.projectPointPlace}}</p>
-          <p class="work_status con">进程节点:&nbsp;{{log.projectCourseNodeName}}</p>
-          <p class="work_pro">
-            <button type="button" name="button" @click="delWorkLog(index)"><i class="iconfont icon-duomeitiicon-"></i>删除</button>
-            <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
-          </p>
-          <p class="click_mask con" @click="logDeti(index)"></p>
-        </div>
-      </v-scroll>
+      <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
+        <ul>
+          <li class="work_list" v-for="(log,index) in logList">
+            <p class="work_time">{{log.workTime}}</p>
+            <p class="work_type con">项目名称:&nbsp;{{log.projectName}}</p>
+            <p class="work_place con">工作地点:&nbsp;{{log.projectPointPlace}}</p>
+            <p class="work_status con">进程节点:&nbsp;{{log.projectCourseNodeName}}</p>
+            <p class="work_pro">
+              <button type="button" name="button" @click="delWorkLog(index)"><i class="iconfont icon-duomeitiicon-"></i>删除</button>
+              <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
+            </p>
+            <p class="click_mask con" @click="logDeti(index)"></p>
+          </li>
+        </ul>
+      </scroller>
       <p class="noLog" v-show="!hasLog">暂无日志</p>
     </div>
 
@@ -30,7 +32,6 @@
 <script>
 import WorkHeader from '@/components/work_header'
 import Deve from '@/components/development_of'
-import Scroll from './newListCon'
 import {mapMutations} from 'vuex'
 export default {
   data(){
@@ -42,8 +43,7 @@ export default {
   },
   components:{
     WorkHeader,
-    Deve,
-    'v-scroll':Scroll
+    Deve
   },
   mounted(){
     this.getLogList()
@@ -86,11 +86,15 @@ export default {
       })
     },
     onRefresh(done){//下拉刷新
-      this.getLogList()
-      done()
+      this.getLogList();
+      setTimeout(()=>{
+        done()
+      },1000)
     },
     onInfinite(done){//加载更多
-      done()
+      setTimeout(()=>{
+        done()
+      },1500)
     },
     delWorkLog(index){//删除当前日志
       this.$Toast('删除日志');
@@ -141,8 +145,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.yo-scroll{
-  top:9.5rem!important;
+._v-container{
+  margin-top: 9rem!important;
 }
 .work_log{
   width: 100%;

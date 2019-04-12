@@ -5,62 +5,97 @@
       <span>消息中心</span>
     </WorkHeader>
     <div class="message_list">
-      <ul>
-        <li v-for="(message,index) in messageList" :key="index">
-          <span>{{message.content}}</span>
-          <span>{{message.time}}</span>
-          <span class="message_status"></span>
-          <img src="../../../static/img/bookmarks_icon.png" alt="" class="icon">
-        </li>
-      </ul>
+      <scroller :on-refresh="onRefresh" :on-infinite="onInfinite">
+        <ul>
+          <li v-for="(message,index) in messageList" :key="index" @click="upRead(index)">
+            <span>{{message.content}}</span>
+            <span>{{message.createTimeStr}}</span>
+            <span class="message_status" v-if="!message.isRead"></span>
+            <img src="../../../static/img/bookmarks_icon.png" alt="" class="icon">
+          </li>
+        </ul>
+      </scroller>
     </div>
   </div>
 </template>
 
 <script>
 import {set,get} from '@/assets/js/loca'
+import {mapState} from 'vuex'
 export default {
+  inject:['reload'],
   data(){
     return{
-      messageList:[
-        {
-          content:'万维网（World Wide Web）是作为欧洲核子研究组织的一个项目发展起来的，在那里Tim Berners-Lee 开发出万维网的雏形。Tim Berners-Lee - 万维网的发明人 - 目前是万维网联盟的主任。W3C 在 1994 年被创建的目的是，为了完成麻省理工学院（MIT）与欧洲粒子物理研究所（CERN）之间的协同工作，并得到了美国国防部高级研究计划局（DARPA）和欧洲委员会（European Commission）的支持。',
-          time:'2019/04/10  10:15'
-        },
-        {
-          content:'万维网（World Wide Web）Berners-Lee - 万维网的发明人 - 目前是万维网联盟的主任。W3C 在 1994 年被创建的目的是，为了完成麻省理工学院（MIT）与欧洲粒子物理研究所（CERN）之间的协同工作，并得到了美国国防部高级研究计划局（DARPA）和欧洲委员会（European Commission）的支持。',
-          time:'2019/04/10  10:15'
-        },
-        {
-          content:'万维网（World Wide  Berners-Lee  Berners-Lee -  - 目前是万维网联盟的主任。W3C 在 1994  Commission）的支持。',
-          time:'2019/04/10  10:15'
-        },
-      ]
+      messageList:[]
     }
   },
-  mounted(){
-    set('information',123)
+  computed:{
+    ...mapState(['userMes'])
+  },
+  created(){
+    this.getMessageList()
   },
   components:{
     WorkHeader:resolve=>require(['@/components/work_header'],resolve)
   },
   methods:{
-    clear(){
-      let dataObjData=get('information',1000*60);
-      if(dataObjData!=''&&dataObjData!=null){
-        alert('有数据')
-      }else{
-        alert('信息已过期')
-      }
+    onRefresh(done){//刷新
+      setTimeout(()=>{
+        done()
+      },1000)
+    },
+    onInfinite(done){//加载更多
+      setTimeout(()=>{
+        done(true)
+      },1500)
+    },
+    getMessageList(){//获取消息列表
+      let _vm=this;
+      _vm.$Indicator.open()
+      let formdata=new FormData();
+      console.log(_vm.userMes)
+      formdata.append('id',_vm.userMes.id);
+      _vm.$axios.post(_vm.oUrl+'/message/findMessageListByOperator',formdata).then((res)=>{
+        if(res.data.code==0){
+          _vm.messageList=res.data.data.content;
+          _vm.$Indicator.close()
+        }else{
+          _vm.$Indicator.close()
+          _vm.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        _vm.$Indicator.close()
+        _vm.$Toast('未知异常,请联系客服')
+        console.log(err)
+      })
+    },
+    upRead(index){//更新消息读取状态
+      let formdata=new FormData();
+      formdata.append('id',this.messageList[index].id);
+      formdata.append('isRead',true);
+      this.$axios.post(this.oUrl+'/message/updateMessageIsRead',formdata).then((res)=>{
+        if(res.data.code==0){
+          this.messageList[index].isRead=true;
+          this.reload()
+        }else{
+          this.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        this.$Toast('未知错误,请联系客服')
+        console.log(err)
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+._v-container{
+  margin-top: 5rem!important;
+}
 .message_list{
   margin-top: 6rem!important;
-  width: 95%;
+  width: 92%!important;
   margin: 0 auto;
   ul{
     li{
@@ -79,7 +114,7 @@ export default {
         position: absolute;
         bottom:.5rem;
         right:.5rem;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         color: #666;
       }
       .icon{
