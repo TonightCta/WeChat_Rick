@@ -47,13 +47,16 @@ export default {
   },
   methods:{
     getMessState(){
-      if(this.userMes.id){
+      if(window.sessionStorage.getItem('footerMsg')){
+        this.hasMsg=true;
+      }else if(this.userMes.id){
         let formdata=new FormData();
         formdata.append('id',this.userMes.id);
         formdata.append('isRead',false);
         this.$axios.post(this.oUrl+'/message/findMessageNumberByOperator',formdata).then((res)=>{
           if(res.data.data>0){
             this.hasMsg=true;
+            window.sessionStorage.setItem('footerMsg',1)
           }else{
             this.hasMsg=false;
           }

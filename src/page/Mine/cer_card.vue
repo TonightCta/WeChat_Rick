@@ -91,20 +91,8 @@ export default {
       let file=e.target.files[0];
       let reader=new FileReader();
       reader.readAsDataURL(file);
-      let img=new Image;
-      reader.onload=function(e){
-        var width=400,
-        quality=0.1,
-        canvas=document.createElement("canvas"),
-        drawer=canvas.getContext("2d");
-        img.src=this.result;
-        img.onload=()=>{
-          canvas.width=width;
-          canvas.height=width*(img.height/img.width);
-          drawer.drawImage(img,0,0,canvas.width,canvas.height);
-          img.src=canvas.toDataURL('image/png',quality);
-        }
-        _this.cardPic.push(img.src);
+      reader.onload=function(){
+        _this.cardPic.push(this.result);
       };
       this.cardFile.push(e.target.files[0]);
     },
@@ -142,9 +130,10 @@ export default {
       let _vm=this;
       _vm.$Indicator.open('提交中...');
       let formData=new FormData();
-      formData.append('id',_vm.userMes.engineerVO.id)
-      formData.append('identityUploadFiles',_vm.cardFile[0]);
-      formData.append('identityUploadFiles',_vm.cardFile[1]);
+      formData.append('id',_vm.userMes.engineerVO.id);
+      _vm.cardFile.forEach((e)=>{
+        formData.append('identityUploadFiles',e);
+      })
       _vm.$axios.post(_vm.oUrl+'/mobile/uploadEngineerFile',formData).then((res)=>{
         if(res.data.code==0){
           _vm.$Indicator.close();

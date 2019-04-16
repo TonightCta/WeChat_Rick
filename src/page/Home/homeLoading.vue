@@ -16,9 +16,8 @@ export default {
   },
   watch:{
     clsoeTime(val,oldVal){
-      if(val==0){
+      if(val==0&&this.isLogin){
         setTimeout(()=>{
-          // this.$refs.home_loading.style.transform='translateX(-100%)'
           this.$refs.home_loading.style.opacity='0'
           set('login',1);
         },1000)

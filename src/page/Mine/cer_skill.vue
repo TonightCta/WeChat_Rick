@@ -90,20 +90,8 @@ export default {
       let file=e.target.files[0];
       let reader=new FileReader();
       reader.readAsDataURL(file);
-      let img=new Image;
-      reader.onload=function(e){
-        var width=400,
-        quality=0.1,
-        canvas=document.createElement("canvas"),
-        drawer=canvas.getContext("2d");
-        img.src=this.result;
-        img.onload=()=>{
-          canvas.width=width;
-          canvas.height=width*(img.height/img.width);
-          drawer.drawImage(img,0,0,canvas.width,canvas.height);
-          img.src=canvas.toDataURL('image/png',quality);
-        }
-        _this.skillsPic.push(img.src);
+      reader.onload=function(){
+        _this.skillsPic.push(this.result);
       };
       this.skillsFile.push(e.target.files[0]);
     },
@@ -140,12 +128,10 @@ export default {
       let _vm=this;
       _vm.$Indicator.open('提交中...');
       let _form=new FormData();
-      _form.append('id',_vm.userMes.engineerVO.id)
-      _form.append('certificateUploadFiles',_vm.skillsFile[0]);
-      _form.append('certificateUploadFiles',_vm.skillsFile[1]);
-      _form.append('certificateUploadFiles',_vm.skillsFile[2]);
-      _form.append('certificateUploadFiles',_vm.skillsFile[3]);
-      _form.append('certificateUploadFiles',_vm.skillsFile[4]);
+      _form.append('id',_vm.userMes.engineerVO.id);
+      _vm.skillsFile.forEach((e)=>{
+        _form.append('certificateUploadFiles',e);
+      })
       _vm.$axios.post(_vm.oUrl+'/mobile/uploadEngineerFile',_form).then((res)=>{
         if(res.data.code==0){
           _vm.$Indicator.close();

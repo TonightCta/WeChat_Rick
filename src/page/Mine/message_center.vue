@@ -76,7 +76,7 @@ export default {
       this.$axios.post(this.oUrl+'/message/updateMessageIsRead',formdata).then((res)=>{
         if(res.data.code==0){
           this.messageList[index].isRead=true;
-          this.reload()
+          this.reload();
         }else{
           this.$Toast(res.data.msg)
         }
@@ -95,17 +95,17 @@ export default {
 }
 .message_list{
   margin-top: 6rem!important;
-  width: 92%!important;
-  margin: 0 auto;
   ul{
     li{
-      margin-top: 1rem;
+      margin-top: 1rem!important;
       text-align: justify;
       position: relative;
       padding:1.5rem 1rem 2.5rem 1rem;
       border-radius:8px;
       box-shadow: 0px 0px 10px #999;
       background: white;
+      width: 86%;
+      margin:0 auto;
       span:nth-child(1){
         text-indent:1.8rem;
         font-size:1.4rem;

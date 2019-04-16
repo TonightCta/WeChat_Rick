@@ -70,7 +70,7 @@ export default {
           pic:'static/img/engPic/person_sly.png',
           name:'孙立业',
           title1:'运维',
-          title2:'HCNA'
+          title2:'HCIE'
         },
         {
           pic:'static/img/engPic/person_zl.png',

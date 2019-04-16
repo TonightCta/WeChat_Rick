@@ -4,18 +4,20 @@
     <div class="home_table">
       <ul>
         <li @click="hasLogin()">小哥注册</li>
-        <router-link to="/takeOrder" tag="li">接单赚钱<span class="orderNum">{{15}}</span></router-link>
+        <router-link to="/takeOrder" tag="li">接单赚钱<span class="orderNum" v-show="hasAvi">{{aviLength}}</span></router-link>
         <router-link to="/demandNeed" tag="li">发布需求</router-link>
         <router-link to="/workLog" tag="li">工作日志</router-link>
-        <!-- <li>接单赚钱</li>
-        <li>发布需求</li>
-        <li>工作日志</li> -->
       </ul>
     </div>
     <div class="adv_box" v-show="alertBox">
       <p @click="closeAdv()"></p>
+      <div class="bg"  @click="goOrder()">
+
+      </div>
+      <span class="advNum">{{aviLength}}</span>
+      <span class="intBorder"></span>
     </div>
-    <div class="adv_mask" v-show="alertBox">
+    <div class="adv_mask" @touchmove.prevent v-show="alertBox">
 
     </div>
   </div>
@@ -26,18 +28,62 @@ import {mapState} from 'vuex'
 export default {
   data(){
     return{
-      alertBox:true
+      alertBox:true,
+      hasAvi:false,
+      aviLength:0
     }
   },
   computed:{
     ...mapState(['userMes'])
   },
+  created(){
+  },
   mounted(){
+    this.getAviList();
     if(sessionStorage.getItem('alertB')){
       this.alertBox=false
-    }
+    };
   },
   methods:{
+    goOrder(){
+      this.$router.push('/takeOrder');
+      window.sessionStorage.setItem('alertB',false)
+      this.alertBox=false
+    },
+    getAviList(){
+      let _vm=this;
+      let formdata=new FormData();
+      let userId=window.localStorage.getItem('engID');
+      // let userId='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
+      console.log(userId,12312312);
+      if(window.localStorage.getItem('engID')){
+        formdata.append('engineerIdOut',userId);
+      }else{
+        console.log('未登录')
+      };
+      if(sessionStorage.getItem('aviNum')){
+        _vm.aviLength=sessionStorage.getItem('aviNum');
+        _vm.hasAvi=true;
+      }else{
+        _vm.$axios.post(_vm.oUrl+'/mission/findMissionListByCondition',formdata).then((res)=>{
+          if(res.data.code==0){
+            console.log(res)
+            if(res.data.data.totalElements>0){
+              _vm.hasAvi=true;
+              _vm.aviLength=res.data.data.totalElements;
+              sessionStorage.setItem('aviNum',res.data.data.totalElements)
+            }else{
+              _vm.hasAvi=false;
+            }
+          }else{
+            _vm.hasAvi=false;
+          }
+        }).catch((err)=>{
+          console.log(err);
+          _vm.hasAvi=false;
+        })
+      }
+    },
     closeAdv(){//关闭广告
       window.sessionStorage.setItem('alertB',false)
       this.alertBox=false
@@ -91,6 +137,9 @@ export default {
         top:-.8rem;
         right:-.8rem;
         line-height: 1.9rem;
+        text-align: center;
+        font-size: 1rem;
+        letter-spacing:0px;
       }
     }
     li:nth-child(3){
@@ -107,19 +156,49 @@ export default {
   width: 70%;
   height: 15rem;
   position: fixed;
-  background: white;
   top:50%;
   margin-left:-35%;
   left:50%;
-  margin-top:-7.5rem;
+  margin-top:-12.5rem;
   z-index: 9010;
+  .bg{
+    width: 100%;
+    height: 100%;
+    background: url('../../../static/img/adi_bg.png');
+    background-size: 100% 100%;
+  }
+  .intBorder{
+    width: 3rem;
+    height:5rem;
+    position: absolute;
+    left:50%;
+    margin-left: -2px;
+    border-left: 4px solid rgba(255,255,255,.5);
+    bottom: -5rem;
+    z-index: 9000;
+  }
+  .advNum{
+    position: absolute;
+    width: 4rem;
+    height: 3rem;
+    line-height: 3rem;
+    background:rgba(0,0,0,0);
+    color:#f43233;
+    text-align: center;
+    font-size: 2.0rem;
+    font-weight: bold;
+    top:50%;
+    margin-top: -1.5rem;
+    left:50%;
+    margin-left: -2.5rem;
+  }
   p{
     width: 3rem;
     height: 3rem;
     background: url('../../../static/img/adv_close.png');
     background-size: 100% 100%;
     position: absolute;
-    bottom:-5rem;
+    bottom:-8rem;
     left:50%;
     margin-left:-1.5rem;
   }

@@ -14,12 +14,12 @@
     </p>
     <!-- <v-screen :visible.sync="visible"></v-screen> -->
     <div class="">
-      <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
+      <scroller :on-refresh="onRefresh" :showBtn="listLength">
         <ul>
           <li class="work_list" v-for="(log,index) in orderList">
             <p class="work_time">{{log.createTimeStr}}</p>
             <p class="work_type con">项目名称:&nbsp;{{log.name}}</p>
-            <p class="work_place con">工作地点:&nbsp;{{log.address}}</p>
+            <p class="work_place con">工作地点:&nbsp;{{log.placeVO.parentName+'-'+log.placeVO.name}}</p>
             <span class="status" v-if="log.stateStr==='接单状态'" style="color:#eb7a1d;">接单中</span>
             <span class="status" v-else style="color:#666;">已截单</span>
             <p class="work_pro">
@@ -29,7 +29,7 @@
           </li>
         </ul>
       </scroller>
-      <p class="noLog" v-show="!hasLog">暂无订单</p>
+      <!-- <p class="noLog" v-show="!hasLog">暂无订单</p> -->
     </div>
     <Footer/>
   </div>
@@ -102,7 +102,7 @@ export default {
     },
     onInfinite(done){//加载更多
       setTimeout(()=>{
-        done()
+        done(true)
       },1500)
     },
     logDeti(index){//日志详情

@@ -9,13 +9,13 @@
       <div class="con_mes publicBox">
         <p>项目名称:&nbsp;{{mes.name}}</p>
         <p>项目地点:&nbsp;{{mes.placeVO.parentName+'-'+mes.placeVO.name}}</p>
+        <p style="max-height:none;line-height:2.5rem;">详细地址:&nbsp;{{mes.address}}</p>
         <p><span>项目状态:&nbsp;{{mes.stateStr}}</span></p>
         <p>
-          <span>进行日期:&nbsp;{{mes.createTimeStr}}</span>
-          <span>进行时间:&nbsp;{{mes.startTime}}:00-{{mes.endTime}}:00</span>
+          <span>发布日期:&nbsp;{{mes.createTimeStr}}</span>
         </p>
       </div>
-      <p class="detis_title">工作内容:<span></span></p>
+      <p class="detis_title">项目内容:<span></span></p>
       <div class="con_text publicBox">
         <p class="con_text">
           <textarea name="name" rows="8" cols="80" v-model="mes.content"></textarea>
@@ -128,7 +128,7 @@ export default {
           _vm.$axios.post(_vm.oUrl+'/mission/saveMissionRecord',formdata).then((res)=>{
             if(res.data.code==0){
               _vm.$Toast('申请成功,稍后将会为您进行审核,请留意');
-              _vm.getLogList();
+              _vm.$router.go(-1);
             }else{
               _vm.$Toast(res.data.msg)
             }
@@ -151,7 +151,6 @@ export default {
 <style lang="scss" scoped>
 .work_detis{
   width: 100%;
-  height: 100%;
   padding-top:6rem;
   .detis_con{
     width: 90%;
@@ -182,13 +181,12 @@ export default {
     }
     .con_mes{
       width: 100%;
-      height: 13.5rem;
       margin-top: -.5rem;
       p{
         font-size: 1.4rem;
         padding-left: 1.5rem;
         display: flex;
-        overflow: hidden;
+        line-height: 3rem;
         span{
           width: 50%;
         }
@@ -203,7 +201,6 @@ export default {
       text-align: left;
       box-sizing: border-box;
       font-size: 1.6rem;
-      height: 3rem;
       line-height: 4rem;
     }
     .con_text{
@@ -227,7 +224,7 @@ export default {
       }
       span{
         width: 100%;
-        height: 15rem;
+        height: 10rem;
         background: rgba(0,0,0,0);
         position: absolute;
         top:0;

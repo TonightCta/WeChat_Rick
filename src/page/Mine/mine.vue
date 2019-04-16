@@ -43,7 +43,7 @@
         <router-link to="/message" tag="li">
           <i class="iconfont icon-chakan"></i>
           <span class="mine_text">消息中心</span>
-          <span class="message_num" v-show="msgNum!=null">{{msgNum}}</span>
+          <span class="message_num" v-show="hasMsg">{{msgNum}}</span>
           <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
         </router-link>
         <router-link to="/cerSkill" tag="li">
@@ -89,7 +89,8 @@ export default {
       pathdyn:null,//跳转地址
       didLogin:true,//未登录
       hasLogin:false,//未登录
-      msgNum:null,
+      msgNum:null,//未读消息条数
+      hasMsg:false,//是否有未读消息
     }
   },
   computed:{
@@ -99,6 +100,9 @@ export default {
         return this.userMes.engineerVO.name
       }
     }
+  },
+  created(){
+    this.getMsgNum();
   },
   mounted(){
     if(this.userMes.engineerVO){
@@ -112,18 +116,6 @@ export default {
       }else{
         this.cerText='已认证'
       }
-      let formdata=new FormData();
-      formdata.append('id',this.userMes.id);
-      formdata.append('isRead',false);
-      this.$axios.post(this.oUrl+'/message/findMessageNumberByOperator',formdata).then((res)=>{
-        if(res.data.data>0){
-          this.msgNum=res.data.data;
-        }else{
-          this.msgNum=null;
-        }
-      }).catch((err)=>{
-        console.log(err)
-      })
     }
     if(this.userMes.email){
       this.userEmail=this.userMes.email
@@ -157,7 +149,25 @@ export default {
         }
       })
     },
-
+    getMsgNum(){//获取未读消息
+      let formdata=new FormData();
+      formdata.append('id',this.userMes.id);
+      formdata.append('isRead',false);
+      this.$axios.post(this.oUrl+'/message/findMessageNumberByOperator',formdata).then((res)=>{
+        if(res.data.data>0){
+          this.msgNum=res.data.data;
+          this.hasMsg=true;
+        }else{
+          this.msgNum=null;
+          if(window.sessionStorage.getItem('footerMsg')){
+            let fMsg=window.sessionStorage.getItem('footerMsg')
+            sessionStorage.removeItem('footerMsg');
+          }
+        }
+      }).catch((err)=>{
+        console.log(err)
+      })
+    },
     mineCon(){//进入登录注册页
       this.isBackM_fn(true);
       this.isBackT_fn(false);

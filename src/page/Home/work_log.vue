@@ -9,7 +9,7 @@
       <button type="button" name="button">添加工作日志</button>
     </p>
     <div class="">
-      <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" v-show="hasLog">
+      <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength" >
         <ul>
           <li class="work_list" v-for="(log,index) in logList">
             <p class="work_time">{{log.workTime}}</p>
@@ -24,7 +24,7 @@
           </li>
         </ul>
       </scroller>
-      <p class="noLog" v-show="!hasLog">暂无日志</p>
+      <!-- <p class="noLog" v-show="!hasLog">暂无日志</p> -->
     </div>
 
   </div>
@@ -93,7 +93,7 @@ export default {
     },
     onInfinite(done){//加载更多
       setTimeout(()=>{
-        done()
+        done(true)
       },1500)
     },
     delWorkLog(index){//删除当前日志

@@ -29,7 +29,7 @@
           </li>
         </ul>
       </scroller>
-      <p class="noLog" v-show="!hasLog">暂无订单</p>
+      <!-- <p class="noLog" v-show="!hasLog">暂无订单</p> -->
     </div>
 
   </div>
@@ -87,7 +87,9 @@ export default {
       // formdata.append('size',10)
       _vm.$axios.post(_vm.oUrl+'/mission/findMissionListByCondition',formdata).then((res)=>{
         if(res.data.code==0){
+          console.log(res)
           _vm.logList=res.data.data.content;
+          sessionStorage.setItem('aviNum',res.data.data.totalElements)
           _vm.$Indicator.close();
           if(res.data.data.content.length<1){
             this.hasLog=false;
@@ -163,7 +165,7 @@ export default {
         // this.pageNum++;
         // console.log(this.pageNum);
         // this.$refs.myscroller.finishPullToRefresh();
-        done()
+        done(true)
       },1500)
         // this.pageNum++;
         // console.log('onInfinite')
