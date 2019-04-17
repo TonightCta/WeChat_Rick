@@ -285,7 +285,6 @@ export default {
       let _vm=this;
       let file=e.target,reader=new FileReader();
       _vm.upPics.push(file.files[0]);
-      console.log(_vm.upPics)
       reader.readAsDataURL(file.files[0]);
       reader.onload=function(){
         _vm.picList.push(this.result);
@@ -338,7 +337,6 @@ export default {
           day = '0' + day
         }
         let Time = year + '-' + month + '-' + day;
-        console.log(Time);
         formdata.append('engineerId',engID);
         formdata.append('projectCourseNodeId',_vm.progressID);
         formdata.append('content',_vm.workContent);
@@ -352,7 +350,6 @@ export default {
           formdata.append('otherFiles',x);
         })
         _vm.$axios.post(_vm.oUrl+'/mobile/saveWorkRecord',formdata).then((res)=>{
-          console.log(res)
           if(res.data.code==0){
             _vm.$Toast('添加成功')
             _vm.$Indicator.close();

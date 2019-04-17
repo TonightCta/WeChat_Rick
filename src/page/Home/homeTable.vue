@@ -55,7 +55,6 @@ export default {
       let formdata=new FormData();
       let userId=window.localStorage.getItem('engID');
       // let userId='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
-      console.log(userId,12312312);
       if(window.localStorage.getItem('engID')){
         formdata.append('engineerIdOut',userId);
       }else{
@@ -67,7 +66,6 @@ export default {
       }else{
         _vm.$axios.post(_vm.oUrl+'/mission/findMissionListByCondition',formdata).then((res)=>{
           if(res.data.code==0){
-            console.log(res)
             if(res.data.data.totalElements>0){
               _vm.hasAvi=true;
               _vm.aviLength=res.data.data.totalElements;

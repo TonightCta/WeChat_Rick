@@ -36,7 +36,7 @@
           <img :src="oUrl+'/'+pic.fileName" alt="" :preview="index"  ref="file_pic">
         </p>
       </div> -->
-      <p class="undoOrder" @click="undoOrder()" v-if="mes.stateStr==='接单状态'">撤销申请</p>
+      <p class="undoOrder" @click="undoOrder()" v-if="isDis">撤销申请</p>
       <div class="work_mask" @touchmove.prevent v-show="isLarger">
 
       </div>
@@ -60,7 +60,8 @@ export default {
       zIndex:null,//当前查看的项目图片
       picList:[],
       //文件列表
-      fileList:[]
+      fileList:[],
+      isDis:false,//是否可注销
     }
   },
   computed:{
@@ -72,7 +73,12 @@ export default {
     this.fileList=this.mes.fileUploads;
   },
   mounted(){
-    this.$previewRefresh();
+    this.$previewRefresh()
+    if(this.mes.stateStr==='接单状态'&&this.mes.missionRecordState==0){
+      this.isDis=true;
+    }else{
+      this.isDis=false;
+    }
   },
   components:{
     WorkHeader
@@ -99,36 +105,36 @@ export default {
     },
     undoOrder(){//撤销申请
       let _vm=this;
-      let formdata=new FormData();
-      let userId=window.localStorage.getItem('engID');
-      formdata.append('engineerId',userId);
-      formdata.append('missionId',_vm.mes.id);
-      MessageBox({
-        message:'确认撤回该申请？',
-        confirmButtonText:'确定',
-        cancelButtonText:'取消',
-        showCancelButton:true
-      }).then(action => {
-        if(action=='confirm'){
-          _vm.$axios.post(_vm.oUrl+'/mission/deleteMissionRecordByMissionIdAndEngineerId',formdata).then((res)=>{
-            if(res.data.code==0){
-              _vm.$Toast('撤销申请成功');
-              setTimeout(()=>{
-                _vm.$router.go(-1);
-              },500)
-            }else{
-              _vm.$Toast(res.data.msg)
-            }
-          }).catch((err)=>{
-            _vm.$Toast('未知错误,请联系客服')
+        let formdata=new FormData();
+        let userId=window.localStorage.getItem('engID');
+        formdata.append('engineerId',userId);
+        formdata.append('missionId',_vm.mes.id);
+        MessageBox({
+          message:'确认撤回该申请？',
+          confirmButtonText:'确定',
+          cancelButtonText:'取消',
+          showCancelButton:true
+        }).then(action => {
+          if(action=='confirm'){
+            _vm.$axios.post(_vm.oUrl+'/mission/deleteMissionRecordByMissionIdAndEngineerId',formdata).then((res)=>{
+              if(res.data.code==0){
+                _vm.$Toast('撤销申请成功');
+                setTimeout(()=>{
+                  _vm.$router.go(-1);
+                },500)
+              }else{
+                _vm.$Toast(res.data.msg)
+              }
+            }).catch((err)=>{
+              _vm.$Toast('未知错误,请联系客服')
+              console.log(err)
+            })
+          }
+        }).catch(err=>{
+          if(err=='cancel'){
             console.log(err)
-          })
-        }
-      }).catch(err=>{
-        if(err=='cancel'){
-          console.log(err)
-        }
-      })
+          }
+        })
     },
   }
 }

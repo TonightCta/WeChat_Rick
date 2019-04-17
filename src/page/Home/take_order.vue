@@ -23,7 +23,7 @@
             <span class="status" v-else style="color:#666;">已截单</span>
             <p class="work_pro">
               <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
-              <button type="button" name="button" @click="applyOrder(index)"><i class="iconfont icon-fuwutiaokuan"></i>申请</button>
+              <button type="button" name="button" @click="applyOrder(index)"  v-show="log.state==2"><i class="iconfont icon-fuwutiaokuan"></i>申请</button>
             </p>
             <p class="click_mask con" @click="logDeti(index)"></p>
           </li>
@@ -76,8 +76,6 @@ export default {
       let formdata=new FormData();
       _vm.$Indicator.open();
       let userId=window.localStorage.getItem('engID');
-      // let userId='d7b801d7-16b5-4dc5-b628-33a966dfc95c';
-      console.log(userId);
       if(window.localStorage.getItem('engID')){
         formdata.append('engineerIdOut',userId);
       }else{
@@ -87,7 +85,6 @@ export default {
       // formdata.append('size',10)
       _vm.$axios.post(_vm.oUrl+'/mission/findMissionListByCondition',formdata).then((res)=>{
         if(res.data.code==0){
-          console.log(res)
           _vm.logList=res.data.data.content;
           sessionStorage.setItem('aviNum',res.data.data.totalElements)
           _vm.$Indicator.close();

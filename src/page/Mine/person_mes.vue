@@ -302,6 +302,7 @@ export default {
             _vm.userMes_fn(res.data.data);
               _vm.$Indicator.close();
               _vm.$Toast('保存成功');
+              _vm.$router.go(-1)
           }else{
             _vm.$Indicator.close();
             _vm.$Toast(res.data.msg)

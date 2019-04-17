@@ -36,7 +36,7 @@
           <img :src="oUrl+'/'+pic.fileName" alt="" :preview="index"  ref="file_pic">
         </p>
       </div> -->
-      <p class="applyOrder" @click="applyOrder()">立即申请</p>
+      <p class="applyOrder" @click="applyOrder()" v-show="mes.state==2">立即申请</p>
       <div class="work_mask" @touchmove.prevent v-show="isLarger">
 
       </div>

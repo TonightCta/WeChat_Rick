@@ -22,6 +22,8 @@
             <p class="work_place con">工作地点:&nbsp;{{log.placeVO.parentName+'-'+log.placeVO.name}}</p>
             <span class="status" v-if="log.stateStr==='接单状态'" style="color:#eb7a1d;">接单中</span>
             <span class="status" v-else style="color:#666;">已截单</span>
+            <span class="auditStatus" v-show="log.missionRecordState==-1" style="color:#666;">未入选</span>
+            <span class="auditStatus" v-show="log.missionRecordState==1" style="color:#eb7a1d;">已入选</span>
             <p class="work_pro">
               <button type="button" name="button" @click="logDeti(index)"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
             </p>
@@ -29,7 +31,7 @@
           </li>
         </ul>
       </scroller>
-      <!-- <p class="noLog" v-show="!hasLog">暂无订单</p> -->
+      <p class="noLog" v-show="!hasLog">暂无订单</p>
     </div>
     <Footer/>
   </div>
@@ -184,7 +186,7 @@ export default {
 .noLog{
   width: 100%;
   position: fixed;
-  top:20%;
+  top:15%;
   text-align: center;
   left:0;
   color:#999;
@@ -193,7 +195,7 @@ export default {
 .work_list{
   width: 95%;
   margin:0 auto;
-  height: 12rem;
+  height: 13rem;
   max-height: none;
   border-radius: 5px;
   box-shadow: 0px 0px 5px 5px #ddd;
@@ -205,6 +207,12 @@ export default {
     right:1rem;
     top:1rem;
     font-size: 1.4rem;
+  }
+  .auditStatus{
+    position: absolute;
+    font-size: 1.4rem;
+    left:11px;
+    bottom:10px;
   }
   p{
     width: 100%;

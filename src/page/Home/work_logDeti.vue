@@ -66,7 +66,6 @@ export default {
   },
   created(){
     this.mes=JSON.parse(window.localStorage.getItem('logMes'));
-    console.log(this.mes);
     this.picList=this.mes.imgUploads;
     this.fileList=this.mes.fileUploads;
   },

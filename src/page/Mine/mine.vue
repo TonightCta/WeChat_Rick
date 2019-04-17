@@ -150,23 +150,28 @@ export default {
       })
     },
     getMsgNum(){//获取未读消息
-      let formdata=new FormData();
-      formdata.append('id',this.userMes.id);
-      formdata.append('isRead',false);
-      this.$axios.post(this.oUrl+'/message/findMessageNumberByOperator',formdata).then((res)=>{
-        if(res.data.data>0){
-          this.msgNum=res.data.data;
-          this.hasMsg=true;
-        }else{
-          this.msgNum=null;
-          if(window.sessionStorage.getItem('footerMsg')){
-            let fMsg=window.sessionStorage.getItem('footerMsg')
-            sessionStorage.removeItem('footerMsg');
+        let formdata=new FormData();
+        formdata.append('id',this.userMes.id);
+        formdata.append('isRead',false);
+        this.$axios.post(this.oUrl+'/message/findMessageNumberByOperator',formdata).then((res)=>{
+          if(res.data.data>0){
+            this.msgNum=res.data.data;
+            this.hasMsg=true;
+            sessionStorage.setItem('mineMsg',res.data.data);
+          }else{
+            this.msgNum=null;
+            this.hasMsg=false;
+            sessionStorage.removeItem('mineMsg')
           }
-        }
-      }).catch((err)=>{
-        console.log(err)
-      })
+        }).catch((err)=>{
+          console.log(err)
+        });
+        setTimeout(()=>{
+          if(sessionStorage.getItem('mineMsg')){
+            this.msgNum=sessionStorage.getItem('mineMsg');
+            this.hasMsg=true;
+          }
+        })
     },
     mineCon(){//进入登录注册页
       this.isBackM_fn(true);
