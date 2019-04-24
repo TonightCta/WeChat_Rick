@@ -2,72 +2,75 @@
 <template lang="html">
   <div class="mine">
     <!-- 个人资料块 -->
-    <div class="person_mes">
-      <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic" @click="goMes()">
-      <router-link to="/TLogin" tag="p" class="person_oper" @click.native="mineCon()" v-show="didLogin">
-        请登录
-      </router-link>
-      <p class="person_oper" v-show="hasLogin">{{nickName}}</p>
-      <div class="person_del">
-        <ul>
-          <li>
-            <span class="iconfont icon-icon-test"></span>
-            <span>电话：</span>
-            <span>{{userPhone}}</span>
-          </li>
-          <li>
-            <span class="iconfont icon-rili"></span>
-            <span>工作年限：</span>
-            <span>{{userDate}}年</span>
-          </li>
-        </ul>
-        <p>
-          <span class="iconfont icon-mail"></span>
-          <span>邮箱：</span>
-          <span>{{userEmail}}</span>
-        </p>
-        <!-- <span class="iconfont icon-iconfontzhizuobiaozhun023114 y" ref="certColor"></span> -->
-        <span class="certIcon" @click="cert()">{{cerText}}</span>
+    <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" >
+      <div class="" style="magin-bottom:10rem;">
+        <div class="person_mes">
+          <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic" @click="goMes()">
+          <router-link to="/TLogin" tag="p" class="person_oper" @click.native="mineCon()" v-show="didLogin">
+            请登录
+          </router-link>
+          <p class="person_oper" v-show="hasLogin">{{nickName}}</p>
+          <div class="person_del">
+            <ul>
+              <li>
+                <span class="iconfont icon-icon-test"></span>
+                <span>电话：</span>
+                <span>{{userPhone}}</span>
+              </li>
+              <li>
+                <span class="iconfont icon-rili"></span>
+                <span>工作年限：</span>
+                <span>{{userDate}}年</span>
+              </li>
+            </ul>
+            <p>
+              <span class="iconfont icon-mail"></span>
+              <span>邮箱：</span>
+              <span>{{userEmail}}</span>
+            </p>
+            <!-- <span class="iconfont icon-iconfontzhizuobiaozhun023114 y" ref="certColor"></span> -->
+            <span class="certIcon" @click="cert()">{{cerText}}</span>
+          </div>
+        </div>
+        <!-- 阴影盒子 -->
+
+        <div class="person_mask">
+
+        </div>
+
+        <!-- 功能块 -->
+        <div class="person_work">
+          <ul>
+            <router-link to="/message" tag="li">
+              <i class="iconfont icon-chakan"></i>
+              <span class="mine_text">消息中心</span>
+              <span class="message_num" v-show="hasMsg">{{msgNum}}</span>
+              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+            </router-link>
+            <router-link to="/cerSkill" tag="li">
+              <i class="iconfont icon-renzheng"></i>
+              <span class="mine_text">技能认证</span>
+              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+            </router-link>
+            <router-link to="/cerCard" tag="li">
+              <i class="iconfont card_icon icon-shimingrenzheng"></i>
+              <span class="mine_text">身份认证</span>
+              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+            </router-link>
+            <router-link :to="{path:'/personMes',query:{isDis:false}}" tag="li">
+              <i class="iconfont write_icon icon-bianjiziliao"></i>
+              <span class="mine_text">编辑资料</span>
+              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+            </router-link>
+            <router-link to="/setTing" tag="li">
+              <i class="iconfont icon-shezhi"></i>
+              <span class="mine_text">设置</span>
+              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+            </router-link>
+          </ul>
+        </div>
       </div>
-
-    </div>
-    <!-- 阴影盒子 -->
-
-    <div class="person_mask">
-
-    </div>
-
-    <!-- 功能块 -->
-    <div class="person_work">
-      <ul>
-        <router-link to="/message" tag="li">
-          <i class="iconfont icon-chakan"></i>
-          <span class="mine_text">消息中心</span>
-          <span class="message_num" v-show="hasMsg">{{msgNum}}</span>
-          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-        </router-link>
-        <router-link to="/cerSkill" tag="li">
-          <i class="iconfont icon-renzheng"></i>
-          <span class="mine_text">技能认证</span>
-          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-        </router-link>
-        <router-link to="/cerCard" tag="li">
-          <i class="iconfont card_icon icon-shimingrenzheng"></i>
-          <span class="mine_text">身份认证</span>
-          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-        </router-link>
-        <router-link :to="{path:'/personMes',query:{isDis:false}}" tag="li">
-          <i class="iconfont write_icon icon-bianjiziliao"></i>
-          <span class="mine_text">编辑资料</span>
-          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-        </router-link>
-        <router-link to="/setTing" tag="li">
-          <i class="iconfont icon-shezhi"></i>
-          <span class="mine_text">设置</span>
-          <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-        </router-link>
-      </ul>
-    </div>
+    </scroller>
     <Footer/>
   </div>
 </template>
@@ -173,11 +176,52 @@ export default {
           }
         })
     },
+    onRefresh(done){//下拉刷新
+      this.getMes()
+      setTimeout(()=>{
+        done()
+      },1000)
+    },
+    onInfinite(done){
+      done()
+    },
     mineCon(){//进入登录注册页
       this.isBackM_fn(true);
       this.isBackT_fn(false);
     },
-
+    getMes(){
+      let userId=window.localStorage.getItem('Uid');
+      if(window.localStorage.getItem('Uid')){
+          this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
+            if(res.data.code==0){
+              this.userMes_fn(res.data.data);
+              this.didLogin=false;
+              this.hasLogin=true;
+              this.userPhone=res.data.data.engineerVO.phone
+              if(res.data.data.engineerVO.state==0){
+                this.cerText='点击认证'
+              }else if(res.data.data.engineerVO.state==1){
+                this.cerText='认证中'
+              }else{
+                this.cerText='已认证'
+              }
+              if(res.data.data.email){
+                this.userEmail=res.data.data.email
+              }
+              if(res.data.data.engineerVO){
+                  this.userDate=res.data.data.engineerVO.workYear
+                };
+            }else{
+              this.$Toast(res.data.msg)
+            }
+          }).catch((err)=>{
+            console.log(err);
+            this.$Toast('未知错误')
+          })
+      }else{
+        this.$Toast('请先登录');
+      }
+    },
     cert(){//申请认证
       let _this=this;
       let beLing=_this.userMes.engineerVO
@@ -268,11 +312,26 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .mine{
-  width: 92%;
-  margin:0 auto;
+  width: 100%;
   position: relative;
+  height:60rem!important;
+
+  ._v-container{
+    // position: static!important;
+    // padding-bottom: 10rem!important;
+    width: 92%!important;
+    height: 80%!important;
+    margin-left:4%!important;
+    // overflow: auto!important;
+    overflow: visible!important;
+    // background: black;
+    ._v-content{
+      height:130%!important;
+      // padding-bottom: 10rem!important;
+    }
+  }
   .person_mes{
     width: 100%;
     background: url('../../../static/img/person_background.png');
@@ -357,7 +416,7 @@ export default {
   .person_work{
     width: 100%;
     margin-bottom: 15rem;
-    z-index: 10;
+    z-index: -1;
     ul{
       width: 100%;
       li{
