@@ -18,8 +18,8 @@
       <p class="detis_title">工作内容:<span></span></p>
       <div class="con_text publicBox">
         <p class="con_text">
-          <textarea name="name" rows="8" cols="80" v-model="mes.content"></textarea>
-          <span></span>
+          <textarea name="name" disabled="disabled" v-model="mes.content"></textarea>
+          <!-- <span></span> -->
         </p>
       </div>
       <p class="detis_title">项目附件:<span></span></p>
@@ -104,6 +104,7 @@ export default {
   width: 100%;
   height: 100%;
   padding-top:6rem;
+  padding-bottom: 10rem;
   .detis_con{
     width: 90%;
     margin:0 auto;
@@ -169,13 +170,17 @@ export default {
         width:92%;
         resize: none;
         border-radius:5px;
-        height: 10rem;
+        min-height: 15rem;
+        max-height: none;
+        padding-bottom: 2rem!important;
         outline: none;
         box-sizing: border-box;
         padding:.5rem;
         font-size: 1.4rem;
         border:1px solid #ccc;
+        background: white;
       }
+      textarea[disabled]{color:black;opacity:1}
       span{
         width: 100%;
         height: 15rem;

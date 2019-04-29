@@ -14,7 +14,7 @@
     </p>
     <!-- <v-screen :visible.sync="visible"></v-screen> -->
     <div class="">
-      <scroller :on-refresh="onRefresh" :showBtn="listLength">
+      <scroller :on-refresh="onRefresh" :showBtn="listLength" v-show="hasLog">
         <ul>
           <li class="work_list" v-for="(log,index) in orderList">
             <p class="work_time">{{log.createTimeStr}}</p>

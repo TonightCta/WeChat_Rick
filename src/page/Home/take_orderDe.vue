@@ -18,8 +18,8 @@
       <p class="detis_title">项目内容:<span></span></p>
       <div class="con_text publicBox">
         <p class="con_text">
-          <textarea name="name" rows="8" cols="80" v-model="mes.content"></textarea>
-          <span></span>
+          <textarea name="name" v-model="mes.content" disabled="disabled"></textarea>
+          <!-- <span></span> -->
         </p>
       </div>
       <!-- <p class="detis_title">项目附件:<span></span></p>
@@ -60,7 +60,8 @@ export default {
       zIndex:null,//当前查看的项目图片
       picList:[],
       //文件列表
-      fileList:[]
+      fileList:[],
+      content:'就开始读后感科技大厦更健康的数据库更合适的开个会 大好时光华盛顿更合适的健康韩国思考红烧冬瓜就开始读后感会计师对韩国可视对讲的鬼话四大皆空更合适的健康更合适的健康感受到规划局时代光华数据库的个感受到好几个号圣诞节开个会是的感受到韩国进口首都航空国际化是的空间规划速度快 该数据库的规划是大家客观环境可适当广寒深宫收到就好该数据库的桂花树看感受到好几个很深刻的结构化数据库的规划开始更合适的结构化考试结构化考试的 个杀鸡给猴看手机号刚开始读后感更合适的结构化数据库韩国司空见惯和三个和尚贵航股份就开始读后感开始接电话更深刻晃过上帝进口国和数据库的规划刚回到家烧开后改加快速度红烧冬瓜见客户速度快更合适的空间规划师规划设计快点干活数据库的规划开始就 更合适的接口规划设计看到过黄寺大街开个会感受到会更好四大金刚黄寺大街kg施工开始就换个数据库的规划开始就给换上'
     }
   },
   computed:{
@@ -152,6 +153,7 @@ export default {
 .work_detis{
   width: 100%;
   padding-top:6rem;
+  padding-bottom:10rem;
   .detis_con{
     width: 90%;
     margin:0 auto;
@@ -215,16 +217,20 @@ export default {
         width:92%;
         resize: none;
         border-radius:5px;
-        height: 10rem;
+        min-height: 15rem;
+        max-height: none;
+        padding-bottom: 2rem!important;
         outline: none;
-        box-sizing: border-box;
         padding:.5rem;
         font-size: 1.4rem;
         border:1px solid #ccc;
+        overflow: auto;
+        background: white;
       }
+      textarea[disabled]{color:black;opacity:1}
       span{
         width: 100%;
-        height: 10rem;
+        height: 15rem;
         background: rgba(0,0,0,0);
         position: absolute;
         top:0;
