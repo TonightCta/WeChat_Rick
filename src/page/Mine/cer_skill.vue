@@ -8,12 +8,12 @@
 
     </div>
     <ul class="showCardPic">
-      <li v-for='(webPic,index) in webView'>
+      <li v-for='(webPic,index) in webView' v-show="isNoCrei">
         <img :src="oUrl+'/'+webPic.fileName" alt="">
         <i class="iconfont icon-guanbi" @click="delWhenPic(index)"></i>
       </li>
     </ul>
-    <ul class="showCardPic">
+    <ul class="showCardPic" v-show="isNoCrei">
       <li v-for='(item,index) in skillsPic'>
         <img :src="item" alt="">
         <i class="iconfont icon-guanbi" @click="delCard(index)"></i>
@@ -26,6 +26,11 @@
     <div class="up_mask"  v-show="upBtn">
 
     </div>
+    <div class="upText" v-show="!isNoCrei">
+      <textarea name="name" v-model="creiText" placeholder="请对您的资质进行说明"></textarea>
+    </div>
+    <p class="noCrei" v-show="isNoCrei">没有证书？<span style="color:#eb7a1d;" @click="isNoCrei=false;isTwo=false;">点击上传文案</span></p>
+    <p class="noCrei" v-show="!isNoCrei"><span style="color:#eb7a1d;" @click="isNoCrei=true;isTwo=true;">返回上传证书</span></p>
   </div>
 </template>
 
@@ -39,8 +44,10 @@ export default {
       skillsPic:[],
       skillsFile:[],
       webView:[],//回显列表
-        isTwo:true,
-      upBtn:true
+      isTwo:true,
+      upBtn:true,
+      isNoCrei:true,//是否显示文案上传
+      creiText:null,//上传文案
     }
   },
   watch:{
@@ -54,6 +61,13 @@ export default {
         this.isTwo=false;
       }else{
         this.isTwo=true
+      }
+    },
+    creiText(val,oldVal){
+      if(val!=null&&val!=''){
+        this.upBtn=false;
+      }else{
+        this.upBtn=true;
       }
     }
   },
@@ -241,6 +255,30 @@ export default {
      opacity: .5;
     right:0;
     height: 4rem;
+  }
+  .upText{
+    width: 85%;
+    min-height: 15rem;
+    margin:0 auto;
+    background: white;
+    border-radius:12px;
+    margin-top: 2rem;
+    box-sizing: border-box;
+    padding: .5rem;
+    border:1px solid #ccc;
+    textarea{
+      outline: none;
+      width: 100%;
+      height: 14rem;
+      resize: none;
+      border:0;
+    }
+  }
+  .noCrei{
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 4rem;
   }
 }
 </style>

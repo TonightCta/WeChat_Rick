@@ -2,11 +2,15 @@
 <template lang="html">
   <div class="">
     <div class="home_table">
-      <ul>
+      <ul class="top">
         <li @click="hasLogin()">小哥注册</li>
         <router-link to="/takeOrder" tag="li">接单赚钱<span class="orderNum" v-show="hasAvi">{{aviLength}}</span></router-link>
-        <router-link to="/demandNeed" tag="li">发布需求</router-link>
         <router-link to="/workLog" tag="li">工作日志</router-link>
+      </ul>
+      <ul class="bottom">
+        <router-link to="/demandNeed" tag="li">发布需求</router-link>
+        <router-link to="/projectTrak" tag="li">项目追踪</router-link>
+        <router-link to="/projectMan" tag="li">项目管理</router-link>
       </ul>
     </div>
     <div class="adv_box" v-show="alertBox">
@@ -106,9 +110,10 @@ export default {
     display: flex;
     width: 95%;
     margin:0 auto;
-    justify-content: space-between;
+    justify-content: space-around;
+    margin-top: 1rem;
     li{
-      width: 22%;
+      width: 29%;
       height:6rem;
       background: red;
       text-align: center;
@@ -118,6 +123,8 @@ export default {
       box-sizing: border-box;
       letter-spacing:2px;
     }
+  }
+  .top{
     li:nth-child(1){
       background: url('../../../static/img/table_1_1.png');
       background-size: 100% 100%;
@@ -144,8 +151,32 @@ export default {
       background: url('../../../static/img/table2.png');
       background-size: 100% 100%;
     }
-    li:nth-child(4){
+  }
+  .bottom{
+    li:nth-child(1){
       background: url('../../../static/img/table3.png');
+      background-size: 100% 100%;
+    }
+    li:nth-child(2){
+      background: url('../../../static/img/table4.png');
+      background-size: 100% 100%;
+      position: relative;
+      .orderNum{
+        position: absolute;
+        width: 1.9rem;
+        height: 1.9rem;
+        background: red;
+        border-radius: 50%;
+        top:-.8rem;
+        right:-.8rem;
+        line-height: 1.9rem;
+        text-align: center;
+        font-size: 1rem;
+        letter-spacing:0px;
+      }
+    }
+    li:nth-child(3){
+      background: url('../../../static/img/table5.png');
       background-size: 100% 100%;
     }
   }

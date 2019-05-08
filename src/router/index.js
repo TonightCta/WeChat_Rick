@@ -166,6 +166,16 @@ const router= new Router({
       path:'/message',//消息中心
       name:'Message',
       component:resolve=>require(['@/page/Mine/message_center'],resolve)
+    },
+    {
+      path:'/projectTrak',//项目追踪
+      name:'ProjectTrak',
+      component:resolve=>require(['@/page/Project/project_tracking'],resolve)
+    },
+    {
+      path:'/projectMan',//项目管理
+      name:'ProjectMan',
+      component:resolve=>require(['@/page/Project/project_man'],resolve)
     }
   ]
 });

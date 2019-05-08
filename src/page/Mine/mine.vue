@@ -28,6 +28,11 @@
               <span>邮箱：</span>
               <span>{{userEmail}}</span>
             </p>
+            <p class="engMes">
+              <span class="iconfont icon-renzheng"></span>
+              <span>技能认证：</span>
+              <span>{{userEng}}</span>
+            </p>
             <!-- <span class="iconfont icon-iconfontzhizuobiaozhun023114 y" ref="certColor"></span> -->
             <span class="certIcon" @click="cert()">{{cerText}}</span>
           </div>
@@ -62,6 +67,16 @@
               <span class="mine_text">编辑资料</span>
               <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
             </router-link>
+            <router-link :to="{path:'/order',query:{color:2}}" tag="li">
+              <i class="iconfont icon-dingdan"></i>
+              <span class="mine_text">我的接单</span>
+              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+            </router-link>
+            <router-link to="/workLog" tag="li">
+              <i class="iconfont icon-fuwutiaokuan"></i>
+              <span class="mine_text">我的日志</span>
+              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+            </router-link>
             <router-link to="/setTing" tag="li">
               <i class="iconfont icon-shezhi"></i>
               <span class="mine_text">设置</span>
@@ -86,6 +101,7 @@ export default {
       userPhone:'-',
       userDate:'-',
       userEmail:'-',
+      userEng:'-',
       messageTitle:'提示',//操作盒子标题
       messageCon:'请先进行身份认证',//操作盒子内容
       cerText:'点击认证',//认证按钮文本
@@ -106,6 +122,7 @@ export default {
   },
   created(){
     this.getMsgNum();
+    this.isEx();
   },
   mounted(){
     if(this.userMes.engineerVO){
@@ -120,18 +137,23 @@ export default {
         this.cerText='已认证'
       }
     }
-    if(this.userMes.email){
+    if(this.userMes.email!=null&&this.userMes.email!=''){
       this.userEmail=this.userMes.email
     }
     if(this.userMes.engineerVO){
-      this.userDate=this.userMes.engineerVO.workYear
+      if(this.userMes.engineerVO.workYear!=null&&this.userMes.engineerVO.workYear!=''){
+        this.userDate=this.userMes.engineerVO.workYear
+      }
+      if(this.userMes.engineerVO.levelStr!=null&&this.userMes.engineerVO.levelStr!=''){
+        this.userEng=this.userMes.engineerVO.levelStr
+      }
     };
     let userId=window.localStorage.getItem('Uid');
     if(window.localStorage.getItem('Uid')){
       if(!this.userMes.engineerVO){
         this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
           if(res.data.code==0){
-            this.userMes_fn(res.data.data)
+            this.userMes_fn(res.data.data);
           }else{
             this.$Toast(res.data.msg)
           }
@@ -140,10 +162,49 @@ export default {
           this.$Toast('未知错误')
         })
       }
-    }
+    };
   },
   methods:{
     ...mapMutations(['isBackM_fn','isBackT_fn','userMes_fn']),
+    isEx(){//是否为外部直接进入个人中心
+      if(this.$Grap.isExterna){
+        let userId=window.localStorage.getItem('Uid');
+        if(window.localStorage.getItem('Uid')){
+            this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
+              if(res.data.code==0){
+                this.didLogin=false;
+                this.hasLogin=true;
+                this.userMes_fn(res.data.data)
+                window.localStorage.setItem('engID',res.data.data.engineerVO.id);
+                this.userPhone=res.data.data.engineerVO.phone
+                if(res.data.data.engineerVO.state==0){
+                  this.cerText='点击认证'
+                }else if(res.data.data.engineerVO.state==1){
+                  this.cerText='认证中'
+                }else{
+                  this.cerText='已认证'
+                }
+              if(res.data.data.email!=null&&res.data.data.email!=''){
+                this.userEmail=res.data.data.email
+              }
+              if(res.data.data.engineerVO){
+                if(res.data.data.engineerVO.workYear!=null&&res.data.data.engineerVO.workYear!=''){
+                  this.userDate=res.data.data.engineerVO.workYear
+                }
+                if(res.data.data.engineerVO.levelStr!=null&&res.data.data.engineerVO.levelStr!=''){
+                  this.userEng=res.data.data.engineerVO.levelStr
+                }
+              };
+              }else{
+                this.$Toast(res.data.msg)
+              }
+            }).catch((err)=>{
+              console.log(err);
+              this.$Toast('未知错误')
+            })
+        };
+      }
+    },
     goMes(){//点击进入个人详情页
       this.$router.push({
         path:'/personMes',
@@ -205,11 +266,16 @@ export default {
               }else{
                 this.cerText='已认证'
               }
-              if(res.data.data.email){
+              if(res.data.data.email!=null&&res.data.data.email!=''){
                 this.userEmail=res.data.data.email
               }
               if(res.data.data.engineerVO){
-                  this.userDate=res.data.data.engineerVO.workYear
+                  if(res.data.data.engineerVO.workYear!=null&&res.data.data.engineerVO.workYear!=''){
+                    this.userDate=res.data.data.engineerVO.workYear;
+                  }
+                  if(res.data.data.engineerVO.levelStr!=null&&res.data.data.engineerVO.levelStr!=''){
+                    this.userEng=res.data.data.engineerVO.levelStr
+                  }
                 };
             }else{
               this.$Toast(res.data.msg)
@@ -316,7 +382,7 @@ export default {
 .mine{
   width: 100%;
   position: relative;
-  height:60rem!important;
+  height:90rem!important;
 
   ._v-container{
     // position: static!important;
@@ -328,7 +394,7 @@ export default {
     overflow: visible!important;
     // background: black;
     ._v-content{
-      height:130%!important;
+      height:145%!important;
       // padding-bottom: 10rem!important;
     }
   }
@@ -336,7 +402,7 @@ export default {
     width: 100%;
     background: url('../../../static/img/person_background.png');
     background-size: 100% 100%;
-    height: 23rem;
+    min-height: 28rem;
     border-radius:12px;
     margin-top: 2rem;
     position: relative;
@@ -382,6 +448,15 @@ export default {
         font-size: 1.2rem;
         padding-left:1rem;
         color:white;
+      }
+      .engMes{
+        display: flex;
+        span:nth-child(2){
+          min-width: 5.5rem;
+        }
+        span:nth-child(3){
+          padding-right: 2rem;
+        }
       }
       .certIcon{
         position: absolute;
