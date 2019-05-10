@@ -13,6 +13,7 @@ import 'mint-ui/lib/style.css';
 import './assets/iconfont/iconfont.css';
 import './assets/iconfontT/iconfont.css';
 import './assets/iconfontS/iconfont.css';
+import './assets/iconfontF/iconfont.css';
 import 'jquery'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'

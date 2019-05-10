@@ -47,9 +47,14 @@
         <div class="person_work">
           <ul>
             <router-link to="/message" tag="li">
-              <i class="iconfont icon-chakan"></i>
+              <i class="iconfont icon-xiaoxi"></i>
               <span class="mine_text">消息中心</span>
               <span class="message_num" v-show="hasMsg">{{msgNum}}</span>
+              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
+            </router-link>
+            <router-link to="/personSkill" tag="li">
+              <i class="iconfont icon-iconset0169"></i>
+              <span class="mine_text">擅长领域</span>
               <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
             </router-link>
             <router-link to="/cerSkill" tag="li">

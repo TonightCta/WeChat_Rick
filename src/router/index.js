@@ -163,6 +163,11 @@ const router= new Router({
       }
     },
     {
+      path:'/personSkill',//擅长领域
+      name:'PersonSkill',
+      component:resolve=>require(['@/page/Mine/person_skill'],resolve)
+    },
+    {
       path:'/message',//消息中心
       name:'Message',
       component:resolve=>require(['@/page/Mine/message_center'],resolve)

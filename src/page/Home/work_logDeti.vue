@@ -159,8 +159,8 @@ export default {
       line-height: 4rem;
     }
     .con_text{
-      height: 10rem;
-      min-height: 10.5rem;
+      height: 15rem;
+      min-height: 15.5rem;
       position: relative;
       padding-bottom: .5rem;
       text-align: center;

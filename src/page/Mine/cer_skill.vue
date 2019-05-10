@@ -29,8 +29,8 @@
     <div class="upText" v-show="!isNoCrei">
       <textarea name="name" v-model="creiText" placeholder="请对您的资质进行说明"></textarea>
     </div>
-    <p class="noCrei" v-show="isNoCrei">没有证书？<span style="color:#eb7a1d;" @click="isNoCrei=false;isTwo=false;">点击上传文案</span></p>
-    <p class="noCrei" v-show="!isNoCrei"><span style="color:#eb7a1d;" @click="isNoCrei=true;isTwo=true;">返回上传证书</span></p>
+    <!-- <p class="noCrei" v-show="isNoCrei">没有证书？<span style="color:#eb7a1d;" @click="isNoCrei=false;isTwo=false;">点击上传文案</span></p>
+    <p class="noCrei" v-show="!isNoCrei"><span style="color:#eb7a1d;" @click="isNoCrei=true;isTwo=true;">返回上传证书</span></p> -->
   </div>
 </template>
 
