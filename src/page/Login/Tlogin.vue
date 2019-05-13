@@ -59,7 +59,7 @@ export default {
     // ...mapState('userMes')
   },
   methods:{
-    ...mapMutations(['userMes_fn']),
+    ...mapMutations(['userMes_fn','engSkill_fn']),
     showPass(){//显示密码
       this.$refs.userpass.type='number';
       this.isPass=false;
@@ -90,6 +90,7 @@ export default {
             set('login',true);
             _this.$Indicator.close();
             _this.userMes_fn(res.data.data);
+            _this.engSkill_fn(res.data.data.engineerVO);
             _this.$Toast('登录成功')
             _this.$router.push({
               path:'/mine',

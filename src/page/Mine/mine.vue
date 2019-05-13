@@ -13,7 +13,7 @@
           <div class="person_del">
             <ul>
               <li>
-                <span class="iconfont icon-icon-test"></span>
+                <span class="iconfont icon-weibiaoti-"></span>
                 <span>电话：</span>
                 <span>{{userPhone}}</span>
               </li>
@@ -543,7 +543,7 @@ export default {
       li:nth-child(1){
         margin-top:4rem;
       }
-      li:nth-child(3){
+      li:nth-child(5){
         .write_icon{
           font-size: 1.8rem;
         }

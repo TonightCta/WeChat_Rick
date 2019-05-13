@@ -187,7 +187,7 @@ const router= new Router({
 router.beforeEach((to,from,next)=>{
   NProgress.start();
   //登录权限页面
-  const nextRoute=['CerSkill','CerCard','PersonMes','WorkLog','Message'];
+  const nextRoute=['CerSkill','CerCard','PersonMes','WorkLog','Message','PersonSkill'];
   if(nextRoute.indexOf(to.name) > -1){
     if (!window.localStorage.getItem('Uid')) {
       Toast('请先登录');
