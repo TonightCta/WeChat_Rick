@@ -51,9 +51,9 @@
           {{skillCon.name}}
           <span class="cancellabel" ref="cancellabelCustom" @click.stop="noLabelCustom(indexC)" style="display:block;"></span>
         </li>
-        <li v-for="(skillCon,indexY) in custom.skillTagVOList">
-          {{skillCon.name}}
-          <span class="cancellabel"></span>
+        <li v-for="(skillCon,indexY) in custom.show" ref="chooseLabelCustomLoca" @click="cancelLocaSkill(indexY)">
+          {{skillCon}}
+          <span class="cancellabel" ref="cancellabelCustomLoca" @click.stop="turnLocaSkill(indexY)" style="display:block;"></span>
         </li>
         <li @click="addSkill()">
           <i class="iconfont icon-icon-test"></i>
@@ -107,7 +107,8 @@ export default {
       isUpSkill:true,//是否禁用上传按钮
       custom:{
         title:'自定义',
-        children:[]
+        children:[],
+        show:[],
       },
       cusInn:{},//自定义回显列表
       showCustom:false,//新增自定义弹框
@@ -162,7 +163,6 @@ export default {
       this.$refs.chooseLabel[index].style.color='white';
       this.$refs.cancellabel[index].style.display='block';
       this.firstChoose.push(this.first.skillTagVOList[index].id);
-      console.log(this.firstChoose)
     },
     noLabel(index){//cancel  first
       this.$refs.chooseLabel[index].style.background='white';
@@ -171,7 +171,6 @@ export default {
       if(this.firstChoose.indexOf(this.first.skillTagVOList[index].id)>-1){
         this.firstChoose.splice(this.firstChoose.indexOf(this.first.skillTagVOList[index].id),1)
       }
-      console.log(this.firstChoose)
     },
     turnLabelSec(indexT){//second
       this.$refs.chooseLabelSec[indexT].style.background='#eb7a1d';
@@ -206,7 +205,6 @@ export default {
       this.$refs.chooseLabelFour[indexF].style.color='white';
       this.$refs.cancellabelFour[indexF].style.display='block';
       this.fourChoose.push(this.four.skillTagVOList[indexF].id);
-      console.log(this.fourChoose)
     },
     noLabelFour(indexF){//cancel  four
       this.$refs.chooseLabelFour[indexF].style.background='white';
@@ -215,7 +213,6 @@ export default {
       if(this.fourChoose.indexOf(this.four.skillTagVOList[indexF].id)>-1){
         this.fourChoose.splice(this.fourChoose.indexOf(this.four.skillTagVOList[indexF].id),1)
       };
-      console.log(this.fourChoose)
     },
     noLabelCustom(indexC){//cancel custom
       this.$refs.cancellabelCustom[indexC].style.display='none';
@@ -224,19 +221,30 @@ export default {
       if(this.allSkillsID.indexOf(this.cusInn.skillTagVOList[indexC].id)>-1){
         this.allSkillsID.splice(this.allSkillsID.indexOf(this.cusInn.skillTagVOList[indexC].id),1)
       }
-      console.log(this.allSkillsID)
     },
     turnLabelCustom(indexC){//custom
       this.$refs.cancellabelCustom[indexC].style.display='block';
       this.$refs.chooseLabelCustom[indexC].style.background='#eb7a1d';
       this.$refs.chooseLabelCustom[indexC].style.color='white';
       this.allSkillsID.push(this.cusInn.skillTagVOList[indexC].id);
-      console.log(this.allSkillsID)
+    },
+    turnLocaSkill(indexY){//loca custom
+      this.$refs.chooseLabelCustomLoca[indexY].style.background='white';
+      this.$refs.chooseLabelCustomLoca[indexY].style.color='black';
+      this.$refs.cancellabelCustomLoca[indexY].style.display='none';
+      this.custom.children.splice(indexY,1);
+    },
+    cancelLocaSkill(indexY){//cancel loca custom
+      this.$refs.chooseLabelCustomLoca[indexY].style.background='#eb7a1d';
+      this.$refs.chooseLabelCustomLoca[indexY].style.color='white';
+      this.$refs.cancellabelCustomLoca[indexY].style.display='block';
+      this.custom.children.push(this.custom.show[indexY]);
     },
     upSkill(){//保存选择技能
       let _vm=this;
       let formdata=new FormData();
       let userID=window.localStorage.getItem('engID');
+      _vm.$Indicator.open()
       _vm.firstChoose.forEach((f)=>{
         _vm.allSkillsID.push(f)
       });
@@ -252,23 +260,24 @@ export default {
       });
       formdata.append('engineerId',userID);
       formdata.append('skillTagIds',_vm.allSkillsID);
-      console.log(this.allSkillsID)
       if(_vm.custom.children.length>0){
         formdata.append('skillTagNames',_vm.custom.children)
       };
       _vm.$axios.post(_vm.oUrl+'/engineerSelectSkillTag',formdata).then((res)=>{
         if(res.data.code==0){
-          console.log(res)
           window.localStorage.setItem('engID',res.data.data.id)
           window.localStorage.setItem('phone',res.data.data.phone);
           _vm.engSkill_fn(res.data.data);
           _vm.$Toast('上传技能成功');
           _vm.$router.go(-1);
+          _vm.$Indicator.close()
         }else{
           _vm.$Toast(res.data.msg)
+          _vm.$Indicator.close()
         }
       }).catch((err)=>{
         _vm.$Toast('未知异常,请联系管理员')
+        _vm.$Indicator.close()
         console.log(err)
       })
       // this.$Toast('上传选中技能')
@@ -299,6 +308,8 @@ export default {
           this.showCustom=false;
         },300);
         this.custom.children.push(this.customText);
+        this.custom.show.push(this.customText);
+        console.log(this.custom.children)
         setTimeout(()=>{
           this.customText=null;
         },100)
@@ -306,18 +317,24 @@ export default {
     },
     getSkillList(){//获取技能列表
       let _vm=this;
-      let userID=window.localStorage.getItem('Uid');
+      _vm.$Indicator.open()
+      let userID=window.localStorage.getItem('engID');
       _vm.$axios.get(_vm.oUrl+'/skillTag/skillTagListInfoForMobileView?engineerId='+userID).then((res)=>{
         if(res.data.code==0){
+          _vm.$Indicator.close()
           _vm.first=res.data.data.skillTagList[0];
           _vm.second=res.data.data.skillTagList[1];
           _vm.three=res.data.data.skillTagList[2];
           _vm.four=res.data.data.skillTagList[3];
           if(res.data.data.skillTagList[4]){
             _vm.cusInn=res.data.data.skillTagList[4];
-            _vm.cusInn.skillTagVOList.forEach((e)=>{
-              _vm.allSkillsID.push(e.id)
-            })
+            if(this.engSkill.skillTagIds!=null){
+              _vm.cusInn.skillTagVOList.forEach((e)=>{
+                if(this.engSkill.skillTagIds.indexOf(e.id)>-1){
+                  _vm.allSkillsID.push(e.id);
+                }
+              })
+            }
             _vm.hasCustom=true;
           }else{
             _vm.hasCustom=false;
@@ -380,24 +397,32 @@ export default {
                 };
                 //自定义比对
                 if(_vm.cusInn!=null){
-                  for(let o in this.cusInn.skillTagVOList){
-                    if(this.cusInn.skillTagVOList[o].id===this.engSkill.skillTagIds[i]){
-                      this.$refs.cancellabelCustom[o].style.display='block';
-                      this.$refs.chooseLabelCustom[o].style.background='#eb7a1d';
-                      this.$refs.chooseLabelCustom[o].style.color='white';
-                    }else{
-                      
-                    }
-                  };
+                  for(let m in this.$refs.cancellabelCustom){
+                    this.$refs.cancellabelCustom[m].style.display='none';
+                    this.$refs.chooseLabelCustom[m].style.background='white';
+                    this.$refs.chooseLabelCustom[m].style.color='black';
+                  }
+                  setTimeout(()=>{
+                    for(let o in this.cusInn.skillTagVOList){
+                      if(this.cusInn.skillTagVOList[o].id===this.engSkill.skillTagIds[i]){
+                        this.$refs.cancellabelCustom[o].style.display='block';
+                        this.$refs.chooseLabelCustom[o].style.background='#eb7a1d';
+                        this.$refs.chooseLabelCustom[o].style.color='white';
+                      }
+                    };
+                  })
+
                 }
               }
             }
           })
         }else{
+          _vm.$Indicator.close()
           _vm.$Toast(res.data.msg)
         }
       }).catch((err)=>{
         _vm.$Toast('未知异常,请联系管理员')
+        _vm.$Indicator.close()
         console.log(err)
       })
     }

@@ -9,7 +9,7 @@
       </ul>
       <ul class="bottom">
         <router-link to="/demandNeed" tag="li">发布需求</router-link>
-        <router-link to="/projectTrak" tag="li">项目追踪</router-link>
+        <router-link to="/projectTrak" tag="li">订单追踪</router-link>
         <router-link to="/projectMan" tag="li">项目管理</router-link>
       </ul>
     </div>
