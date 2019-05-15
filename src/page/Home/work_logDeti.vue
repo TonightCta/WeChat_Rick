@@ -122,7 +122,7 @@ export default {
         background: #eb7a1d;
         left:0;
         top:50%;
-        margin-top:-.7rem;
+        margin-top:-.8rem;
       }
     }
     .publicBox{

@@ -334,25 +334,11 @@ export default {
             console.log(err)
           }
         })
-      }else if(beLing.identifyState==2){
-        MessageBox({
-          message:'当前未进行技能认证，是否前往？',
-          confirmButtonText:'前往',
-          cancelButtonText:'取消',
-          showCancelButton:true
-        }).then(action => {
-          if(action=='confirm'){
-            _this.$router.push('/cerSkill')
-          }
-        }).catch(err=>{
-          if(err=='cancel'){
-            console.log(err)
-          }
-        })
       }else if(beLing.identifyState==3){
         let formData=new FormData();
         formData.append('id',_this.userMes.engineerVO.id);
         _this.$axios.post(_this.oUrl+'/mobile/externalEngineerApply',formData).then((res)=>{
+          console.log(res)
           if(res.data.code==0){
             _this.messageTitle=res.data.data.title;
             _this.messageCon=res.data.data.con;

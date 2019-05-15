@@ -181,13 +181,18 @@ const router= new Router({
       path:'/projectMan',//项目管理
       name:'ProjectMan',
       component:resolve=>require(['@/page/Project/project_man'],resolve)
+    },
+    {
+      path:'/projectMes',//项目详情
+      name:'ProjeceMes',
+      component:resolve=>require(['@/page/Project/project_details'],resolve)
     }
   ]
 });
 router.beforeEach((to,from,next)=>{
   NProgress.start();
   //登录权限页面
-  const nextRoute=['CerSkill','CerCard','PersonMes','WorkLog','Message','PersonSkill'];
+  const nextRoute=['CerSkill','CerCard','projectMes','PersonMes','WorkLog','Message','PersonSkill'];
   if(nextRoute.indexOf(to.name) > -1){
     if (!window.localStorage.getItem('Uid')) {
       Toast('请先登录');
