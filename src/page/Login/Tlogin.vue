@@ -83,21 +83,40 @@ export default {
         formData.append('password',_this.userPass);
         _this.$axios.post(_this.oUrl+'/login',formData).then((res)=>{
           if(res.data.code===0){
+            if(res.data.data.identityCode==2){
+              window.localStorage.setItem('engID',res.data.data.engineerVO.id)
+              window.localStorage.setItem('name',res.data.data.name);
+              _this.engSkill_fn(res.data.data.engineerVO);
+              window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
+            }
+            window.localStorage.setItem('Ident',res.data.data.identityCode);//0  管理员   1客户  2工程师
             window.localStorage.setItem('Uid',res.data.data.id);
-            window.localStorage.setItem('engID',res.data.data.engineerVO.id)
-            window.localStorage.setItem('name',res.data.data.name);
-            window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
             set('login',true);
             _this.$Indicator.close();
             _this.userMes_fn(res.data.data);
-            _this.engSkill_fn(res.data.data.engineerVO);
-            _this.$Toast('登录成功')
-            _this.$router.push({
-              path:'/mine',
-              query:{
-                color:4
-              }
-            })
+            _this.$Toast('登录成功');
+            if(res.data.data.identityCode==0){
+              _this.$router.push({
+                path:'/adminMine',
+                query:{
+                  color:4
+                }
+              })
+            }else if(res.data.data.identityCode==1){
+              _this.$router.push({
+                path:'/cusMine',
+                query:{
+                  color:4
+                }
+              })
+            }else{
+              _this.$router.push({
+                path:'/mine',
+                query:{
+                  color:4
+                }
+              })
+            }
           }else{
             _this.$Indicator.close();
             _this.$Toast(res.data.msg)

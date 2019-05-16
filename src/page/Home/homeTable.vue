@@ -91,7 +91,7 @@ export default {
       this.alertBox=false
     },
     hasLogin(){
-      if(this.userMes.engineerVO){
+      if(window.localStorage.getItem('Uid')){
         this.$Toast('当前已登录，请退出登录后再试')
       }else{
         this.$router.push('/register')

@@ -186,11 +186,27 @@ const router= new Router({
       path:'/projectMes',//项目详情
       name:'ProjeceMes',
       component:resolve=>require(['@/page/Project/project_details'],resolve)
+    },
+    {
+      path:'/cusMine',//客户个人中心
+      name:'CusMine',
+      component:resolve=>require(['@/page/Mine/cusMine'],resolve)
+    },
+    {
+      path:'/adminMine',//管理员个人中心
+      name:'AdminMine',
+      component:resolve=>require(['@/page/Mine/adminMine'],resolve)
+    },
+    {
+      path:'/receipt',
+      name:'Receipt',
+      component:resolve=>require(['@/components/receipt'],resolve)
     }
   ]
 });
 router.beforeEach((to,from,next)=>{
   NProgress.start();
+  let iDent=window.localStorage.getItem('Ident')
   //登录权限页面
   const nextRoute=['CerSkill','CerCard','projectMes','PersonMes','WorkLog','Message','PersonSkill'];
   if(nextRoute.indexOf(to.name) > -1){
@@ -198,7 +214,31 @@ router.beforeEach((to,from,next)=>{
       Toast('请先登录');
       next('/Tlogin')
    }
-  }
+ };
+ //客户权限页面
+ const cusRoute=['TakeOrder','WorkLog','ProjectMan','LogDetis','AddLog','TakeOrderDe','Order','OrderDetails'];
+ if(cusRoute.indexOf(to.name)>-1){
+   if(iDent==1){
+     Toast('当前为客户身份,请切换身份后重试');
+     // console.log('montherFuck')
+     next('/receipt')
+   }
+ };
+ const engRoute=['ProjectTrak','ProjectMan','ProjeceMes'];
+ if(engRoute.indexOf(to.name)>-1){
+   if(iDent==2){
+     Toast('当前为工程师身份,请切换身份后重试');
+     next('/receipt')
+   }
+ };
+ //管理员权限页面
+ const adminRoute=['Order','TakeOrder','WorkLog','ProjectMan','LogDetis','AddLog','TakeOrderDe'];
+ if(adminRoute.indexOf(to.name)>-1){
+   if(iDent==0){
+     Toast('当前为管理员身份,请切换身份后重试');
+     next('/receipt')
+   }
+ }
   next()
 });
 router.afterEach(() => {

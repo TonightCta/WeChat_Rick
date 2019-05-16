@@ -7,47 +7,55 @@
     <div class="details_con">
       <p class="details_title">项目信息</p>
       <ul class="details_mes">
-        <li>项目名称:&nbsp;{{name}}</li>
-        <li>项目内容:&nbsp;{{name}}</li>
-        <li>项目负责人:&nbsp;&nbsp;{{peo}}</li>
-        <li>项目状态:&nbsp;&nbsp;{{state}}</li>
-        <li>项目进度:&nbsp;&nbsp;{{speed}}%</li>
+        <li>项目名称:&nbsp;{{projectMes.customerName}}</li>
+        <li>项目内容:&nbsp;{{projectMes.content}}</li>
+        <li>项目负责人:&nbsp;&nbsp;{{projectMes.creatorName}}</li>
+        <li>项目状态:&nbsp;&nbsp;{{projectMes.stateStr}}</li>
+        <li>项目进度:&nbsp;&nbsp;{{projectMes.schedule}}%</li>
       </ul>
       <p class="details_title">工作时间</p>
       <ul class="details_workTime">
-        <li :class="{first:mission!=null}">
+        <li :class="{first:projectMes.startTime!=null&&projectMes.startTime!=''}">
           <p class="vertical"></p>
           <p class="transverse"></p>
-          <span v-if="mission!=null">入场时间:{{mission}}</span>
-          <span v-else>入场时间:-</span>
+          <span v-if="projectMes.startTime!=null&&projectMes.startTime!=''">入场时间:{{projectMes.startTimeSec}}</span>
+          <span v-else>入场时间:-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </li>
-        <li :class="{first:fin!=null}">
+        <li :class="{first:projectMes.finishTime!=null&&projectMes.finishTime!=''}">
           <p class="vertical"></p>
           <p class="transverse"></p>
-          <span v-if="fin!=null">完工时间:{{fin}}</span>
+          <span v-if="projectMes.finishTime!=null&&projectMes.finishTime">完工时间:{{projectMes.finishTimeSec}}</span>
           <span v-else>完工时间:-</span>
         </li>
-        <li :class="{first:take!=null}">
+        <li :class="{first:projectMes.acceptTime!=null&&projectMes.acceptTime!=''}">
           <p class="vertical"></p>
           <p class="transverse"></p>
-          <span v-if="take!=null">验收时间:{{take}}</span>
+          <span v-if="projectMes.acceptTime!=null&&projectMes.acceptTime!=''">验收时间:{{projectMes.acceptTimeSec}}</span>
           <span v-else>验收时间:-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </li>
       </ul>
-      <div class="">
+      <div class="" v-for="(point,index) in projectMes.projectPointVOList">
         <p class="details_title">局点信息</p>
         <ul class="details_point details_mes">
-          <li>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点:&nbsp;&nbsp;北京-北京市</li>
-          <li>人员组成:&nbsp;&nbsp;彭闯</li>
+          <li>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点:&nbsp;&nbsp;{{point.placeName}}</li>
+          <li v-if="point.engineerNameListStr!=null&&point.engineerNameListStr!=''">人员组成:&nbsp;&nbsp;{{point.engineerNameListStr}}</li>
+          <li v-else>人员组成:&nbsp;&nbsp;-</li>
         </ul>
         <ul class="details_workTime">
-          <li v-for="(point,index) in pointList" :class="{first:point.creatTime!=null}">
+          <li v-for="(gress,index) in point.usingProjectCourseNodeVOList" :class="{first:gress.startTime!=null}">
             <p class="vertical"></p>
             <p class="transverse"></p>
-            <span v-if="point.creatTime!=null">{{point.text}}:{{point.creatTime}}</span>
-            <span v-else>{{point.text}}:-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span v-if="gress.startTime!=null">{{gress.courseNodeName}}:{{gress.startTimeSec}}</span>
+            <span v-else>{{gress.courseNodeName}}:-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
           </li>
         </ul>
+        <!-- 老婆出门要跟“从”
+             老婆命令要服“从”
+             老婆讲错要盲“从”
+             老婆化妆要等“得”
+             老婆花钱要舍“得”
+             老婆生气要忍“得”
+             老婆生日要记“得” -->
       </div>
     </div>
   </div>
@@ -59,46 +67,154 @@ export default {
   data(){
     return{
       PageID:null,//订单ID
-      name:'双方就爱上咖啡机哈萨克交付哈空间规划卡设计稿has',
-      peo:'彭闯',
-      state:'进场开工',
-      speed:'80',
-      mission:'2018-05-06',
-      fin:'2018-06-08',
-      take:null,
-      pointList:[
-        {
-          creatTime:'2018-05-09',
-          text:'上门开工'
-        },
-        {
-          creatTime:'2018-05-11',
-          text:'加电单调'
-        },
-        {
-          creatTime:null,
-          text:'硬件安装'
-        },
-        {
-          creatTime:null,
-          text:'联调割接'
-        },
-        {
-          creatTime:null,
-          text:'培训'
-        },
-        {
-          creatTime:null,
-          text:'完工'
-        }
-      ]
+      projectMes:{},//项目详情
     }
   },
   created(){
     this.PageID=this.$route.query.ProID;
   },
   mounted(){
-    console.log(this.PageID)
+    this.getProDetails()
+  },
+  methods:{
+    getProDetails(){//获取项目详情
+      let _vc=this;
+      _vc.$axios.get(_vc.oUrl+'/projectInfo?projectId='+_vc.PageID).then((res)=>{
+        if(res.data.code==0){
+          //入场时间
+          let startDate=new Date(res.data.data.startTime);
+          let sYear=startDate.getFullYear();
+          let sMon=startDate.getMonth()+1;
+          if(sMon<10){
+            sMon='0'+sMon
+          };
+          let sDay=startDate.getDate();
+          if(sDay<10){
+            sDay='0'+sDay
+          }
+          let sTime=sYear+'-'+sMon+'-'+sDay;
+          _vc.$set(res.data.data,'startTimeSec',sTime);
+          //完工时间
+          let finishDate=new Date(res.data.data.finishTime);
+          let fYear=finishDate.getFullYear();
+          let fMon=finishDate.getMonth()+1;
+          if(fMon<10){
+            fMon='0'+fMon
+          };
+          let fDay=finishDate.getDate();
+          if(fDay<10){
+            fDay='0'+fDay
+          }
+          let fTime=fYear+'-'+fMon+'-'+fDay;
+          _vc.$set(res.data.data,'finishTimeSec',fTime);
+          //验收时间
+          let acceptDate=new Date(res.data.data.acceptTime);
+          let aYear=acceptDate.getFullYear();
+          let aMon=acceptDate.getMonth()+1;
+          if(aMon<10){
+            aMon='0'+aMon
+          };
+          let aDay=acceptDate.getDate();
+          if(aDay<10){
+            aDay='0'+aDay
+          }
+          let aTime=aYear+'-'+aMon+'-'+aDay;
+          _vc.$set(res.data.data,'acceptTimeSec',aTime);
+          //预警时间
+          let warnDate=new Date(res.data.data.warnTime );
+          let wYear=warnDate.getFullYear();
+          let wMon=warnDate.getMonth()+1;
+          if(wMon<10){
+            wMon='0'+wMon
+          };
+          let wDay=warnDate.getDate();
+          if(wDay<10){
+            wDay='0'+wDay
+          }
+          let wTime=wYear+'-'+wMon+'-'+wDay;
+          _vc.$set(res.data.data,'warnTimeSec',wTime);
+          //计划完工时间
+          let planFDate=new Date(res.data.data.planFinishTime);
+          let pfYear=planFDate.getFullYear();
+          let pfMon=planFDate.getMonth()+1;
+          if(pfMon<10){
+            pfMon='0'+pfMon
+          };
+          let pfDay=planFDate.getDate();
+          if(pfDay<10){
+            pfDay='0'+pfDay
+          }
+          let pfTime=pfYear+'-'+pfMon+'-'+pfDay;
+          _vc.$set(res.data.data,'planFTimeSec',pfTime);
+          //计划验收时间
+          let planADate=new Date(res.data.data.planAcceptTime);
+          let paYear=planADate.getFullYear();
+          let paMon=planADate.getMonth()+1;
+          if(paMon<10){
+            paMon='0'+paMon
+          };
+          let paDay=planADate.getDate();
+          if(paDay<10){
+            paDay='0'+paDay
+          }
+          let paTime=paYear+'-'+paMon+'-'+paDay;
+          _vc.$set(res.data.data,'planATimeSec',paTime);
+          for(let i in res.data.data.projectPointVOList){
+            for(let x in res.data.data.projectPointVOList[i].usingProjectCourseNodeVOList){
+              //开始时间
+              let startDate=new Date(res.data.data.projectPointVOList[i].usingProjectCourseNodeVOList[x].startTime);
+              let sYear=startDate.getFullYear();
+              let sMon=startDate.getMonth()+1;
+              if(sMon<10){
+                sMon='0'+sMon
+              };
+              let sDay=startDate.getDate();
+              if(sDay<10){
+                sDay='0'+sDay
+              };
+              let sTime=sYear+'-'+sMon+'-'+sDay
+              _vc.$set(res.data.data.projectPointVOList[i].usingProjectCourseNodeVOList[x],'startTimeSec',sTime)
+              //结束时间
+              let endDate=new Date(res.data.data.projectPointVOList[i].usingProjectCourseNodeVOList[x].endTime);
+              let eYear=endDate.getFullYear();
+              let eMon=endDate.getMonth()+1;
+              if(eMon<10){
+                eMon='0'+eMon
+              };
+              let eDay=endDate.getDate();
+              if(eDay<10){
+                eDay='0'+eDay
+              };
+              let eTime=eYear+'-'+eMon+'-'+eDay
+              _vc.$set(res.data.data.projectPointVOList[i].usingProjectCourseNodeVOList[x],'endTimeSec',eTime);
+              _vc.$set(res.data.data.projectPointVOList[i].usingProjectCourseNodeVOList[x],'openKey',_vc.lengthNum++);
+            }
+            for(let y in res.data.data.projectPointVOList[i].warnRecordVOList){
+              //风险创建时间
+              let startDate=new Date(res.data.data.projectPointVOList[i].warnRecordVOList[y].createTime);
+              let sYear=startDate.getFullYear();
+              let sMon=startDate.getMonth()+1;
+              if(sMon<10){
+                sMon='0'+sMon
+              };
+              let sDay=startDate.getDate();
+              if(sDay<10){
+                sDay='0'+sDay
+              };
+              let sTime=sYear+'-'+sMon+'-'+sDay
+              _vc.$set(res.data.data.projectPointVOList[i].warnRecordVOList[y],'warnTimeCreat',sTime)
+            }
+          }
+          _vc.projectMes=res.data.data;
+          console.log(_vc.projectMes)
+        }else{
+          this.$Toast(res.data.msg)
+        }
+      }).catch((err)=>{
+        this.$Toast('未知错误,请联系管理员')
+        console.log(err)
+      })
+    }
   },
   components:{
     WorkHeader
@@ -128,7 +244,7 @@ export default {
     margin-top: 7rem;
     .details_title{
       width: 100%;
-      margin-top: 2rem;
+      margin-top: 4rem;
       box-sizing: border-box;
       height: 1.8rem;
       padding-left: .4rem;

@@ -2,7 +2,7 @@
 <template lang="html">
   <div class="work_log">
     <WorkHeader>
-      <span>项目追踪</span>
+      <span>订单追踪</span>
     </WorkHeader>
     <p class="push_work" v-if="false">
       <img src="../../../static/img/screening_icon.png" alt="">
@@ -69,14 +69,10 @@ export default {
       let _vm=this;
       let formdata=new FormData();
       _vm.$Indicator.open();
-      // let userId=window.localStorage.getItem('engID');
-      // if(window.localStorage.getItem('engID')){
-      //   formdata.append('engineerIdOut',userId);
-      // }else{
-      //   console.log('未登录')
-      // };
       formdata.append('page',_vm.pageNum);
-      // formdata.append('size',10)
+      if(window.localStorage.getItem('Ident')==1){
+        formdata.append('customerId',_vm.userMes.customerVO.id)
+      }
       _vm.$axios.post(_vm.oUrl+'/findProjectListByCondition',formdata).then((res)=>{
         if(res.data.code==0){
           res.data.data.content.forEach((e)=>{

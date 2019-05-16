@@ -26,8 +26,10 @@ export default {
       if(!this.userMes.engineerVO){
         this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
           if(res.data.code==0){
-            this.userMes_fn(res.data.data);
-            window.localStorage.setItem('engID',res.data.data.engineerVO.id)
+            if(res.data.data.identityCode==2){
+              window.localStorage.setItem('engID',res.data.data.engineerVO.id)
+              this.userMes_fn(res.data.data);
+            }
           }else{
             this.$Toast(res.data.msg)
           }

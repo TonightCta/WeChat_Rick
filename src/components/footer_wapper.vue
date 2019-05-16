@@ -14,11 +14,11 @@
           <i class="iconfont icon-guanyuwomen1" style="font-size:1.7rem;"></i>
           <span>关于我们</span>
         </router-link>
-        <router-link :to="{path:'/mine',query:{color:4}}" tag="li" :class="{active:color==4}" @click.native="color==4">
+        <li @click="peoCenter()"  :class="{active:color==4}">
           <i class="iconfont icon-wd"></i>
           <span>个人中心</span>
           <i class="mesStatus" v-show="hasMsg"></i>
-        </router-link>
+        </li>
     </ul>
   </div>
 </template>
@@ -66,6 +66,42 @@ export default {
         this.hasMsg=true;
       }
     }
+  },
+  peoCenter(){
+    this.color=4;
+    if(window.localStorage.getItem('Ident')){
+      let iDent=window.localStorage.getItem('Ident');
+      if(iDent==1){
+        this.$router.push({
+          path:'/cusMine',
+          query:{
+            color:4
+          }
+        })
+      }else if(iDent==2){
+        this.$router.push({
+          path:'/mine',
+          query:{
+            color:4
+          }
+        })
+      }else{
+        this.$router.push({
+          path:'/adminMine',
+          query:{
+            color:4
+          }
+        })
+      }
+    }else{
+      this.$router.push({
+        path:'/mine',
+        query:{
+          color:4
+        }
+      })
+    }
+
   }
 }
 }

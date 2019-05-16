@@ -1,11 +1,11 @@
-<!-- 个人中心 -->
+<!-- 客户个人中心 -->
 <template lang="html">
   <div class="mine">
     <!-- 个人资料块 -->
     <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" >
       <div class="" style="magin-bottom:10rem;">
-        <div class="person_mes" style="minHeight:28rem;">
-          <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic" @click="goMes()">
+        <div class="person_mes">
+          <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic">
           <router-link to="/TLogin" tag="p" class="person_oper" @click.native="mineCon()" v-show="didLogin">
             请登录
           </router-link>
@@ -17,24 +17,14 @@
                 <span>电话：</span>
                 <span>{{userPhone}}</span>
               </li>
-              <li>
-                <span class="iconfont icon-rili"></span>
-                <span>工作年限：</span>
-                <span>{{userDate}}年</span>
-              </li>
             </ul>
             <p>
               <span class="iconfont icon-mail"></span>
               <span>邮箱：</span>
               <span>{{userEmail}}</span>
             </p>
-            <p class="engMes">
-              <span class="iconfont icon-renzheng"></span>
-              <span>技能认证：</span>
-              <span>{{userEng}}</span>
-            </p>
             <!-- <span class="iconfont icon-iconfontzhizuobiaozhun023114 y" ref="certColor"></span> -->
-            <span class="certIcon" @click="cert()">{{cerText}}</span>
+            <!-- <span class="certIcon" @click="cert()">{{cerText}}</span> -->
           </div>
         </div>
         <!-- 阴影盒子 -->
@@ -52,34 +42,19 @@
               <span class="message_num" v-show="hasMsg">{{msgNum}}</span>
               <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
             </router-link>
-            <router-link to="/personSkill" tag="li">
-              <i class="iconfont icon-iconset0169"></i>
-              <span class="mine_text">擅长领域</span>
-              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-            </router-link>
-            <router-link to="/cerSkill" tag="li">
-              <i class="iconfont icon-renzheng"></i>
-              <span class="mine_text">技能认证</span>
-              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-            </router-link>
-            <router-link to="/cerCard" tag="li">
-              <i class="iconfont card_icon icon-shimingrenzheng"></i>
-              <span class="mine_text">身份认证</span>
-              <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-            </router-link>
-            <router-link :to="{path:'/personMes',query:{isDis:false}}" tag="li">
+            <!-- <router-link :to="{path:'/personMes',query:{isDis:false}}" tag="li">
               <i class="iconfont write_icon icon-bianjiziliao"></i>
               <span class="mine_text">编辑资料</span>
               <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
-            </router-link>
-            <router-link :to="{path:'/order',query:{color:2}}" tag="li">
-              <i class="iconfont icon-dingdan"></i>
-              <span class="mine_text">我的接单</span>
+            </router-link> -->
+            <router-link to="/projectTrak" tag="li">
+              <i class="iconfont write_icon icon-zhuizong1"></i>
+              <span class="mine_text">订单追踪</span>
               <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
             </router-link>
-            <router-link to="/workLog" tag="li">
-              <i class="iconfont icon-fuwutiaokuan"></i>
-              <span class="mine_text">我的日志</span>
+            <router-link to="/demandNeed" tag="li">
+              <i class="iconfont write_icon icon-fabu1"></i>
+              <span class="mine_text">发布需求</span>
               <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
             </router-link>
             <router-link to="/setTing" tag="li">
@@ -115,44 +90,28 @@ export default {
       hasLogin:false,//未登录
       msgNum:null,//未读消息条数
       hasMsg:false,//是否有未读消息
+      nickName:null,
     }
   },
   computed:{
     ...mapState(['userMes']),
-    nickName(){
-      if(this.userMes.engineerVO){
-        return this.userMes.engineerVO.name
-      }
-    }
   },
   created(){
     this.getMsgNum();
     this.isEx();
   },
   mounted(){
-    if(this.userMes.engineerVO){
+    if(this.userMes.customerVO){
       this.didLogin=false;
       this.hasLogin=true;
-      this.userPhone=this.userMes.engineerVO.phone
-      if(this.userMes.engineerVO.state==0){
-        this.cerText='点击认证'
-      }else if(this.userMes.engineerVO.state==1){
-        this.cerText='认证中'
-      }else{
-        this.cerText='已认证'
-      }
+    }
+    this.nickName=this.userMes.customerVO.name;
+    if(this.userMes.customerVO.phone!=null&&this.userMes.customerVO.phone!=''){
+      this.userPhone=this.userMes.customerVO.phone;
     }
     if(this.userMes.email!=null&&this.userMes.email!=''){
-      this.userEmail=this.userMes.email
+      this.userEmail=this.userMes.email;
     }
-    if(this.userMes.engineerVO){
-      if(this.userMes.engineerVO.workYear!=null&&this.userMes.engineerVO.workYear!=''){
-        this.userDate=this.userMes.engineerVO.workYear
-      }
-      if(this.userMes.engineerVO.levelStr!=null&&this.userMes.engineerVO.levelStr!=''){
-        this.userEng=this.userMes.engineerVO.levelStr
-      }
-    };
     let userId=window.localStorage.getItem('Uid');
     if(window.localStorage.getItem('Uid')){
       if(!this.userMes.engineerVO){
@@ -181,25 +140,9 @@ export default {
                 this.hasLogin=true;
                 this.userMes_fn(res.data.data)
                 window.localStorage.setItem('engID',res.data.data.engineerVO.id);
-                this.userPhone=res.data.data.engineerVO.phone
-                if(res.data.data.engineerVO.state==0){
-                  this.cerText='点击认证'
-                }else if(res.data.data.engineerVO.state==1){
-                  this.cerText='认证中'
-                }else{
-                  this.cerText='已认证'
-                }
               if(res.data.data.email!=null&&res.data.data.email!=''){
                 this.userEmail=res.data.data.email
               }
-              if(res.data.data.engineerVO){
-                if(res.data.data.engineerVO.workYear!=null&&res.data.data.engineerVO.workYear!=''){
-                  this.userDate=res.data.data.engineerVO.workYear
-                }
-                if(res.data.data.engineerVO.levelStr!=null&&res.data.data.engineerVO.levelStr!=''){
-                  this.userEng=res.data.data.engineerVO.levelStr
-                }
-              };
               }else{
                 this.$Toast(res.data.msg)
               }
@@ -209,14 +152,6 @@ export default {
             })
         };
       }
-    },
-    goMes(){//点击进入个人详情页
-      this.$router.push({
-        path:'/personMes',
-        query:{
-          isDis:true
-        }
-      })
     },
     getMsgNum(){//获取未读消息
         let formdata=new FormData();
@@ -260,28 +195,10 @@ export default {
       if(window.localStorage.getItem('Uid')){
           this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
             if(res.data.code==0){
+              console.log(res)
               this.userMes_fn(res.data.data);
               this.didLogin=false;
               this.hasLogin=true;
-              this.userPhone=res.data.data.engineerVO.phone
-              if(res.data.data.engineerVO.state==0){
-                this.cerText='点击认证'
-              }else if(res.data.data.engineerVO.state==1){
-                this.cerText='认证中'
-              }else{
-                this.cerText='已认证'
-              }
-              if(res.data.data.email!=null&&res.data.data.email!=''){
-                this.userEmail=res.data.data.email
-              }
-              if(res.data.data.engineerVO){
-                  if(res.data.data.engineerVO.workYear!=null&&res.data.data.engineerVO.workYear!=''){
-                    this.userDate=res.data.data.engineerVO.workYear;
-                  }
-                  if(res.data.data.engineerVO.levelStr!=null&&res.data.data.engineerVO.levelStr!=''){
-                    this.userEng=res.data.data.engineerVO.levelStr
-                  }
-                };
             }else{
               this.$Toast(res.data.msg)
             }
@@ -293,75 +210,6 @@ export default {
         this.$Toast('请先登录');
       }
     },
-    cert(){//申请认证
-      let _this=this;
-      let beLing=_this.userMes.engineerVO
-      if(!_this.userMes.engineerVO){
-        _this.$Toast('请先登录');
-        _this.$router.push('/Tlogin')
-      }else if(beLing.identifyState==0){
-        MessageBox({
-          message:'当前未进行资料完善，是否前往？',
-          confirmButtonText:'前往',
-          cancelButtonText:'取消',
-          showCancelButton:true
-        }).then(action => {
-          if(action=='confirm'){
-            _this.$router.push({
-              path:'/personMes',
-              query:{
-                isDis:false
-              }
-            })
-          }
-        }).catch(err=>{
-          if(err=='cancel'){
-            console.log(err)
-          }
-        })
-      }else if(beLing.identifyState==1){
-        MessageBox({
-          message:'当前未进行身份认证，是否前往？',
-          confirmButtonText:'前往',
-          cancelButtonText:'取消',
-          showCancelButton:true
-        }).then(action => {
-          if(action=='confirm'){
-            _this.$router.push('/cerCard')
-          }
-        }).catch(err=>{
-          if(err=='cancel'){
-            console.log(err)
-          }
-        })
-      }else if(beLing.identifyState==3){
-        let formData=new FormData();
-        formData.append('id',_this.userMes.engineerVO.id);
-        _this.$axios.post(_this.oUrl+'/mobile/externalEngineerApply',formData).then((res)=>{
-          console.log(res)
-          if(res.data.code==0){
-            _this.messageTitle=res.data.data.title;
-            _this.messageCon=res.data.data.con;
-            this.userMes_fn(res.data.data);
-            if(res.data.data.engineerVO.state==0){
-              this.$Toast(res.data.data.engineerVO.identifyMsg)
-            }else if(res.data.data.engineerVO.state==1){
-              this.$Toast('已申请认证，请等待')
-            }else{
-              this.$Toast('您已完成认证')
-            }
-          }else{
-            _this.$Toast(res.data.msg)
-          }
-          _this.reload();
-        }).catch((err)=>{
-          _this.$Toast('未知错误')
-          console.log(err)
-        })
-      }else{
-        _this.$Toast('当前账户异常，请联系客服')
-      }
-    }
   },
   components:{
     Footer
@@ -373,7 +221,7 @@ export default {
 .mine{
   width: 100%;
   position: relative;
-  height:90rem!important;
+  height:70rem!important;
 
   ._v-container{
     // position: static!important;
@@ -393,7 +241,7 @@ export default {
     width: 100%;
     background: url('../../../static/img/person_background.png');
     background-size: 100% 100%;
-    min-height: 28rem;
+    min-height: 23rem;
     border-radius:12px;
     margin-top: 2rem;
     position: relative;
