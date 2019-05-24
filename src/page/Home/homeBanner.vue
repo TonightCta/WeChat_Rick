@@ -4,11 +4,17 @@
     <div class="banner_wapper">
       <mt-swipe :auto="4000">
         <mt-swipe-item>
+          <img src='../../../static/img/banner2_1.png' alt="">
+        </mt-swipe-item>
+        <mt-swipe-item>
+          <img src='../../../static/img/banner2_2.png' alt="">
+        </mt-swipe-item>
+        <!-- <mt-swipe-item>
           <img src='../../../static/img/banner1_1.png' alt="">
         </mt-swipe-item>
         <mt-swipe-item>
           <img src='../../../static/img/banner1_2.png' alt="">
-        </mt-swipe-item>
+        </mt-swipe-item> -->
         <mt-swipe-item>
           <img src='../../../static/img/banner1.png' alt="">
         </mt-swipe-item>

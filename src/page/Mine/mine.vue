@@ -159,6 +159,9 @@ export default {
         this.$axios.get(this.oUrl+'/mobile/getOperatorInfo?operatorId='+userId).then((res)=>{
           if(res.data.code==0){
             this.userMes_fn(res.data.data);
+            if(res.data.data.identityCode==2){
+              this.engSkill_fn(res.data.data.engineerVO);
+            }
           }else{
             this.$Toast(res.data.msg)
           }
@@ -170,7 +173,7 @@ export default {
     };
   },
   methods:{
-    ...mapMutations(['isBackM_fn','isBackT_fn','userMes_fn']),
+    ...mapMutations(['isBackM_fn','isBackT_fn','userMes_fn','engSkill_fn']),
     isEx(){//是否为外部直接进入个人中心
       if(this.$Grap.isExterna){
         let userId=window.localStorage.getItem('Uid');
@@ -180,6 +183,7 @@ export default {
                 this.didLogin=false;
                 this.hasLogin=true;
                 this.userMes_fn(res.data.data)
+                this.engSkill_fn(res.data.data.engineerVO);
                 window.localStorage.setItem('engID',res.data.data.engineerVO.id);
                 this.userPhone=res.data.data.engineerVO.phone
                 if(res.data.data.engineerVO.state==0){

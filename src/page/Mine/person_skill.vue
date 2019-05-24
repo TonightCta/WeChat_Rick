@@ -151,10 +151,9 @@ export default {
     WorkHeader
   },
   created(){
-    this.getSkillList()
   },
   mounted(){
-
+    this.getSkillList()
   },
   methods:{
     ...mapMutations(['engSkill_fn']),
@@ -349,69 +348,68 @@ export default {
             _vm.showFour=false;
           };
           setTimeout(()=>{
-            if(this.engSkill.skillTagIds!=null){
-              for(let i in this.engSkill.skillTagIds){
+            if(_vm.engSkill.skillTagIds!=null){
+              for(let i in _vm.engSkill.skillTagIds){
                 //第一组对比
                 if(_vm.first!=null){
-                  for(let x in this.first.skillTagVOList){
-                    if(this.first.skillTagVOList[x].id===this.engSkill.skillTagIds[i]){
-                      this.$refs.chooseLabel[x].style.background='#eb7a1d';
-                      this.$refs.chooseLabel[x].style.color='white';
-                      this.$refs.cancellabel[x].style.display='block';
-                      this.firstChoose.push(this.first.skillTagVOList[x].id);
+                  for(let x in _vm.first.skillTagVOList){
+                    if(_vm.first.skillTagVOList[x].id===_vm.engSkill.skillTagIds[i]){
+                      _vm.$refs.chooseLabel[x].style.background='#eb7a1d';
+                      _vm.$refs.chooseLabel[x].style.color='white';
+                      _vm.$refs.cancellabel[x].style.display='block';
+                      _vm.firstChoose.push(_vm.first.skillTagVOList[x].id);
                     }
                   };
                 }
                 //第二组对比
                 if(_vm.second!=null){
-                  for(let y in this.second.skillTagVOList){
-                    if(this.second.skillTagVOList[y].id===this.engSkill.skillTagIds[i]){
-                      this.$refs.chooseLabelSec[y].style.background='#eb7a1d';
-                      this.$refs.chooseLabelSec[y].style.color='white';
-                      this.$refs.cancellabelSec[y].style.display='block';
-                      this.secondChoose.push(this.second.skillTagVOList[y].id);
+                  for(let y in _vm.second.skillTagVOList){
+                    if(_vm.second.skillTagVOList[y].id===_vm.engSkill.skillTagIds[i]){
+                      _vm.$refs.chooseLabelSec[y].style.background='#eb7a1d';
+                      _vm.$refs.chooseLabelSec[y].style.color='white';
+                      _vm.$refs.cancellabelSec[y].style.display='block';
+                      _vm.secondChoose.push(_vm.second.skillTagVOList[y].id);
                     }
                   };
                 }
                 //第三组比对
                 if(_vm.three!=null){
-                  for(let a in this.three.skillTagVOList){
-                    if(this.three.skillTagVOList[a].id===this.engSkill.skillTagIds[i]){
-                      this.$refs.chooseLabelThr[a].style.background='#eb7a1d';
-                      this.$refs.chooseLabelThr[a].style.color='white';
-                      this.$refs.cancellabelThr[a].style.display='block';
-                      this.threeChoose.push(this.three.skillTagVOList[a].id);
+                  for(let a in _vm.three.skillTagVOList){
+                    if(_vm.three.skillTagVOList[a].id===_vm.engSkill.skillTagIds[i]){
+                      _vm.$refs.chooseLabelThr[a].style.background='#eb7a1d';
+                      _vm.$refs.chooseLabelThr[a].style.color='white';
+                      _vm.$refs.cancellabelThr[a].style.display='block';
+                      _vm.threeChoose.push(_vm.three.skillTagVOList[a].id);
                     }
                   };
                 };
                 //第四组对比
                 if(_vm.four!=null){
-                  for(let p in this.four.skillTagVOList){
-                    if(this.four.skillTagVOList[p].id===this.engSkill.skillTagIds[i]){
-                      this.$refs.chooseLabelFour[p].style.background='#eb7a1d';
-                      this.$refs.chooseLabelFour[p].style.color='white';
-                      this.$refs.cancellabelFour[p].style.display='block';
-                      this.fourChoose.push(this.four.skillTagVOList[p].id);
+                  for(let p in _vm.four.skillTagVOList){
+                    if(_vm.four.skillTagVOList[p].id===_vm.engSkill.skillTagIds[i]){
+                      _vm.$refs.chooseLabelFour[p].style.background='#eb7a1d';
+                      _vm.$refs.chooseLabelFour[p].style.color='white';
+                      _vm.$refs.cancellabelFour[p].style.display='block';
+                      _vm.fourChoose.push(_vm.four.skillTagVOList[p].id);
                     }
                   };
                 };
                 //自定义比对
                 if(_vm.cusInn!=null){
-                  for(let m in this.$refs.cancellabelCustom){
-                    this.$refs.cancellabelCustom[m].style.display='none';
-                    this.$refs.chooseLabelCustom[m].style.background='white';
-                    this.$refs.chooseLabelCustom[m].style.color='black';
+                  for(let m in _vm.$refs.cancellabelCustom){
+                    _vm.$refs.cancellabelCustom[m].style.display='none';
+                    _vm.$refs.chooseLabelCustom[m].style.background='white';
+                    _vm.$refs.chooseLabelCustom[m].style.color='black';
                   }
                   setTimeout(()=>{
-                    for(let o in this.cusInn.skillTagVOList){
-                      if(this.cusInn.skillTagVOList[o].id===this.engSkill.skillTagIds[i]){
-                        this.$refs.cancellabelCustom[o].style.display='block';
-                        this.$refs.chooseLabelCustom[o].style.background='#eb7a1d';
-                        this.$refs.chooseLabelCustom[o].style.color='white';
+                    for(let o in _vm.cusInn.skillTagVOList){
+                      if(_vm.cusInn.skillTagVOList[o].id===_vm.engSkill.skillTagIds[i]){
+                        _vm.$refs.cancellabelCustom[o].style.display='block';
+                        _vm.$refs.chooseLabelCustom[o].style.background='#eb7a1d';
+                        _vm.$refs.chooseLabelCustom[o].style.color='white';
                       }
                     };
                   })
-
                 }
               }
             }

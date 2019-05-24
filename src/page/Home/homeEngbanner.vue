@@ -226,7 +226,7 @@ export default {
       border-radius: 50%;
       margin-top:17.5%;
       margin-left: 17.5%;
-      background: red;
+      background: white;
       overflow: hidden;
       img{
         width: 100%;

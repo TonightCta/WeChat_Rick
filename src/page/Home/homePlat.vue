@@ -3,7 +3,7 @@
   <div class="home_plat">
     <p class="home_newsTitle">平台优势</p>
     <div class="plat_bg">
-
+      <img src="../../../static/img/plat_bg2.gif" alt="">
     </div>
     <p class="plat_case">你有能力，我有平台</p>
     <p class="plat_case">赚钱，工作，学习，犀牛小哥平台一站解决</p>
@@ -33,9 +33,14 @@ export default {
 .plat_bg{
   width: 100%;
   height: 190px;
-  background:url('../../../static/img/plat_bg.png');
-  background-size:100% 100%;
-
+  position: relative;
+  img{
+    width: 100%;
+    height: 160%;
+    position: absolute;
+    top:-30%;
+    left:0;
+  }
 }
 .plat_case{
   width: 100%;

@@ -165,7 +165,10 @@ const router= new Router({
     {
       path:'/personSkill',//擅长领域
       name:'PersonSkill',
-      component:resolve=>require(['@/page/Mine/person_skill'],resolve)
+      component:resolve=>require(['@/page/Mine/person_skill'],resolve),
+      meta:{
+        keep:false
+      }
     },
     {
       path:'/message',//消息中心
@@ -208,7 +211,7 @@ router.beforeEach((to,from,next)=>{
   NProgress.start();
   let iDent=window.localStorage.getItem('Ident')
   //登录权限页面
-  const nextRoute=['CerSkill','CerCard','projectMes','PersonMes','WorkLog','Message','PersonSkill'];
+  const nextRoute=['CerSkill','CerCard','projectMes','PersonMes','WorkLog','Message','PersonSkill','ProjectTrak'];
   if(nextRoute.indexOf(to.name) > -1){
     if (!window.localStorage.getItem('Uid')) {
       Toast('请先登录');

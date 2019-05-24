@@ -15,7 +15,7 @@
 import {mapState,mapMutations} from 'vuex'
 export default {
   methods:{
-    ...mapMutations(['userMes_fn'])
+    ...mapMutations(['userMes_fn','engSkill_fn'])
   },
   computed:{
     ...mapState(['userMes'])
@@ -29,6 +29,7 @@ export default {
             if(res.data.data.identityCode==2){
               window.localStorage.setItem('engID',res.data.data.engineerVO.id)
               this.userMes_fn(res.data.data);
+              this.engSkill_fn(res.data.data.engineerVO);
             }
           }else{
             this.$Toast(res.data.msg)
