@@ -15,18 +15,6 @@
     <div class="" style="margin-top:10rem;">
       <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" ref="myscroller">
         <ul>
-          <li class="work_list">
-            <p class="work_time">{{tem.time}}</p>
-            <p class="work_type con">项目名称:&nbsp;{{tem.name}}</p>
-            <p class="work_place con">工作地点:&nbsp;{{tem.placeVO.parentName+'-'+tem.placeVO.name}}</p>
-            <span class="status" style="color:#eb7a1d;">可接单</span>
-            <!-- <span class="status" v-else style="color:#666;">已截单</span> -->
-            <p class="work_pro">
-              <button type="button" name="button" @click="temCon()"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
-              <button type="button" name="button" disabled="disabled" style="background:#ccc;color:white;" @click="temCon()"><i class="iconfont icon-fuwutiaokuan"></i>申请</button>
-            </p>
-            <p class="click_mask con" @click="temCon()"></p>
-          </li>
           <li class="work_list" v-for="(log,index) in logList">
             <p class="work_time">{{log.createTimeStr}}</p>
             <p class="work_type con">项目名称:&nbsp;{{log.name}}</p>
@@ -60,23 +48,6 @@ export default {
       hasText:false,//是否有输入内容
       searchKey:null,//搜索关键字
       pageNum:0,//页码
-      tem:{
-        time:'2019-05-24',
-        name:'北京测试项目',
-        address:'北京-北京市',
-        placeVO:{
-          id: "110100",
-          name: "北京市",
-          parentId: "110000",
-          parentName: "北京",
-          selected: false,
-          sort: 2,
-          state: 2
-        },
-        content:'所需人数:8-9人1、服务器调试及配置2、存储设备调试及配置3、精通主流交换机、路由器、防火墙等网络硬件设备4、精通Linux/Windows环境下网络的配置证书要求：具备华为HCIP及以上或同等级别的证书服务要求：听从客户安排，测试IT及数通产品。',
-        stateStr:'接单状态',
-        createTimeStr:'2019-05-24'
-      }
     }
   },
   components:{

@@ -43,6 +43,8 @@ export default {
           window.localStorage.clear('name');
           window.localStorage.clear('Uid');
           window.localStorage.clear('phone');
+          window.localStorage.clear('engID');
+          window.localStorage.clear('Ident');
           setTimeout(()=>{
             this.$Indicator.close();
             this.$Toast('注销成功');

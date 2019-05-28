@@ -32,7 +32,8 @@ export default {
               this.engSkill_fn(res.data.data.engineerVO);
             }
           }else{
-            this.$Toast(res.data.msg)
+            this.$Toast('登录信息已过期,请从新登录');
+            this.$router.push('/TLogin')
           }
         }).catch((err)=>{
           console.log(err);

@@ -119,6 +119,7 @@ export default {
       showFour:true,
       allSkillsID:[],//全部技能ID
       hasCustom:false,//是否有自定义
+      userID:null,//工程师ID
     }
   },
   computed:{
@@ -242,7 +243,10 @@ export default {
     upSkill(){//保存选择技能
       let _vm=this;
       let formdata=new FormData();
-      let userID=window.localStorage.getItem('engID');
+      _vm.userID=window.localStorage.getItem('engID');
+      // alert(_vm.userID)
+
+
       _vm.$Indicator.open()
       _vm.firstChoose.forEach((f)=>{
         _vm.allSkillsID.push(f)
@@ -257,27 +261,29 @@ export default {
       _vm.fourChoose.forEach((e)=>{
         _vm.allSkillsID.push(e)
       });
-      formdata.append('engineerId',userID);
       formdata.append('skillTagIds',_vm.allSkillsID);
       if(_vm.custom.children.length>0){
         formdata.append('skillTagNames',_vm.custom.children)
       };
-      _vm.$axios.post(_vm.oUrl+'/engineerSelectSkillTag',formdata).then((res)=>{
-        if(res.data.code==0){
-          window.localStorage.setItem('engID',res.data.data.id)
-          window.localStorage.setItem('phone',res.data.data.phone);
-          _vm.engSkill_fn(res.data.data);
-          _vm.$Toast('上传技能成功');
-          _vm.$router.go(-1);
+      formdata.append('engineerId',window.localStorage.getItem('engID'));
+      setTimeout(()=>{
+        _vm.$axios.post(_vm.oUrl+'/engineerSelectSkillTag',formdata).then((res)=>{
+          if(res.data.code==0){
+            window.localStorage.setItem('engID',res.data.data.id)
+            window.localStorage.setItem('phone',res.data.data.phone);
+            _vm.engSkill_fn(res.data.data);
+            _vm.$Toast('上传技能成功');
+            _vm.$router.go(-1);
+            _vm.$Indicator.close()
+          }else{
+            _vm.$Toast(res.data.msg)
+            _vm.$Indicator.close()
+          }
+        }).catch((err)=>{
+          _vm.$Toast('未知异常,请联系管理员')
           _vm.$Indicator.close()
-        }else{
-          _vm.$Toast(res.data.msg)
-          _vm.$Indicator.close()
-        }
-      }).catch((err)=>{
-        _vm.$Toast('未知异常,请联系管理员')
-        _vm.$Indicator.close()
-        console.log(err)
+          console.log(err)
+        })
       })
       // this.$Toast('上传选中技能')
     },
