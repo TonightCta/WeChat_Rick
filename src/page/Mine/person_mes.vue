@@ -275,7 +275,7 @@ export default {
         console.log(err)
       })
     },
-    saveMes(){
+    saveMes(){//保存信息
       let _vm=this;
       if(_vm.userDate==''){
         _vm.$Toast('请输入工作年限')
@@ -491,9 +491,9 @@ export default {
     //取消禁止页面滑动
     move(){
       document.body.addEventListener('touchmove', function (e) {
-        e.preventDefault() // 阻止默认的处理方式(阻止下拉滑动的效果)
-    }, {passive: true})
-     }
+          e.preventDefault() // 阻止默认的处理方式(阻止下拉滑动的效果)
+      }, {passive: true})
+    }
   },
   components:{
     WorkHeader
