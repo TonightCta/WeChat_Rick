@@ -14,19 +14,21 @@ import './assets/iconfont/iconfont.css';
 import './assets/iconfontT/iconfont.css';
 import './assets/iconfontS/iconfont.css';
 import './assets/iconfontF/iconfont.css';
+import './assets/iconfontFI/iconfont.css';
 import 'jquery'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
+import './css/weui.scss'
 Vue.prototype.$axios=Axios
 import {UrlSearch} from './assets/js/fun'
 let Grap=new UrlSearch()
 Vue.prototype.$Grap=Grap;
 import VueScroller from 'vue-scroller'
-Vue.prototype.oUrl='http://admin.rightservicetech.com';
+// Vue.prototype.oUrl='http://admin.rightservicetech.com';
 // Vue.prototype.oUrl='http://hexsoft.top:8080';
-// Vue.prototype.oUrl='http://10.0.0.31:8080';
+Vue.prototype.oUrl='http://10.0.0.31:8080';
 Vue.prototype.$Indicator=Indicator;
 Vue.prototype.$Toast=Toast;
 Vue.config.productionTip = false;

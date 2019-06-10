@@ -7,10 +7,16 @@
     <div class="login_pic">
       <img src="../../../static/img/login_bg2.png" alt="">
     </div>
+    <p>
+      <mt-radio
+        v-model="isCompany"
+        :options="['小哥账户', '公司账户']">
+      </mt-radio>
+    </p>
     <ul>
       <li>
         <img src="../../../static/img/regi_icon.png" alt="">
-        <input type="text" v-model="userName" @blur="regisClear" placeholder="请输入姓名" name="" value="">
+        <input type="text" v-model="userName" @blur="regisClear" placeholder="请输入姓名或公司名称" name="" value="">
       </li>
       <li>
         <img src="../../../static/img/btn_icon.png" alt="">
@@ -50,7 +56,8 @@ export default {
       userPass:null,//用户密码
       turnPass:null,//确认密码
       inviCode:'',//邀请码
-      regisClear:downIOS
+      regisClear:downIOS,
+      isCompany:'小哥账户',//
     }
   },
   methods:{
@@ -61,7 +68,7 @@ export default {
         _this.$Toast('请输入姓名')
       }else if(_this.userPhone==null){
         _this.$Toast('请输入手机号')
-      }else if(!(/^1[34578]\d{9}$/.test(_this.userPhone))){
+      }else if(_this.userPhone.length<11){
         _this.$Toast('请输入正确的手机号')
       }else if(_this.turnPass==null){
         _this.$Toast('请输入登录密码')
@@ -75,8 +82,14 @@ export default {
         formData.append('username',this.userPhone);
         formData.append('password',this.turnPass);
         formData.append('recommendCode',this.inviCode);
+        if(_this.isCompany==='小哥账户'){
+          formData.append('isCompany',false)
+        }else{
+          formData.append('isCompany',true)
+        }
         _this.$axios.post(_this.oUrl+'/saveExternalEngineer',formData).then((res)=>{
           _this.$Indicator.close();
+          console.log(res)
           if(res.data.code==0){
             _this.$Toast('注册成功');
             _this.userMes_fn(res.data.data);

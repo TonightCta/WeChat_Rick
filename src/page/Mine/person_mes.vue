@@ -70,7 +70,7 @@
           <img src="../../../static/img/mes_phone.png" alt="">
           <span>联系电话:</span>
           <span>
-            <input type="text" @blur="mesClear" v-model="userPhone" name="" value=""
+            <input type="number" @blur="mesClear" v-model="userPhone" name="" value=""
             placeholder="请输入您的联系电话"
             >
             <span class="mes_mask" v-show="true"></span>
@@ -283,7 +283,7 @@ export default {
         _vm.$Toast('请输入您的邮箱')
       }else if(!(/^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/.test(this.userEmail))){
         _vm.$Toast('请输入正确的邮箱格式')
-      }else if(!(/^1[34578]\d{9}$/.test(_vm.userPhone))){
+      }else if(_vm.userPhone.length<11){
         _vm.$Toast('请输入正确的手机号')
       }else if(_vm.cityID.length<1){
         _vm.$Toast('请选择至少一个地址')

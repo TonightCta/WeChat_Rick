@@ -85,9 +85,16 @@ export default {
             color:4
           }
         })
-      }else{
+      }else if(iDent==0){
         this.$router.push({
           path:'/adminMine',
+          query:{
+            color:4
+          }
+        })
+      }else{
+        this.$router.push({
+          path:'/companyMine',
           query:{
             color:4
           }

@@ -83,6 +83,7 @@ export default {
         formData.append('password',_this.userPass);
         _this.$axios.post(_this.oUrl+'/login',formData).then((res)=>{
           if(res.data.code===0){
+            console.log(res)
             if(res.data.data.identityCode==2){
               window.localStorage.setItem('engID',res.data.data.engineerVO.id)
               window.localStorage.setItem('name',res.data.data.name);
@@ -109,9 +110,16 @@ export default {
                   color:4
                 }
               })
-            }else{
+            }else if(res.data.data.identityCode==2){
               _this.$router.push({
                 path:'/mine',
+                query:{
+                  color:4
+                }
+              })
+            }else{
+              _this.$router.push({
+                path:'/companyMine',
                 query:{
                   color:4
                 }

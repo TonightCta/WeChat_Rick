@@ -201,9 +201,19 @@ const router= new Router({
       component:resolve=>require(['@/page/Mine/adminMine'],resolve)
     },
     {
-      path:'/receipt',
+      path:'/receipt',//回执页面
       name:'Receipt',
       component:resolve=>require(['@/components/receipt'],resolve)
+    },
+    {
+      path:'/companyMine',//企业个人中心
+      name:'CompanyMine',
+      component:resolve=>require(['@/page/Mine/companyMine'],resolve)
+    },
+    {
+      path:'/companyCard',//企业认证页
+      name:'CompanyCard',
+      component:resolve=>require(['@/page/Mine/companyCard'],resolve)
     }
   ]
 });
@@ -229,8 +239,8 @@ router.beforeEach((to,from,next)=>{
  };
  const engRoute=['ProjectTrak','ProjectMan','ProjeceMes'];
  if(engRoute.indexOf(to.name)>-1){
-   if(iDent==2){
-     Toast('当前为工程师身份,请切换身份后重试');
+   if(iDent==2||iDent==3){
+     Toast('当前为工程师身份或公司账户,请切换账户后重试');
      next('/receipt')
    }
  };

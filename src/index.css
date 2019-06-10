@@ -101,3 +101,9 @@ input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
 .pswp img{
   max-height: none;
 }
+.mint-radiolist{
+  display: flex;
+  width: 80%;
+  margin:0 auto;
+  margin-top: 2rem;
+}

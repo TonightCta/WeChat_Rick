@@ -89,7 +89,7 @@ export default {
         _this.$Toast('请输入联系人姓名')
       }else if(_this.contactPhone==null){
         _this.$Toast('请输入联系人电话')
-      }else if(!(/^1[34578]\d{9}$/.test(_this.contactPhone))){
+      }else if(_this.contactPhone.length<11){
         _this.$Toast('请输入正确的手机号')
       }else{
         _this.$Indicator.open('提交中...');
