@@ -106,4 +106,8 @@ input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
   width: 80%;
   margin:0 auto;
   margin-top: 2rem;
+  border:none!important;
+}
+.mint-cell{
+  border:none!important;
 }

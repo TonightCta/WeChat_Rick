@@ -83,8 +83,7 @@ export default {
         formData.append('password',_this.userPass);
         _this.$axios.post(_this.oUrl+'/login',formData).then((res)=>{
           if(res.data.code===0){
-            console.log(res)
-            if(res.data.data.identityCode==2){
+            if(res.data.data.identityCode==2||res.data.data.identityCode==3){
               window.localStorage.setItem('engID',res.data.data.engineerVO.id)
               window.localStorage.setItem('name',res.data.data.name);
               _this.engSkill_fn(res.data.data.engineerVO);

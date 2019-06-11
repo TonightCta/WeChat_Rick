@@ -26,7 +26,6 @@
     <div class="up_mask"  v-show="upBtn">
 
     </div>
-    <p class="card_ins"><span style="color:red;">*</span>请上传清晰身份证正反面照片，并且为 .jpg或.png格式（图片将被等比压缩为260*180大小，长度相近的图片效果更佳）</p>
   </div>
 </template>
 
@@ -193,7 +192,7 @@ export default {
     height: 15rem;
     border-radius: 10px;
     margin-top:2rem;
-    background: url('../../../static/img/card_bg.png');
+    background: url('../../../static/img/company_card.png');
     background-size: 100% 100%;
     margin:0 auto;
     box-sizing: border-box;

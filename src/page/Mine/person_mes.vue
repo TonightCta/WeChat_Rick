@@ -48,8 +48,8 @@
           <img src="../../../static/img/mes_date.png" alt="">
           <span>工作年限:</span>
           <span>
-            <input type="text" @blur="mesClear" v-model="userDate" name="" value=""
-            placeholder="单位：年"
+            <input type="number" @blur="mesClear" v-model="userDate" name="" value=""
+            placeholder="单位：年" oninput="this.value=this.value.replace(/[^0-9.]+/,'');"
             >
             <span class="mes_mask" v-show="disabled"></span>
           </span>

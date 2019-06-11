@@ -7,6 +7,15 @@
     <div class="login_pic">
       <img src="../../../static/img/login_bg2.png" alt="">
     </div>
+    <div class="radio_mask first">
+
+    </div>
+    <div class="radio_mask second">
+
+    </div>
+    <div class="radio_mask three">
+
+    </div>
     <p>
       <mt-radio
         v-model="isCompany"
@@ -61,7 +70,7 @@ export default {
     }
   },
   methods:{
-    ...mapMutations(['userMes_fn','userID_fn']),
+    ...mapMutations(['userMes_fn','userID_fn','engSkill_fn']),
     regis(){
       let _this=this;
       if(_this.userName==null){
@@ -89,24 +98,36 @@ export default {
         }
         _this.$axios.post(_this.oUrl+'/saveExternalEngineer',formData).then((res)=>{
           _this.$Indicator.close();
-          console.log(res)
           if(res.data.code==0){
             _this.$Toast('注册成功');
             _this.userMes_fn(res.data.data);
             _this.userID_fn(res.data.data.id);
+            if(res.data.data.identityCode==2||res.data.data.identityCode==3){
+              window.localStorage.setItem('engID',res.data.data.engineerVO.id)
+              _this.engSkill_fn(res.data.data.engineerVO);
+            }
             window.localStorage.setItem('Uid',res.data.data.id);
             window.localStorage.setItem('name',res.data.data.engineerVO.name);
             window.localStorage.setItem('phone',res.data.data.engineerVO.phone);
             window.localStorage.setItem('login',true)
             setTimeout(()=>{
               window.localStorage.clear('login')
-            },24*60*60*1000)
-            _this.$router.push({
-              path:'/mine',
-              query:{
-                color:4
-              }
-            })
+            },24*60*60*1000);
+            if(res.data.data.identityCode==3){
+              _this.$router.push({
+                path:'/companyMine',
+                query:{
+                  color:4
+                }
+              })
+            }else{
+              _this.$router.push({
+                path:'/mine',
+                query:{
+                  color:4
+                }
+              })
+            }
           }else{
             _this.$Toast(res.data.msg)
           }
@@ -129,6 +150,7 @@ export default {
     background-size: 100% 100%;
     position: relative;
     margin-top: 5rem;
+    z-index: 20;
     img{
       width: 12rem;
       height: 7rem;
@@ -138,6 +160,23 @@ export default {
       margin-left:-6rem;
       margin-top:-3.5rem;
     }
+  }
+  .radio_mask{
+    width: 40%;
+    height: 3rem;
+    background: white;
+    position: absolute;
+    left:10%;
+    z-index: 10;
+    top:16.5rem;
+  }
+  .second{
+    left: 50%;
+  }
+  .three{
+    top:23rem;
+    left: 50%;
+    height: 1rem;
   }
   ul{
     width: 70%;

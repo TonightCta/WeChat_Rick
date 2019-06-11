@@ -5,7 +5,7 @@
     <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" >
       <div class="" style="magin-bottom:10rem;">
         <div class="person_mes" style="minHeight:28rem;">
-          <img src="../../../static/img/user_pic.jpg" alt="" class="person_pic" @click="goMes()">
+          <img src="../../../static/img/comPic.png" alt="" class="person_pic" @click="goMes()">
           <router-link to="/TLogin" tag="p" class="person_oper" @click.native="mineCon()" v-show="didLogin">
             请登录
           </router-link>
@@ -17,15 +17,10 @@
                 <span>电话：</span>
                 <span>{{userPhone}}</span>
               </li>
-              <li>
-                <span class="iconfont icon-rili"></span>
-                <span>工作年限：</span>
-                <span>{{userDate}}年</span>
-              </li>
             </ul>
             <p>
               <span class="iconfont icon-mail"></span>
-              <span>邮箱：</span>
+              <span>企业邮箱：</span>
               <span>{{userEmail}}</span>
             </p>
             <p class="engMes">

@@ -50,7 +50,7 @@
             <p><span style="color:red;">*</span>联系电话：</p>
           </li>
           <li>
-            <input type="number" @blur="clearIOS" name="" value="" placeholder="请输入联系人电话" v-model="contactPhone">
+            <input type="number" oninput="this.value=this.value.replace(/[^0-9.]+/,'');" @blur="clearIOS" name="" value="" placeholder="请输入联系人电话" v-model="contactPhone">
           </li>
         </ul>
       </div>
