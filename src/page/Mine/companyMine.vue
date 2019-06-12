@@ -62,7 +62,7 @@
               <span class="mine_text">企业认证</span>
               <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
             </router-link>
-            <router-link :to="{path:'/personMes',query:{isDis:false}}" tag="li">
+            <router-link :to="{path:'/companyMes',query:{isDis:false}}" tag="li">
               <i class="iconfont write_icon icon-bianjiziliao"></i>
               <span class="mine_text">编辑资料</span>
               <i class="iconfont forward icon-tiaozhuanqianwangyoujiantouxiangyouxiayibuxianxing"></i>
@@ -162,7 +162,7 @@ export default {
             this.$router.push('/TLogin')
           }
         }).catch((err)=>{
-          console.log(err);
+          // console.log(err);
           this.$Toast('未知错误')
         })
       }
@@ -204,7 +204,7 @@ export default {
                 this.$Toast(res.data.msg)
               }
             }).catch((err)=>{
-              console.log(err);
+              // console.log(err);
               this.$Toast('未知错误')
             })
         };
@@ -212,7 +212,7 @@ export default {
     },
     goMes(){//点击进入个人详情页
       this.$router.push({
-        path:'/personMes',
+        path:'/companyMes',
         query:{
           isDis:true
         }
@@ -233,7 +233,7 @@ export default {
             sessionStorage.removeItem('mineMsg')
           }
         }).catch((err)=>{
-          console.log(err)
+          // console.log(err)
         });
         setTimeout(()=>{
           if(sessionStorage.getItem('mineMsg')){
@@ -286,7 +286,7 @@ export default {
               this.$Toast(res.data.msg)
             }
           }).catch((err)=>{
-            console.log(err);
+            // console.log(err);
             this.$Toast('未知错误')
           })
       }else{
@@ -338,7 +338,6 @@ export default {
         let formData=new FormData();
         formData.append('id',_this.userMes.engineerVO.id);
         _this.$axios.post(_this.oUrl+'/mobile/externalEngineerApply',formData).then((res)=>{
-          console.log(res)
           if(res.data.code==0){
             _this.messageTitle=res.data.data.title;
             _this.messageCon=res.data.data.con;
@@ -356,7 +355,7 @@ export default {
           _this.reload();
         }).catch((err)=>{
           _this.$Toast('未知错误')
-          console.log(err)
+          // console.log(err)
         })
       }else{
         _this.$Toast('当前账户异常，请联系客服')

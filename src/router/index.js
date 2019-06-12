@@ -214,6 +214,11 @@ const router= new Router({
       path:'/companyCard',//企业认证页
       name:'CompanyCard',
       component:resolve=>require(['@/page/Mine/companyCard'],resolve)
+    },
+    {
+      path:'/companyMes',//企业资料页
+      name:'CompanyMes',
+      component:resolve=>require(['@/page/Mine/company_mes'],resolve)
     }
   ]
 });
