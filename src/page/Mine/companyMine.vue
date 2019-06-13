@@ -308,7 +308,7 @@ export default {
         }).then(action => {
           if(action=='confirm'){
             _this.$router.push({
-              path:'/personMes',
+              path:'/companyMes',
               query:{
                 isDis:false
               }
@@ -321,13 +321,13 @@ export default {
         })
       }else if(beLing.identifyState==1){
         MessageBox({
-          message:'当前未进行身份认证，是否前往？',
+          message:'当前未进行企业认证，是否前往？',
           confirmButtonText:'前往',
           cancelButtonText:'取消',
           showCancelButton:true
         }).then(action => {
           if(action=='confirm'){
-            _this.$router.push('/cerCard')
+            _this.$router.push('/companyCard')
           }
         }).catch(err=>{
           if(err=='cancel'){
