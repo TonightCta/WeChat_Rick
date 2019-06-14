@@ -101,7 +101,7 @@ export default {
       if(_vm.userMes.engineerVO){
         if(_vm.mes.stateStr==='截单状态'){
           _vm.$Toast('很抱歉,该项目已截单')
-        }else if(_vm.userMes.engineerVO.state==0||_vm.userMes.engineerVO.state==1){
+        }else if(_vm.userMes.engineerVO.state==0){
           MessageBox({
             message:'当前未进行工程师认证,是否立即前往？',
             confirmButtonText:'确定',
