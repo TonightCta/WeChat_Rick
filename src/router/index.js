@@ -183,7 +183,20 @@ const router= new Router({
     {
       path:'/projectMan',//项目管理
       name:'ProjectMan',
-      component:resolve=>require(['@/page/Project/project_man'],resolve)
+      component:resolve=>require(['@/page/Project/project_man'],resolve),
+      children:[
+        {
+          path:'/projectMan/proList',//项目列表
+          name:'ProList',
+          component:resolve=>require(['@/page/Project/proList'],resolve)
+        },
+        {
+          path:'/projectMan/proGress',//项目数据统计
+          name:'ProGress',
+          component:resolve=>require(['@/page/Project/proGress'],resolve)
+        }
+      ],
+      redirect:'/projectMan/proList'
     },
     {
       path:'/projectMes',//项目详情
@@ -250,7 +263,7 @@ router.beforeEach((to,from,next)=>{
    }
  };
  //管理员权限页面
- const adminRoute=['Order','TakeOrder','WorkLog','ProjectMan','LogDetis','AddLog','TakeOrderDe'];
+ const adminRoute=['Order','TakeOrder','WorkLog','LogDetis','AddLog','TakeOrderDe'];
  if(adminRoute.indexOf(to.name)>-1){
    if(iDent==0){
      Toast('当前为管理员身份,请切换身份后重试');
