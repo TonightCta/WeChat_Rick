@@ -1,61 +1,35 @@
-<!-- 项目详情 -->
+<!-- 项目详情Admin -->
 <template lang="html">
-  <div class="project_details">
+  <div class="pro_admin">
+    <h1>123</h1>
     <WorkHeader>
-      <span>订单详情</span>
+      <span>项目详情</span>
     </WorkHeader>
-    <div class="details_con">
-      <p class="details_title">项目信息</p>
-      <ul class="details_mes">
-        <li>项目名称:&nbsp;{{projectMes.customerName}}</li>
-        <li>项目内容:&nbsp;{{projectMes.content}}</li>
-        <li>项目负责人:&nbsp;&nbsp;{{projectMes.creatorName}}</li>
-        <li>项目状态:&nbsp;&nbsp;{{projectMes.stateStr}}</li>
-        <li>项目进度:&nbsp;&nbsp;{{projectMes.schedule}}%</li>
-      </ul>
-      <p class="details_title">工作时间</p>
-      <ul class="details_workTime">
-        <li :class="{first:projectMes.startTime!=null&&projectMes.startTime!=''}">
-          <p class="vertical"></p>
-          <p class="transverse"></p>
-          <span v-if="projectMes.startTime!=null&&projectMes.startTime!=''">入场时间:{{projectMes.startTimeSec}}</span>
-          <span v-else>入场时间:-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </li>
-        <li :class="{first:projectMes.finishTime!=null&&projectMes.finishTime!=''}">
-          <p class="vertical"></p>
-          <p class="transverse"></p>
-          <span v-if="projectMes.finishTime!=null&&projectMes.finishTime">完工时间:{{projectMes.finishTimeSec}}</span>
-          <span v-else>完工时间:-</span>
-        </li>
-        <li :class="{first:projectMes.acceptTime!=null&&projectMes.acceptTime!=''}">
-          <p class="vertical"></p>
-          <p class="transverse"></p>
-          <span v-if="projectMes.acceptTime!=null&&projectMes.acceptTime!=''">验收时间:{{projectMes.acceptTimeSec}}</span>
-          <span v-else>验收时间:-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </li>
-      </ul>
-      <div class="" v-for="(point,index) in projectMes.projectPointVOList">
-        <p class="details_title">局点信息</p>
-        <ul class="details_point details_mes">
-          <li>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点:&nbsp;&nbsp;{{point.placeName}}</li>
-          <li v-if="point.engineerNameListStr!=null&&point.engineerNameListStr!=''">人员组成:&nbsp;&nbsp;{{point.engineerNameListStr}}</li>
-          <li v-else>人员组成:&nbsp;&nbsp;-</li>
-        </ul>
-        <ul class="details_workTime">
-          <li v-for="(gress,index) in point.usingProjectCourseNodeVOList" :class="{first:gress.startTime!=null}">
-            <p class="vertical"></p>
-            <p class="transverse"></p>
-            <span v-if="gress.startTime!=null">{{gress.courseNodeName}}:{{gress.startTimeSec}}</span>
-            <span v-else>{{gress.courseNodeName}}:-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          </li>
-        </ul>
-        <!-- 老婆出门要跟“从”
-             老婆命令要服“从”
-             老婆讲错要盲“从”
-             老婆化妆要等“得”
-             老婆花钱要舍“得”
-             老婆生气要忍“得”
-             老婆生日要记“得” -->
+    <div class="pro_con">
+      <div class="pro_mes">
+        <p class="mes_title">项目信息
+          <span></span>
+        </p>
+        <p class="mes_con">客户名称:&nbsp;{{projectMes.customerName}}</p>
+        <p class="mes_con">项目名称:&nbsp;{{projectMes.name}}</p>
+        <p class="mes_con">项目合同单号:&nbsp;{{projectMes.contractNumber}}</p>
+        <p class="mes_con">项目内容:&nbsp;{{projectMes.content}}</p>
+        <p class="mes_con">
+          <span>联系人:&nbsp;{{projectMes.linkman}}</span>
+          <span>联系电话:&nbsp;{{projectMes.phone}}</span>
+        </p>
+        <p class="mes_con">
+          <span>项目人数:&nbsp;{{projectMes.peopleNumber}}</span>
+          <span>工期:&nbsp;{{projectMes.dayNumber}}</span>
+        </p>
+        <p class="mes_con">技能要求:&nbsp;{{projectMes.levelStr}}</p>
+        <p class="mes_con">
+          <span>交付标准:&nbsp;{{projectMes.standard}}</span>
+          <span>项目状态:&nbsp;{{projectMes.stateStr}}</span>
+        </p>
+        <p class="mes_con">
+          <span>项目进度:&nbsp;{{projectMes.schedule}}%</span>
+        </p>
       </div>
     </div>
   </div>
@@ -66,20 +40,20 @@ import WorkHeader from '@/components/work_header'
 export default {
   data(){
     return{
-      PageID:null,//订单ID
-      projectMes:{},//项目详情
+      proID:null,//项目ID
+      projectMes:{},//项目信息
     }
   },
   created(){
-    this.PageID=this.$route.query.ProID;
+    this.proID=this.$route.query.proID
   },
   mounted(){
-    this.getProDetails()
+    this.hasDetials()
   },
   methods:{
-    getProDetails(){//获取项目详情
+    hasDetials(){//查看项目详情
       let _vc=this;
-      _vc.$axios.get(_vc.oUrl+'/projectInfo?projectId='+_vc.PageID).then((res)=>{
+      _vc.$axios.get(_vc.oUrl+'/projectInfo?projectId='+_vc.proID).then((res)=>{
         if(res.data.code==0){
           //入场时间
           let startDate=new Date(res.data.data.startTime);
@@ -208,13 +182,13 @@ export default {
           _vc.projectMes=res.data.data;
           console.log(_vc.projectMes)
         }else{
-          this.$Toast(res.data.msg)
+          _vc.$Toast(res.data.msg)
         }
       }).catch((err)=>{
-        this.$Toast('未知错误,请联系管理员')
+        _vc.$Toast('未知错误,请联系管理员')
         console.log(err)
       })
-    }
+    },
   },
   components:{
     WorkHeader
@@ -223,95 +197,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.first{
-  .vertical{
-    background: rgba(235,122,29,1)!important;
-  }
-  .transverse{
-    background: rgba(235,122,29,1)!important;
-  }
-  span{
-    color:rgba(235,122,29,1)!important;
-  }
-}
-.project_details{
+.pro_con{
+  margin-top: 4rem;
   width: 100%;
-  height: 100%;
-  padding-bottom: 5rem;
-  .details_con{
-    width: 90%;
+  .pro_mes{
+    width: 93%;
     margin:0 auto;
-    margin-top: 7rem;
-    .details_title{
+    .mes_title{
       width: 100%;
-      margin-top: 4rem;
-      box-sizing: border-box;
-      height: 1.8rem;
-      padding-left: .4rem;
-      border-left:4px solid rgba(235,122,29,1);
+      height: 4rem;
       font-size: 1.6rem;
-      line-height: 1.8rem;
-    }
-    .details_mes{
-      width: 92%;
-      margin:0 auto;
-      li{
-        font-size: 1.4rem;
-        margin-top: 1rem;
+      box-sizing: border-box;
+      padding-left: .8rem;
+      position: relative;
+      span{
+        position: absolute;
+        height: 1.4rem;
+        width: 4px;
+        background: #eb7a1d;
+        left:0;
+        top:26%;
+        margin-top:-.8rem;
       }
     }
-    .details_workTime{
-      width: 85%;
-      margin:0 auto;
-      margin-top: 2rem;
-      li{
-        width: 100%;
-        position: relative;
-        height:8rem;
-        .vertical{
-          width: .4rem;
-          height: 100%;
-          position: absolute;
-          top:0;
-          left:50%;
-          margin-left: -.2rem;
-          background: #ccc;
-        }
-        .transverse{
-          width: 1.6rem;
-          height: 1.6rem;
-          border-radius: 50%;
-          background: #ccc;
-          position: absolute;
-          top:0;
-          left:50%;
-          margin-left: -.8rem;
-        }
-        span{
-          position: absolute;
-          font-size: 1.3rem;
-          right:0;
-          // top:.3rem;
-          color:#ccc;
-        }
-      }
-      li:nth-of-type(even){
-        span{
-          left: 0;
-        }
-      }
-      li:last-child{
-        height:4rem;
-        span{
-          // left:55%;
-          top:3rem;
-        }
-        .transverse{
-          top:3rem;
-        }
-      }
+    .mes_con{
+      width: 100%;
+      font-size: 1.5rem;
+      box-sizing: border-box;
+      padding-left: .8rem;
+      line-height: 2rem;
     }
   }
 }
-
 </style>

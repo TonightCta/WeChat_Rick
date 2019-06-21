@@ -4,61 +4,61 @@
     <div class="">
       <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" ref="myscroller">
         <ul>
-          <li class="work_list" v-for="(log,index) in logList">
-            <p class="work_time">{{log.createTimeStr}}</p>
-            <p class="work_type con">项目名称:&nbsp;{{log.name}}</p>
-            <p class="work_place con">工作地点:&nbsp;{{log.placeVO.parentName+'-'+log.placeVO.name}}</p>
-            <span class="status" v-if="log.stateStr==='接单状态'" style="color:#eb7a1d;">可接单</span>
-            <span class="status" v-else style="color:#666;">已截单</span>
+          <li class="work_list" v-for="(pro,index) in proList">
+            <img src="../../../static/img/bookmarks_icon.png" alt="">
+            <p class="work_time">{{pro.createTimeStr}}</p>
+            <p class="work_type con">项目名称:&nbsp;{{pro.name}}</p>
+            <p class="work_type con" v-if="pro.contractNumber!=null&&pro.contractNumber!=''">合同号:&nbsp;{{pro.contractNumber}}</p>
+            <p class="work_type con" v-else>合同号:&nbsp;-</p>
+            <p class="work_type con">项目状态:&nbsp;{{pro.stateStr}}</p>
+            <p class="work_type con">产品线:&nbsp;{{pro.technologyName}}</p>
+            <p class="work_type con">项目负责人:&nbsp;{{pro.creatorName}}</p>
+            <p class="work_type con">进度:&nbsp;{{pro.schedule}}%</p>
             <p class="work_pro">
-              <button type="button" name="button"><i class="iconfont icon-fuwutiaokuan"></i>详情</button>
-              <button type="button" name="button"  v-show="log.state==2"><i class="iconfont icon-fuwutiaokuan"></i>申请</button>
+              <button type="button" name="button"><i class="iconfont icon-fuwutiaokuan" @click="proDetails(index)"></i>详情</button>
             </p>
-            <p class="click_mask con"></p>
+            <p class="click_mask con" @click="proDetails(index)"></p>
           </li>
         </ul>
       </scroller>
-      <!-- <p class="noLog" v-show="!hasLog">暂无订单</p> -->
     </div>
   </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   data(){
     return{
-      logList:[],//项目列表
+      proList:[],//项目列表
     }
   },
   created(){
     this.getLogList();
   },
+  computed:{
+    ...mapState(['userMes'])
+  },
   methods:{
     getLogList(){//获取日志列表
       let _vm=this;
-      let formdata=new FormData();
       _vm.$Indicator.open();
-      let userId=window.localStorage.getItem('engID');
-      if(window.localStorage.getItem('engID')){
-        formdata.append('engineerIdOut',userId);
-      }else{
-        console.log('未登录')
-      };
-      // formdata.append('size',10)
-      _vm.$axios.post(_vm.oUrl+'/mission/findMissionListByCondition',formdata).then((res)=>{
+      let formdata=new FormData();
+      formdata.append('size',100);
+      if(_vm.userMes.identityCode==2||_vm.userMes.identityCode==3){
+        formdata.append('managerName',_vm.userMes.nickname)
+      }
+      _vm.$axios.post(_vm.oUrl+'/findProjectListByCondition',formdata).then((res)=>{
         if(res.data.code==0){
-          _vm.logList=res.data.data.content;
-          sessionStorage.setItem('aviNum',res.data.data.totalElements)
+          console.log(res)
+          _vm.proList=res.data.data.content;
           _vm.$Indicator.close();
-          if(res.data.data.content.length<1){
-            this.hasLog=false;
-          }
         }else{
           _vm.$Indicator.close();
-          // this.hasLog=false;
           _vm.$Toast(res.data.msg)
         }
       }).catch((err)=>{
+        _vm.$Toast('未知异常,请联系管理员')
         _vm.$Indicator.close();
         console.log(err)
       })
@@ -74,6 +74,14 @@ export default {
         done(true)
       },1500)
     },
+    proDetails(index){//项目详情
+      this.$router.push({
+        path:'/projectMes',
+        query:{
+          proID:this.proList[index].id
+        }
+      });
+    },
   }
 }
 </script>
@@ -83,15 +91,23 @@ export default {
   margin-top: 5rem!important;
 }
 .work_list{
-  width: 95%;
+  width: 90%;
   margin:0 auto;
-  height: 12.5rem;
   max-height: none;
   border-radius: 5px;
   box-shadow: 0px 0px 5px 5px #ddd;
   position: relative;
   margin-bottom: .5rem;
   margin-top: 1rem;
+  padding-bottom: 3.5rem;
+  padding-left: .5rem;
+  padding-right: .5rem;
+  img{
+    position: absolute;
+    left:.5rem;
+    top:-.3rem;
+    width: 2rem;
+  }
   p{
     width: 100%;
     padding-left: 1rem;
@@ -144,15 +160,9 @@ export default {
       background: white;
       border:1px solid #eb7a1d;
       color:#eb7a1d;
-      margin-right: 1rem;
       i{
         font-size: 1.4rem;
       }
-    }
-    button:nth-child(2){
-      background: white;
-      background :#eb7a1d;
-      color:white;
     }
   }
 }

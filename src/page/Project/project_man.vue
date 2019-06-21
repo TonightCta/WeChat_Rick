@@ -7,7 +7,7 @@
         <span>项目管理</span>
       </slot>
     </div>
-    <div class="admin_bar">
+    <div class="admin_bar" v-if="isAdmin">
       <router-link to="/projectMan/proList" tag="span"  v-if="Tab" @click.native="Tab=false">
         <img src="../../../static/img/admin_bar.png" alt="">
       </router-link>
@@ -23,17 +23,26 @@
 
 <script>
 import WorkHeader from '@/components/work_header'
+import {mapState} from 'vuex'
 export default {
   data(){
     return{
       Tab:false,//切换路径
+      isAdmin:false,//是否为项目经理
     }
+  },
+  computed:{
+    ...mapState(['userMes'])
   },
   components:{
     WorkHeader
   },
+  created(){
+    if(this.userMes.identityCode==0){
+      this.isAdmin=true;
+    }
+  },
   methods:{
-
     backOf(){//返回上级
       this.$router.push('/')
     },

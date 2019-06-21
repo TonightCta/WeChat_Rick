@@ -32,7 +32,7 @@ export default {
         },
         //图例，选择要显示的项目
         legend:{
-          orient:'horizontal',
+          orient:'vertical',
           bottom:'bottom',
           textStyle:{
             fontSize:'16',
@@ -57,6 +57,22 @@ export default {
             },
             label: { //饼图图形的文本标签
               normal: {  //下同，normal指在普通情况下样式，而非高亮时样式
+                formatter: '{b|{b}：}{c}',
+                borderWidth: 1,
+                borderRadius: 4,
+                rich: {
+                       b: {
+                           fontSize: 16,
+                           lineHeight: 13,
+                           color:'black'
+                       },
+                       per: {
+                           color: '#eee',
+                           backgroundColor: '#334455',
+                           padding: [2, 4],
+                           borderRadius: 2
+                       }
+                   },
                 textStyle: {
                   color: 'black',
                   fontSize:'15'

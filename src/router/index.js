@@ -239,7 +239,7 @@ router.beforeEach((to,from,next)=>{
   NProgress.start();
   let iDent=window.localStorage.getItem('Ident')
   //登录权限页面
-  const nextRoute=['CerSkill','CerCard','projectMes','PersonMes','WorkLog','Message','PersonSkill','ProjectTrak'];
+  const nextRoute=['CerSkill','CerCard','projectMes','PersonMes','WorkLog','Message','PersonSkill','ProjectTrak','projectMan'];
   if(nextRoute.indexOf(to.name) > -1){
     if (!window.localStorage.getItem('Uid')) {
       Toast('请先登录');
@@ -247,7 +247,7 @@ router.beforeEach((to,from,next)=>{
    }
  };
  //客户权限页面
- const cusRoute=['TakeOrder','WorkLog','ProjectMan','LogDetis','AddLog','TakeOrderDe','Order','OrderDetails'];
+ const cusRoute=['TakeOrder','WorkLog','ProjectMan','LogDetis','AddLog','TakeOrderDe','Order','OrderDetails','projectMan'];
  if(cusRoute.indexOf(to.name)>-1){
    if(iDent==1){
      Toast('当前为客户身份,请切换身份后重试');
@@ -255,7 +255,7 @@ router.beforeEach((to,from,next)=>{
      next('/receipt')
    }
  };
- const engRoute=['ProjectTrak','ProjectMan','ProjeceMes'];
+ const engRoute=['ProjectTrak'];
  if(engRoute.indexOf(to.name)>-1){
    if(iDent==2||iDent==3){
      Toast('当前为工程师身份或公司账户,请切换账户后重试');
