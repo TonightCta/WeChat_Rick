@@ -8,7 +8,7 @@
       <img src="../../../static/img/login_bg2.png" alt="">
     </div>
     <div class="radio_mask first">
-
+      
     </div>
     <div class="radio_mask second">
 

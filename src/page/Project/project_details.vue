@@ -1,7 +1,6 @@
 <!-- 项目详情Admin -->
 <template lang="html">
   <div class="pro_admin">
-    <h1>123</h1>
     <WorkHeader>
       <span>项目详情</span>
     </WorkHeader>
@@ -14,22 +13,85 @@
         <p class="mes_con">项目名称:&nbsp;{{projectMes.name}}</p>
         <p class="mes_con">项目合同单号:&nbsp;{{projectMes.contractNumber}}</p>
         <p class="mes_con">项目内容:&nbsp;{{projectMes.content}}</p>
-        <p class="mes_con">
+        <p class="mes_con bothBox">
           <span>联系人:&nbsp;{{projectMes.linkman}}</span>
           <span>联系电话:&nbsp;{{projectMes.phone}}</span>
         </p>
-        <p class="mes_con">
+        <p class="mes_con bothBox">
           <span>项目人数:&nbsp;{{projectMes.peopleNumber}}</span>
           <span>工期:&nbsp;{{projectMes.dayNumber}}</span>
         </p>
         <p class="mes_con">技能要求:&nbsp;{{projectMes.levelStr}}</p>
-        <p class="mes_con">
+        <p class="mes_con bothBox">
           <span>交付标准:&nbsp;{{projectMes.standard}}</span>
           <span>项目状态:&nbsp;{{projectMes.stateStr}}</span>
         </p>
         <p class="mes_con">
           <span>项目进度:&nbsp;{{projectMes.schedule}}%</span>
         </p>
+        <p class="mes_con bothBox">
+          <span v-if="projectMes.warnTime!=null&&projectMes.warnTime!=''">预警时间:&nbsp;{{projectMes.warnTimeSec}}</span>
+          <span v-else>预警时间:&nbsp;-</span>
+          <span v-if="projectMes.startTime!=null&&projectMes.startTime!=''">入场时间:&nbsp;{{projectMes.startTimeSec}}</span>
+          <span v-else>入场时间:&nbsp;-</span>
+        </p>
+        <p class="mes_con">
+          <span v-if="projectMes.planFinishTime!=null&&projectMes.planFinishTime!=''">计划完工时间:&nbsp;{{projectMes.planFTimeSec}}</span>
+          <span v-else>计划完工时间:&nbsp;-</span>
+        </p>
+        <p class="mes_con">
+          <span v-if="projectMes.planAcceptTime!=null&&projectMes.planAcceptTime!=''">计划验收时间:&nbsp;{{projectMes.planATimeSec}}</span>
+          <span v-else>计划验收时间:&nbsp;-</span>
+        </p>
+        <p class="mes_con bothBox">
+          <span v-if="projectMes.finishTime!=null&&projectMes.finishTime!=''">完工时间:&nbsp;{{projectMes.finishTimeSec}}</span>
+          <span v-else>完工时间:&nbsp;-</span>
+          <span v-if="projectMes.acceptTime!=null&&projectMes.acceptTime!=''">验收时间:&nbsp;{{projectMes.acceptTimeSec}}</span>
+          <span v-else>验收时间:&nbsp;-</span>
+        </p>
+        <div class="" style="margin-top:2rem;" v-for="(point,key) in projectMes.projectPointVOList" :key="'Point'+key">
+          <p class="mes_title">局点信息
+            <span></span>
+          </p>
+          <p class="mes_con">
+            <span>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点:&nbsp;&nbsp;&nbsp;{{point.placeName}}</span>
+          </p>
+          <p class="mes_con">
+            <span>详细地址:&nbsp;&nbsp;&nbsp;{{point.address}}</span>
+          </p>
+          <p class="mes_con">
+            <span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:&nbsp;&nbsp;&nbsp;{{point.remark}}</span>
+          </p>
+          <p class="mes_con">
+            <span>人员组成:&nbsp;&nbsp;&nbsp;{{point.engineerNameListStr}}</span>
+          </p>
+          <p class="point_title">项目进程</p>
+          <div class="" v-for="(gress,index) in point.usingProjectCourseNodeVOList">
+            <p class="mes_con pointBoth">{{gress.courseNodeName}}</p>
+            <p class="mes_con pointBothBox">
+              <span v-if="gress.startTime!=null&&gress.startTime!=''">{{gress.startTimeSec}}</span>
+              <span v-else>暂无</span>
+              -
+              <span v-if="gress.endTime!=null&&gress.endTime!=''">{{gress.endTimeSec}}</span>
+              <span v-else>暂无</span>
+            </p>
+          </div>
+          <p class="point_title" v-if="point.projectFileVOList!=null">项目文档</p>
+          <p class="mes_con" v-for="(file,index) in point.projectFileVOList" :key="'File'+index">
+            <span v-show="file.fileType==0">【项目经理任命】</span>
+            <span v-show="file.fileType==1">【开会检查项】</span>
+            <span v-show="file.fileType==2">【会议纪要】</span>
+            <span v-show="file.fileType==3">【技术方案】</span>
+            <span v-show="file.fileType==4">【安装报告】</span>
+            <span v-show="file.fileType==5">【加电测试】</span>
+            <span v-show="file.fileType==6">【割接调测】</span>
+            <span v-show="file.fileType==7">【完工报告】</span>
+            <span v-show="file.fileType==8">【验收报告】</span>
+            <span v-show="file.fileType==9">【进场报告】</span>
+            <span v-show="file.fileType==10">【离场报告】</span>
+            <a :href="oUrl+'/'+file.fileName">{{file.fileName}}</a>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -198,14 +260,14 @@ export default {
 
 <style lang="scss" scoped>
 .pro_con{
-  margin-top: 4rem;
+  margin-top: 7rem;
   width: 100%;
   .pro_mes{
     width: 93%;
     margin:0 auto;
     .mes_title{
       width: 100%;
-      height: 4rem;
+      height: 3rem;
       font-size: 1.6rem;
       box-sizing: border-box;
       padding-left: .8rem;
@@ -216,7 +278,7 @@ export default {
         width: 4px;
         background: #eb7a1d;
         left:0;
-        top:26%;
+        top:34%;
         margin-top:-.8rem;
       }
     }
@@ -226,6 +288,36 @@ export default {
       box-sizing: border-box;
       padding-left: .8rem;
       line-height: 2rem;
+      margin-bottom: 1rem;
+    }
+    .bothBox{
+      width: 100%;
+      display: flex;
+      span{
+        display: inline-block;
+        width: 50%;
+        text-align: left;
+      }
+    }
+    .point_title{
+      width: 100%;
+      font-size: 1.6rem;
+      box-sizing: border-box;
+      padding-left: .8rem;
+      color:#eb7a1d;
+      margin-bottom: 1rem;
+    }
+    .pointBoth{
+      padding-left: 1.4rem;
+    }
+    .pointBothBox{
+      word-wrap: 90%;
+      display: flex;
+      justify-content: space-around;
+      span{
+        width: 10rem;
+        text-align: center;
+      }
     }
   }
 }
