@@ -131,6 +131,7 @@ export default {
     getEcharts(){//获取图表数据
       let _vm=this;
       _vm.$axios.get(_vm.oUrl+'/view/statisticsProject').then((res)=>{
+        console.log(res)
         if(res.data.code==0){
           _vm.left_option.legend.data=[];
           _vm.left_option.series[0].data=[];
@@ -158,7 +159,6 @@ export default {
         }
       }).catch((err)=>{
         _vm.$message.error('未知错误,请联系管理员')
-        console.log(err)
       })
     },
     initEcharts(){//初始化图表
@@ -184,6 +184,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loading-layer{
+  display: none!important;
+  opacity: 0!important;
+}
 .pro_gress{
   height: 100%;
   margin-top: -13rem;
