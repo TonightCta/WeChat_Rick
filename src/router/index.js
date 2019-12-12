@@ -80,15 +80,30 @@ const router= new Router({
       redirect:'/companyIn',
 
     },
+
     {
       path:'/newslist',//新闻列表
       name:'NewsList',
-      component:resolve=>require(['@/page/Home/newslist'],resolve)
+      component:resolve=>require(['@/page/Home/newslist'],resolve),
+      meta:{
+        title:'公司新闻'
+      }
+    },
+    {
+      path:'/caseList',//新闻详情
+      name:'CaseList',
+      component:resolve=>require(['@/page/Home/caseList'],resolve),
+      meta:{
+        title:'成功案例'
+      }
     },
     {
       path:'/newDetails',//新闻详情
       name:'NewsDetails',
-      component:resolve=>require(['@/page/Home/newsDetails'],resolve)
+      component:resolve=>require(['@/page/Home/newsDetails'],resolve),
+      meta:{
+        title:'新闻详情'
+      }
     },
     {
       path:'/personMes',//个人信息页
@@ -232,6 +247,14 @@ const router= new Router({
       path:'/companyMes',//企业资料页
       name:'CompanyMes',
       component:resolve=>require(['@/page/Mine/company_mes'],resolve)
+    },
+    {
+      path:'/inve',//问卷调查
+      name:'Inve',
+      component:resolve=>require(['@/page/About/about_inve'],resolve),
+      meta:{
+        title:'犀牛小哥兼职工程师调查问卷'
+      }
     }
   ]
 });

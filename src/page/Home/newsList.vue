@@ -1,9 +1,9 @@
 <!-- 新闻列表页 -->
 <template lang="html">
   <div class="news_list">
-    <WorkHeader>
+    <!-- <WorkHeader>
       <span>{{pageTitle}}</span>
-    </WorkHeader>
+    </WorkHeader> -->
     <div class="">
       <scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :showBtn="listLength">
         <div class="news_newsDeta" ref="newsDa">
@@ -139,9 +139,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-._v-container{
-  margin-top: 5rem!important;
-}
+  // ._v-container{
+  //   margin-top: 5rem!important;
+  // }
   .news_list{
     width: 100%;
     .news_newsDeta{
@@ -150,6 +150,8 @@ export default {
         width: 100%;
         li{
           height:11rem;
+          width: 96%;
+          margin:0 auto;
           position: relative;
           box-sizing: border-box;
           border-bottom:1px solid #ccc;
@@ -159,19 +161,20 @@ export default {
             position: absolute;
             top:2rem;
             left:2rem;
+            border-radius: 5px;
           }
           .news_newsDeta_title{
             font-size: 1.4rem;
             position: absolute;
             top:1.5rem;
-            left:12rem;
+            left:11rem;
           }
           .news_newsDeta_de{
             font-size: 1.2rem;
             width: 19rem;
             position: absolute;
             top:4rem;
-            left:12rem;
+            left:11rem;
             line-height: 1.9rem;
              text-align: justify
           }

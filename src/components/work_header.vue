@@ -2,7 +2,7 @@
   <div class="header_wapper">
     <i class="iconfont icon-fanhui"  @click="backPage()"></i>
     <slot>
-      <span>新闻中心</span>
+      <span></span>
     </slot>
   </div>
 </template>

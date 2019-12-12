@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="news_details">
     <WorkHeader>
-      <span>新闻详情</span>
+      <!-- <span>新闻详情</span> -->
     </WorkHeader>
     <p class="newsTitle_cl">{{newsTitle}}</p>
     <div class="details_mes" ref="details_mes">
@@ -34,7 +34,6 @@ export default {
 <style lang="scss">
 .newsTitle_cl{
   width: 100%;
-  margin-top: 8rem;
   text-align: center;
   font-size: 1.6rem;
   font-weight: bold;
@@ -53,7 +52,7 @@ export default {
     text-justify:inter-ideograph!important;
     img{
       width: 95%!important;
-      margin-left:-6.5%!important;
+      margin-left:2.5%!important;
       margin-top: 2rem;
     }
     span{

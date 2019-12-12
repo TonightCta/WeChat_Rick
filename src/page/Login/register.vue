@@ -8,7 +8,7 @@
       <img src="../../../static/img/login_bg2.png" alt="">
     </div>
     <div class="radio_mask first">
-      
+
     </div>
     <div class="radio_mask second">
 
@@ -66,7 +66,7 @@ export default {
       turnPass:null,//确认密码
       inviCode:'',//邀请码
       regisClear:downIOS,
-      isCompany:'小哥账户',//
+      isCompany:'小哥账户',//账户类型
     }
   },
   methods:{
